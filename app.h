@@ -5,6 +5,7 @@
 
 #include <irsadc.h>
 
+#include "supply.h"
 #include "comm.h"
 #include "cfg.h"
 
@@ -22,11 +23,11 @@ private:
   cfg_t* mp_cfg;
   meas_comm_t m_meas_comm_app;
   //supply_comm_t m_supply_comm_app;
-  // supply_t m_supply_200V;
-  // supply_t m_supply_20V;
-  // supply_t m_supply_2V;
-  // supply_t m_supply_1A;
-  // supply_t m_supply_17A;
+  supply_t m_supply_200V;
+  supply_t m_supply_20V;
+  supply_t m_supply_2V;
+  supply_t m_supply_1A;
+  supply_t m_supply_17A;
 }; // app_t
 
 } // namespace u309m

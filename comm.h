@@ -14,7 +14,7 @@
 
 namespace u309m {
 
-class plis_t
+class meas_plis_t
 {
 public:
   enum plis_status_t {
@@ -23,19 +23,19 @@ public:
     ERROR = 3
   };
   
-  plis_t(
+  meas_plis_t(
     irs_u32 a_tact_freq,
     irs::arm::arm_spi_t* ap_spi,
     irs::gpio_pin_t* ap_cs_pin
   );
-  ~plis_t();
+  ~meas_plis_t();
   void write(const irs_u8 *ap_command);
   void tact_on();
   void tact_off();
   void tick();
 private:
   enum {
-    CCP5 = 0x4,
+    CCP2 = 0x4,
     TIMER_16_BIT = 0x4,
     PERIODIC_MODE = 0x2
   };
@@ -53,7 +53,7 @@ private:
   irs_u8 mp_buf[m_size];
   status_t m_status;
   bool m_need_write;
-}; // plis_t
+}; // meas_plis_t
 
 class meas_comm_t
 {
@@ -101,13 +101,55 @@ private:
   irs::th_lm95071_t m_th5;
   irs::th_lm95071_data_t m_th5_data;
   irs::loop_timer_t m_timer;
-  plis_t m_plis;
+  meas_plis_t m_plis;
   bool m_command_apply;
   bool m_comm_on;
   bool m_plis_reset;
   irs_u16 m_command;
   tick_mode_t m_mode;
 }; // meas_comm_t
+
+class supply_plis_t
+{
+public:
+  enum plis_status_t {
+    BUSY = 1,
+    COMPLETE = 2,
+    ERROR = 3
+  };
+  
+  supply_plis_t(
+    irs_u32 a_tact_freq,
+    irs::arm::arm_spi_t* ap_spi,
+    irs::gpio_pin_t* ap_cs_pin
+  );
+  ~supply_plis_t();
+  void read(irs_u8* ap_buf);
+  void write(const irs_u8 *ap_command);
+  void tact_on();
+  void tact_off();
+  void tick();
+private:
+  enum {
+    CCP0 = 0x1,
+    TIMER_16_BIT = 0x4,
+    PERIODIC_MODE = 0x2
+  };
+  enum status_t
+  {
+    PLIS_SPI_FREE,
+    PLIS_SPI_WRITE
+  };
+  enum {
+    m_size = 2
+  };
+  irs_u32 m_tact_freq;
+  irs::arm::arm_spi_t* mp_spi;
+  irs::gpio_pin_t* mp_cs_pin;
+  irs_u8 mp_buf[m_size];
+  status_t m_status;
+  bool m_need_write;
+}; // supply_plis_t
 
 class supply_comm_t
 {
@@ -126,7 +168,7 @@ private:
   
   supply_comm_pins_t* mp_supply_comm_pins;
   supply_comm_data_t* mp_supply_comm_data;
-  plis_t m_plis;
+  supply_plis_t m_plis;
   bool m_command_apply;
   bool m_comm_on;
   irs_u16 m_command;

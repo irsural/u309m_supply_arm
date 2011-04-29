@@ -266,26 +266,26 @@ struct supply_eth_data_t {
 }; // supply_eth_data_t
 
 struct meas_comm_pins_t {
-  irs::arm::io_pin_t* cs;
-  irs::arm::io_pin_t* reset;
-  irs::arm::io_pin_t* apply;
-  irs::arm::io_pin_t* error;
-  irs::arm::io_pin_t* termo_sense_1;
-  irs::arm::io_pin_t* termo_sense_2;
-  irs::arm::io_pin_t* termo_sense_3;
-  irs::arm::io_pin_t* termo_sense_4;
-  irs::arm::io_pin_t* termo_sense_5;
+  irs::gpio_pin_t* cs;
+  irs::gpio_pin_t* reset;
+  irs::gpio_pin_t* apply;
+  irs::gpio_pin_t* error;
+  irs::gpio_pin_t* termo_sense_1;
+  irs::gpio_pin_t* termo_sense_2;
+  irs::gpio_pin_t* termo_sense_3;
+  irs::gpio_pin_t* termo_sense_4;
+  irs::gpio_pin_t* termo_sense_5;
   
   meas_comm_pins_t(
-    irs::arm::io_pin_t* ap_cs,
-    irs::arm::io_pin_t* ap_reset,
-    irs::arm::io_pin_t* ap_apply,
-    irs::arm::io_pin_t* ap_error,
-    irs::arm::io_pin_t* ap_termo_sense_1,
-    irs::arm::io_pin_t* ap_termo_sense_2,
-    irs::arm::io_pin_t* ap_termo_sense_3,
-    irs::arm::io_pin_t* ap_termo_sense_4,
-    irs::arm::io_pin_t* ap_termo_sense_5
+    irs::gpio_pin_t* ap_cs,
+    irs::gpio_pin_t* ap_reset,
+    irs::gpio_pin_t* ap_apply,
+    irs::gpio_pin_t* ap_error,
+    irs::gpio_pin_t* ap_termo_sense_1,
+    irs::gpio_pin_t* ap_termo_sense_2,
+    irs::gpio_pin_t* ap_termo_sense_3,
+    irs::gpio_pin_t* ap_termo_sense_4,
+    irs::gpio_pin_t* ap_termo_sense_5
   ):
     cs(ap_cs),
     reset(ap_reset),
@@ -301,55 +301,41 @@ struct meas_comm_pins_t {
 }; // meas_comm_pins_t
 
 struct supply_comm_pins_t {
-  irs::arm::io_pin_t* cs;
-  irs::arm::io_pin_t* reset;
-  irs::arm::io_pin_t* apply;
-  irs::arm::io_pin_t* error;
-  irs::arm::io_pin_t* termo_sense_1;
-  irs::arm::io_pin_t* termo_sense_2;
-  irs::arm::io_pin_t* termo_sense_3;
-  irs::arm::io_pin_t* termo_sense_4;
-  irs::arm::io_pin_t* termo_sense_5;
+  irs::gpio_pin_t* cs;
+  irs::gpio_pin_t* reset;
+  irs::gpio_pin_t* apply;
+  irs::gpio_pin_t* error;
+  irs::gpio_pin_t* termo_sense_1;
+  irs::gpio_pin_t* termo_sense_2;
+  irs::gpio_pin_t* termo_sense_3;
+  irs::gpio_pin_t* termo_sense_4;
+  irs::gpio_pin_t* termo_sense_5;
   
   supply_comm_pins_t(
-    irs::arm::io_pin_t* ap_cs,
-    irs::arm::io_pin_t* ap_reset,
-    irs::arm::io_pin_t* ap_apply,
-    irs::arm::io_pin_t* ap_error,
-    irs::arm::io_pin_t* ap_termo_sense_1,
-    irs::arm::io_pin_t* ap_termo_sense_2,
-    irs::arm::io_pin_t* ap_termo_sense_3,
-    irs::arm::io_pin_t* ap_termo_sense_4,
-    irs::arm::io_pin_t* ap_termo_sense_5
+    irs::gpio_pin_t* ap_cs,
+    irs::gpio_pin_t* ap_reset
   ):
     cs(ap_cs),
-    reset(ap_reset),
-    apply(ap_apply),
-    error(ap_error),
-    termo_sense_1(ap_termo_sense_1),
-    termo_sense_2(ap_termo_sense_2),
-    termo_sense_3(ap_termo_sense_3),
-    termo_sense_4(ap_termo_sense_4),
-    termo_sense_5(ap_termo_sense_5)
+    reset(ap_reset)
   {
   }
 }; // supply_comm_pins_t
 
 struct supply_pins_t {
-  irs::arm::io_pin_t* termo_sense_base_cs;
-  irs::arm::io_pin_t* termo_sense_aux_cs;
-  irs::arm::io_pin_t* adc_cs;
-  irs::arm::io_pin_t* tc_cs;
-  irs::arm::io_pin_t* volt_reg_cs;
-  irs::arm::io_pin_t* temp_reg_cs;
+  irs::gpio_pin_t* termo_sense_base_cs;
+  irs::gpio_pin_t* termo_sense_aux_cs;
+  irs::gpio_pin_t* adc_cs;
+  irs::gpio_pin_t* tc_cs;
+  irs::gpio_pin_t* volt_reg_cs;
+  irs::gpio_pin_t* temp_reg_cs;
   
   supply_pins_t(
-    irs::arm::io_pin_t* ap_termo_sense_base_cs,
-    irs::arm::io_pin_t* ap_termo_sense_aux_cs,
-    irs::arm::io_pin_t* ap_adc_cs,
-    irs::arm::io_pin_t* ap_tc_cs,
-    irs::arm::io_pin_t* ap_volt_reg_cs,
-    irs::arm::io_pin_t* ap_temp_reg_cs
+    irs::gpio_pin_t* ap_termo_sense_base_cs,
+    irs::gpio_pin_t* ap_termo_sense_aux_cs,
+    irs::gpio_pin_t* ap_adc_cs,
+    irs::gpio_pin_t* ap_tc_cs,
+    irs::gpio_pin_t* ap_volt_reg_cs,
+    irs::gpio_pin_t* ap_temp_reg_cs
   ):
     termo_sense_base_cs(ap_termo_sense_base_cs),
     termo_sense_aux_cs(ap_termo_sense_aux_cs),
@@ -360,6 +346,24 @@ struct supply_pins_t {
   {
   }
 }; // supply_pins_t
+
+struct eeprom_data_t {
+
+  eeprom_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
+    irs_uarc* ap_size = IRS_NULL)
+  {
+    irs_uarc size = connect(ap_data, a_index);
+    if(ap_size != IRS_NULL){
+      *ap_size = size;
+    }
+  }
+  irs_uarc connect(irs::mxdata_t *ap_data, irs_uarc a_index)
+  {
+    irs_uarc index = a_index;
+    
+    return index;
+  }
+}; // eeprom_data_t
 
 } // namespace u309m
 
