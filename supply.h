@@ -19,12 +19,14 @@ public:
   supply_t(
     irs::arm::arm_spi_t* ap_spi,
     supply_pins_t* ap_supply_pins,
-    supply_eth_data_t* ap_supply_eth_data
+    supply_eth_data_t* ap_supply_eth_data,
+    eeprom_supply_data_t* ap_supply_eeprom_data
   );
   void tick();
 private:
   supply_pins_t* mp_supply_pins;
   supply_eth_data_t* mp_eth_data;
+  eeprom_supply_data_t* mp_eeprom_data;
   irs::th_lm95071_t m_th_base;
   irs::th_lm95071_data_t m_th_base_data;
   irs::th_lm95071_t m_th_aux;

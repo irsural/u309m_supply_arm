@@ -103,13 +103,13 @@ void u309m::meas_plis_t::tick()
 }
 
 u309m::meas_comm_t::meas_comm_t(
-  irs::arm::adc_t* ap_adc,
+  //irs::arm::adc_t* ap_adc,
   irs::arm::arm_spi_t* ap_spi_term,
   irs::arm::arm_spi_t* ap_spi_meas_comm_plis,
   meas_comm_pins_t* ap_meas_comm_pins,
   meas_comm_data_t* ap_meas_comm_data
 ):
-  mp_adc(ap_adc),
+  //mp_adc(ap_adc),
   mp_meas_comm_pins(ap_meas_comm_pins),
   mp_meas_comm_data(ap_meas_comm_data),
   m_th1(ap_spi_term, mp_meas_comm_pins->termo_sense_1,
@@ -300,13 +300,13 @@ void u309m::meas_comm_t::tick()
   }
   
   if (m_timer.check()) {  
-    mp_meas_comm_data->meas_rele_power_voltage =
+    /*mp_meas_comm_data->meas_rele_power_voltage =
       (mp_adc->get_data(0)/0.73f);
     mp_meas_comm_data->power_voltage = mp_adc->get_data(1);
     mp_meas_comm_data->meas_comm_plis_voltage =
       (mp_adc->get_data(0)/0.44f);
     mp_meas_comm_data->internal_temp =
-      mp_adc->get_temperature();
+      mp_adc->get_temperature();*/
     mp_meas_comm_data->th1_value = 
       (m_th1_data.temperature_code*m_th1.get_conv_koef());
     mp_meas_comm_data->th2_value = 
@@ -374,7 +374,7 @@ u309m::supply_plis_t::~supply_plis_t()
   
 }
 
-void u309m::supply_plis_t::read(irs_u8* ap_buf)
+void u309m::supply_plis_t::read(irs_u8* /*ap_buf*/)
 {
 
 }

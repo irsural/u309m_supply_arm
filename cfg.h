@@ -23,13 +23,18 @@
 namespace u309m {
 
 struct eth_data_t {
-  supply_comm_data_t supply_comm_data;
-  meas_comm_data_t meas_comm_data;
-  supply_eth_data_t supply_200V_data;
-  supply_eth_data_t supply_20V_data;
-  supply_eth_data_t supply_2V_data;
-  supply_eth_data_t supply_1A_data;
-  supply_eth_data_t supply_17A_data;
+  irs::conn_data_t<irs_u8> ip_0;
+  irs::conn_data_t<irs_u8> ip_1;
+  irs::conn_data_t<irs_u8> ip_2;
+  irs::conn_data_t<irs_u8> ip_3;
+  arm_adc_data_t arm_adc;
+  supply_comm_data_t supply_comm;
+  meas_comm_data_t meas_comm;
+  supply_eth_data_t supply_200V;
+  supply_eth_data_t supply_20V;
+  supply_eth_data_t supply_2V;
+  supply_eth_data_t supply_1A;
+  supply_eth_data_t supply_17A;
 
   eth_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
     irs_uarc* ap_size = IRS_NULL)
@@ -43,26 +48,155 @@ struct eth_data_t {
   {
     irs_uarc index = a_index;
     
-    index = supply_comm_data.connect(ap_data, index);
-    index = meas_comm_data.connect(ap_data, index);
-    index = supply_200V_data.connect(ap_data, index);
-    index = supply_20V_data.connect(ap_data, index);
-    index = supply_2V_data.connect(ap_data, index);
-    index = supply_1A_data.connect(ap_data, index);
-    index = supply_17A_data.connect(ap_data, index);
+    index = ip_0.connect(ap_data, index);
+    index = ip_1.connect(ap_data, index);
+    index = ip_2.connect(ap_data, index);
+    index = ip_3.connect(ap_data, index);
+    index = arm_adc.connect(ap_data, index);
+    index = supply_comm.connect(ap_data, index);
+    index = meas_comm.connect(ap_data, index);
+    index = supply_200V.connect(ap_data, index);
+    index = supply_20V.connect(ap_data, index);
+    index = supply_2V.connect(ap_data, index);
+    index = supply_1A.connect(ap_data, index);
+    index = supply_17A.connect(ap_data, index);
     
     return index;
+  }
+  void reset_to_default(supply_type_t a_supply_type)
+  {
+    ip_0 = 192;
+    ip_1 = 168;
+    ip_2 = 0;
+    ip_3 = 211;
+    switch(a_supply_type)
+    {
+      case sup_200V:
+      {
+        supply_200V.prev_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
+        supply_200V.fin_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
+        supply_200V.prev_dac_data.koef = 2633;
+        supply_200V.fin_dac_data.koef = 2702;
+        
+        supply_200V.base_tr_data.temperature_ref = 60;
+        supply_200V.base_tr_data.temp_k = 15000;
+        supply_200V.base_tr_data.temp_ki = 0.00075;
+        supply_200V.base_tr_data.temp_kd = 200;
+        supply_200V.base_tr_data.temp_prop_koef = 0;
+        supply_200V.base_tr_data.temp_time_const = 20;
+        
+        supply_200V.aux_tr_data.temperature_ref = 60;
+        supply_200V.aux_tr_data.temp_k = 15000;
+        supply_200V.aux_tr_data.temp_ki = 0.00075;
+        supply_200V.aux_tr_data.temp_kd = 200;
+        supply_200V.aux_tr_data.temp_prop_koef = 0;
+        supply_200V.aux_tr_data.temp_time_const = 20;
+        irs::mlog() << irsm(" eeprom supply_200V") << endl;
+      } break;
+      case sup_20V:
+      {
+        supply_20V.prev_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
+        supply_20V.fin_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
+        supply_20V.prev_dac_data.koef = 2633;
+        supply_20V.fin_dac_data.koef = 2702;
+        
+        supply_20V.base_tr_data.temperature_ref = 60;
+        supply_20V.base_tr_data.temp_k = 15000;
+        supply_20V.base_tr_data.temp_ki = 0.00075;
+        supply_20V.base_tr_data.temp_kd = 200;
+        supply_20V.base_tr_data.temp_prop_koef = 0;
+        supply_20V.base_tr_data.temp_time_const = 20;
+        
+        supply_20V.aux_tr_data.temperature_ref = 60;
+        supply_20V.aux_tr_data.temp_k = 15000;
+        supply_20V.aux_tr_data.temp_ki = 0.00075;
+        supply_20V.aux_tr_data.temp_kd = 200;
+        supply_20V.aux_tr_data.temp_prop_koef = 0;
+        supply_20V.aux_tr_data.temp_time_const = 20;
+        irs::mlog() << irsm(" eeprom supply_20V") << endl;
+      } break;
+      case sup_2V:
+      {
+        supply_2V.prev_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
+        supply_2V.fin_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
+        supply_2V.prev_dac_data.koef = 2633;
+        supply_2V.fin_dac_data.koef = 2702;
+        
+        supply_2V.base_tr_data.temperature_ref = 60;
+        supply_2V.base_tr_data.temp_k = 15000;
+        supply_2V.base_tr_data.temp_ki = 0.00075;
+        supply_2V.base_tr_data.temp_kd = 200;
+        supply_2V.base_tr_data.temp_prop_koef = 0;
+        supply_2V.base_tr_data.temp_time_const = 20;
+        
+        supply_2V.aux_tr_data.temperature_ref = 60;
+        supply_2V.aux_tr_data.temp_k = 15000;
+        supply_2V.aux_tr_data.temp_ki = 0.00075;
+        supply_2V.aux_tr_data.temp_kd = 200;
+        supply_2V.aux_tr_data.temp_prop_koef = 0;
+        supply_2V.aux_tr_data.temp_time_const = 20;
+        irs::mlog() << irsm(" eeprom supply_2V") << endl;
+      } break;
+      case sup_1A:
+      {
+        supply_1A.prev_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
+        supply_1A.fin_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
+        supply_1A.prev_dac_data.koef = 2633;
+        supply_1A.fin_dac_data.koef = 2702;
+        
+        supply_1A.base_tr_data.temperature_ref = 60;
+        supply_1A.base_tr_data.temp_k = 15000;
+        supply_1A.base_tr_data.temp_ki = 0.00075;
+        supply_1A.base_tr_data.temp_kd = 200;
+        supply_1A.base_tr_data.temp_prop_koef = 0;
+        supply_1A.base_tr_data.temp_time_const = 20;
+        
+        supply_1A.aux_tr_data.temperature_ref = 60;
+        supply_1A.aux_tr_data.temp_k = 15000;
+        supply_1A.aux_tr_data.temp_ki = 0.00075;
+        supply_1A.aux_tr_data.temp_kd = 200;
+        supply_1A.aux_tr_data.temp_prop_koef = 0;
+        supply_1A.aux_tr_data.temp_time_const = 20;
+        irs::mlog() << irsm(" eeprom supply_1A") << endl;
+      } break;
+      case sup_17A:
+      {
+        supply_17A.prev_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
+        supply_17A.fin_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
+        supply_17A.prev_dac_data.koef = 2633;
+        supply_17A.fin_dac_data.koef = 2702;
+        
+        supply_17A.base_tr_data.temperature_ref = 60;
+        supply_17A.base_tr_data.temp_k = 15000;
+        supply_17A.base_tr_data.temp_ki = 0.00075;
+        supply_17A.base_tr_data.temp_kd = 200;
+        supply_17A.base_tr_data.temp_prop_koef = 0;
+        supply_17A.base_tr_data.temp_time_const = 20;
+        
+        supply_17A.aux_tr_data.temperature_ref = 60;
+        supply_17A.aux_tr_data.temp_k = 15000;
+        supply_17A.aux_tr_data.temp_ki = 0.00075;
+        supply_17A.aux_tr_data.temp_kd = 200;
+        supply_17A.aux_tr_data.temp_prop_koef = 0;
+        supply_17A.aux_tr_data.temp_time_const = 20;
+        irs::mlog() << irsm(" eeprom supply_17A") << endl;
+      } break;
+      default:
+      {
+        IRS_LIB_ASSERT_MSG("неверно указан тип источника");
+      }
+    }
   }
 };
 
 struct command_pins_t {
-  meas_comm_pins_t* meas_comm_pins;
-  supply_comm_pins_t* supply_comm_pins;
-  supply_pins_t* supply_200V_pins;
-  supply_pins_t* supply_20V_pins;
-  supply_pins_t* supply_2V_pins;
-  supply_pins_t* supply_1A_pins;
-  supply_pins_t* supply_17A_pins;
+  meas_comm_pins_t* meas_comm;
+  supply_comm_pins_t* supply_comm;
+  supply_pins_t* supply_200V;
+  supply_pins_t* supply_20V;
+  supply_pins_t* supply_2V;
+  supply_pins_t* supply_1A;
+  supply_pins_t* supply_17A;
   
   command_pins_t(
     meas_comm_pins_t* ap_meas_comm_pins,
@@ -73,13 +207,13 @@ struct command_pins_t {
     supply_pins_t* ap_supply_1A_pins,
     supply_pins_t* ap_supply_17A_pins
   ):
-    meas_comm_pins(ap_meas_comm_pins),
-    supply_comm_pins(ap_supply_comm_pins),
-    supply_200V_pins(ap_supply_200V_pins),
-    supply_20V_pins(ap_supply_20V_pins),
-    supply_2V_pins(ap_supply_2V_pins),
-    supply_1A_pins(ap_supply_1A_pins),
-    supply_17A_pins(ap_supply_17A_pins)
+    meas_comm(ap_meas_comm_pins),
+    supply_comm(ap_supply_comm_pins),
+    supply_200V(ap_supply_200V_pins),
+    supply_20V(ap_supply_20V_pins),
+    supply_2V(ap_supply_2V_pins),
+    supply_1A(ap_supply_1A_pins),
+    supply_17A(ap_supply_17A_pins)
   {
   }
 }; // command_pins_t
@@ -94,6 +228,8 @@ public:
   irs::arm::arm_spi_t* spi_supply_comm_plis();
   irs::arm::arm_spi_t* spi_general_purpose();
   eth_data_t* eth_data();
+  eeprom_data_t* eeprom_data();
+  irs::hardflow::simple_udp_flow_t* hardflow();
   void tick();
   
 private:
@@ -136,6 +272,18 @@ private:
     CS_DAC_2V = 3,
     CS_DAC_20V = 4,
     CS_DAC_200V = 5
+  };
+  enum {
+    PTC_A_channel = 0,
+    PTC_LC_channel = 1,
+    TR_24V_TEST_channel = 2,
+    IZM_3_3V_TEST_channel = 3,
+    IZM_6V_TEST_channel = 4,
+    IZM_1_2V_TEST_channel = 5,
+    TEST_24V_channel = 6,
+    TEST_5V_channel = 7,
+    PTC_PWR_channel = 8,
+    PTC_17A_channel = 9
   };
   irs_u8 m_spi_buf_size;
   irs_u32 m_f_osc;
@@ -189,6 +337,8 @@ private:
   supply_pins_t m_supply_1A_pins;
   supply_pins_t m_supply_17A_pins;
   command_pins_t m_command_pins;
+  
+  irs::loop_timer_t m_timer;
 };
 
 } // namespace u309m

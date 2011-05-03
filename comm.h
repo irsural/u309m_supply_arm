@@ -59,7 +59,7 @@ class meas_comm_t
 {
 public:
   meas_comm_t(
-    irs::arm::adc_t* ap_adc,
+    //irs::arm::adc_t* ap_adc,
     irs::arm::arm_spi_t* ap_spi_term,
     irs::arm::arm_spi_t* ap_spi_meas_comm_plis,
     meas_comm_pins_t* ap_meas_comm_pins,
@@ -87,7 +87,7 @@ private:
     meas_reset_complete
   };
 
-  irs::arm::adc_t* mp_adc;
+  //irs::arm::adc_t* mp_adc;
   meas_comm_pins_t* mp_meas_comm_pins;
   meas_comm_data_t* mp_meas_comm_data;
   irs::th_lm95071_t m_th1;
@@ -124,7 +124,7 @@ public:
     irs::gpio_pin_t* ap_cs_pin
   );
   ~supply_plis_t();
-  void read(irs_u8* ap_buf);
+  void read(irs_u8* /*ap_buf*/);
   void write(const irs_u8 *ap_command);
   void tact_on();
   void tact_off();
