@@ -186,8 +186,6 @@ void u309m::meas_comm_t::tick()
   m_th4.tick();
   m_th5.tick();
   
-  m_plis.tick();
-
   mp_meas_comm_data->error =
     mp_meas_comm_pins->error->pin();
   
@@ -333,8 +331,10 @@ u309m::supply_plis_t::supply_plis_t (
   m_tact_freq(a_tact_freq),
   mp_spi(ap_spi),
   mp_cs_pin(ap_cs_pin),
-  m_status(PLIS_SPI_FREE),
-  m_need_write(false)
+  m_status(completed),
+  m_mode(PLIS_SPI_FREE),
+  m_need_write(false),
+  m_need_read(false)
 {
   memset((void*)mp_buf, 0, m_size);
   
@@ -374,9 +374,11 @@ u309m::supply_plis_t::~supply_plis_t()
   
 }
 
-void u309m::supply_plis_t::read(irs_u8* /*ap_buf*/)
+void u309m::supply_plis_t::read(irs_u8* ap_buf)
 {
-
+  //mp_buf = ap_buf;
+  m_need_read = true;
+  m_status = busy;
 }
 
 void u309m::supply_plis_t::write(const irs_u8* ap_command)
@@ -384,6 +386,7 @@ void u309m::supply_plis_t::write(const irs_u8* ap_command)
   mp_buf[0] = ap_command[1];
   mp_buf[1] = ap_command[0];
   m_need_write = true;
+  m_status = busy;
 }
 
 void u309m::supply_plis_t::tact_on()
@@ -396,9 +399,14 @@ void u309m::supply_plis_t::tact_off()
   GPTM0CTL_bit.TAEN = 0;
 }
 
+u309m::supply_plis_t::status_t u309m::supply_plis_t::spi_status()
+{
+  return m_status;
+}
+
 void u309m::supply_plis_t::tick()
 {
-  switch (m_status) {
+  switch (m_mode) {
     case PLIS_SPI_FREE:
     {
       if (m_need_write && (mp_spi->get_status() == irs::spi_t::FREE)) {
@@ -409,17 +417,29 @@ void u309m::supply_plis_t::tick()
           mp_spi->lock();
           mp_cs_pin->clear();
           mp_spi->write(mp_buf, m_size);
-          m_status = PLIS_SPI_WRITE;
+          m_mode = PLIS_SPI_RESET;
           m_need_write = false;
+        }
+      } else if (m_need_read && (mp_spi->get_status() == irs::spi_t::FREE)) {
+        if (!mp_spi->get_lock()) {
+          mp_spi->set_order(irs::spi_t::MSB);
+          mp_spi->set_polarity(irs::spi_t::RISING_EDGE);
+          mp_spi->set_phase(irs::spi_t::LEAD_EDGE);
+          mp_spi->lock();
+          mp_cs_pin->clear();
+          mp_spi->read(mp_buf, m_size);
+          m_mode = PLIS_SPI_RESET;
+          m_need_read = false;
         }
       }
     } break;
-    case PLIS_SPI_WRITE:
+    case PLIS_SPI_RESET:
     {
       if (mp_spi->get_status() == irs::spi_t::FREE) {
         mp_cs_pin->set();
         mp_spi->unlock();
-        m_status = PLIS_SPI_FREE;
+        m_status = completed;
+        m_mode = PLIS_SPI_FREE;
       }
     } break;
   }
@@ -436,16 +456,144 @@ u309m::supply_comm_t::supply_comm_t(
   m_command_apply(false),
   m_comm_on(false),
   m_command(0),
-  m_mode(command_check)
+  m_mode(mode_command_check),
+  m_plis_reset(false)
 {
 }
 
 void u309m::supply_comm_t::make_command()
 {
+  m_command = 0;
+  m_command = (
+    (mp_supply_comm_data->on << 2) |
+    (mp_supply_comm_data->polarity_calibrated << 3) |
+    (mp_supply_comm_data->polarity_etalon << 4) |
+    (mp_supply_comm_data->calibrated_cell << 5) |
+    (mp_supply_comm_data->etalon_cell << 9) |
+    (mp_supply_comm_data->supply_index << 13)
+  );
+}
 
+void u309m::supply_comm_t::init_default()
+{
+  m_comm_on = 0;
+  mp_supply_comm_data->on = m_comm_on;
+  mp_supply_comm_data->supply_index = 0;
+  mp_supply_comm_data->calibrated_cell = 0;
+  mp_supply_comm_data->etalon_cell = 0;
+}
+
+u309m::supply_comm_t::status_t u309m::supply_comm_t::get_status()
+{
+  m_plis.tact_on();
+  irs_u16 response = 0;
+  m_plis.read(reinterpret_cast<irs_u8*>(&response));
+  while(m_plis.spi_status() != supply_plis_t::completed);
+  m_plis.tact_off();
+  irs_u16 status_mask = IRS_U16_MAX;
+  status_mask <<= 14;
+  status_mask >>= 14;
+  irs_u16 error_mask = IRS_U16_MAX;
+  error_mask <<= 15;
+  error_mask >>= 15;
+  if (!(response&error_mask)) {
+    if (response&status_mask) {
+      return busy;
+    } else {
+      return completed;
+    }
+  } else {
+    return error;
+  }
 }
 
 void u309m::supply_comm_t::tick()
 {
   m_plis.tick();
+#ifndef NOP
+  bool plis_reset_change =
+    (m_plis_reset != mp_supply_comm_data->reset);
+  if (plis_reset_change) {
+    m_plis_reset = mp_supply_comm_data->reset;
+    if (m_plis_reset) {
+      init_default();
+      mp_supply_comm_pins->reset->set();
+      m_plis.tact_on();
+      m_mode = mode_reset;
+    }
+  }
+  
+  switch (m_mode) {
+    case mode_command_check:
+    {
+      bool meas_comm_on_change =
+        (m_comm_on != mp_supply_comm_data->on);
+      if (meas_comm_on_change) {
+        m_comm_on = mp_supply_comm_data->on;
+        if (!m_comm_on) {
+          mp_supply_comm_pins->reset->set();
+          m_plis.tact_on();
+          m_mode = mode_reset;
+          break;
+        }
+      }
+      if (m_comm_on) {
+        bool meas_comm_apply_bit_change =
+          (m_command_apply != mp_supply_comm_data->apply);
+        if (meas_comm_apply_bit_change) {
+          m_command_apply = mp_supply_comm_data->apply;
+          if (m_command_apply) {
+            /*m_plis.tact_on();
+            irs_u16 command = m_read_only;
+            m_plis.write(command);*/
+            m_mode = mode_send_command;
+          }
+        }
+      } else {
+        if (mp_supply_comm_data->apply) {
+          mp_supply_comm_data->apply = 0;
+        }
+      }
+    } break;
+    case mode_send_command:
+    {
+      if (get_status() == completed) {
+        m_plis.tact_on();
+        make_command();
+        m_plis.write(reinterpret_cast<irs_u8*>(&m_command));
+      }
+    } break;
+    case mode_reset:
+    {
+      status_t status = get_status();
+      if (status == completed) {
+        mp_supply_comm_pins->reset->clear();
+        m_plis.tact_off();
+        mp_supply_comm_data->apply = 0;
+        m_command_apply = 0;
+        m_mode = mode_command_check;
+      } else if (status == error) {
+        mp_supply_comm_data->error = 1;
+        mp_supply_comm_data->apply = 0;
+        m_command_apply = 0;
+        m_mode = mode_command_check;
+      }
+    } break;
+    case mode_send_command_end:
+    {
+      status_t status = get_status();
+      if (status == completed) {
+        m_plis.tact_off();
+        mp_supply_comm_data->apply = 0;
+        m_command_apply = 0;
+        m_mode = mode_command_check;
+      } else if (status == error) {
+        mp_supply_comm_data->error = 1;
+        mp_supply_comm_data->apply = 0;
+        m_command_apply = 0;
+        m_mode = mode_command_check;
+      }
+    } break;
+  }
+#endif // NOP
 }

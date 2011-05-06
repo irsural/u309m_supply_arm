@@ -15,6 +15,7 @@ enum supply_type_t{
 
 struct supply_comm_data_t
 {
+  irs::conn_data_t<irs_u8> supply_index;
   irs::conn_data_t<irs_u8> etalon_cell;
   irs::conn_data_t<irs_u8> calibrated_cell;
   irs::bit_data_t polarity_etalon;
@@ -22,6 +23,7 @@ struct supply_comm_data_t
   irs::bit_data_t apply;
   irs::bit_data_t on;
   irs::bit_data_t error;
+  irs::bit_data_t reset;
   
   supply_comm_data_t(irs::mxdata_t *ap_data = IRS_NULL,
     irs_uarc a_index = 0, irs_uarc* ap_size = IRS_NULL)
@@ -36,6 +38,7 @@ struct supply_comm_data_t
   {
     irs_uarc index = a_start_index;
     
+    index = supply_index.connect(ap_data, index);
     index = etalon_cell.connect(ap_data, index);
     index = calibrated_cell.connect(ap_data, index);
     polarity_etalon.connect(ap_data, index, 0);
@@ -43,6 +46,7 @@ struct supply_comm_data_t
     apply.connect(ap_data, index, 2);
     on.connect(ap_data, index, 3);
     error.connect(ap_data, index, 4);
+    reset.connect(ap_data, index, 5);
     index++;
     
     return index;
@@ -336,13 +340,6 @@ struct meas_comm_pins_t {
 struct supply_comm_pins_t {
   irs::gpio_pin_t* cs;
   irs::gpio_pin_t* reset;
-  irs::gpio_pin_t* apply;
-  irs::gpio_pin_t* error;
-  irs::gpio_pin_t* termo_sense_1;
-  irs::gpio_pin_t* termo_sense_2;
-  irs::gpio_pin_t* termo_sense_3;
-  irs::gpio_pin_t* termo_sense_4;
-  irs::gpio_pin_t* termo_sense_5;
   
   supply_comm_pins_t(
     irs::gpio_pin_t* ap_cs,

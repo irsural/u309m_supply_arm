@@ -67,25 +67,22 @@ private:
     }
     virtual void set()
     {
+      mp_cs_data->cs_enable->clear();
+    }
+    virtual void clear()
+    {
+      mp_cs_data->cs_enable->set();
       if (m_index <= first_demux_end) {
         mp_cs_data->cs_code_4->clear();
-        set_or_clear_pin(mask_gen_demux_1(0), mp_cs_data->cs_code_0);
-        set_or_clear_pin(mask_gen_demux_1(1), mp_cs_data->cs_code_1);
-        set_or_clear_pin(mask_gen_demux_1(2), mp_cs_data->cs_code_2);
-        set_or_clear_pin(mask_gen_demux_1(3), mp_cs_data->cs_code_3);
       } else if ((m_index >= second_demux_begin) &&
         (m_index <= second_demux_end))
       {
         mp_cs_data->cs_code_4->set();
-        set_or_clear_pin(mask_gen_demux_2(0), mp_cs_data->cs_code_0);
-        set_or_clear_pin(mask_gen_demux_2(1), mp_cs_data->cs_code_1);
-        set_or_clear_pin(mask_gen_demux_2(2), mp_cs_data->cs_code_2);
-        set_or_clear_pin(mask_gen_demux_2(3), mp_cs_data->cs_code_3);
       }
-    }
-    virtual void clear()
-    {
-      mp_cs_data->cs_enable->clear();
+      set_or_clear_pin(mask_gen_demux(0), mp_cs_data->cs_code_0);
+      set_or_clear_pin(mask_gen_demux(1), mp_cs_data->cs_code_1);
+      set_or_clear_pin(mask_gen_demux(2), mp_cs_data->cs_code_2);
+      set_or_clear_pin(mask_gen_demux(3), mp_cs_data->cs_code_3);
     }
     virtual void set_dir(gpio_pin_t::dir_t /*a_dir*/)
     {
@@ -100,26 +97,18 @@ private:
     spi_demux_cs_data_t* mp_cs_data;
     irs_u8 m_index;
     
-    irs_u8 mask_gen_demux_1(irs_u8 a_bit)
+    irs_u8 mask_gen_demux(irs_u8 a_bit)
     {
-      irs_u8 left_shift = 7 - a_bit;
-      irs_u8 right_shift = a_bit;
-      irs_u8 mask = m_index;
-      mask <<= left_shift;
-      mask >>= left_shift;
-      mask >>= right_shift;
-      mask <<= right_shift;
-      return mask;
-    }
-    irs_u8 mask_gen_demux_2(irs_u8 a_bit)
-    {
-      irs_u8 left_shift = 7 - a_bit;
-      irs_u8 right_shift = a_bit;
-      irs_u8 mask = m_index - second_demux_begin;
-      mask <<= left_shift;
-      mask >>= left_shift;
-      mask >>= right_shift;
-      mask <<= right_shift;
+      irs_u8 mask = IRS_U8_MAX;
+      mask >>= 7;
+      mask <<= a_bit;
+      if (m_index <= first_demux_end) {
+        mask&=m_index;
+      } else if ((m_index >= second_demux_begin) &&
+        (m_index <= second_demux_end))
+      {
+        mask&=(m_index - second_demux_begin);
+      }
       return mask;
     }
     void set_or_clear_pin(bool a_bit, irs::gpio_pin_t* a_pin)
@@ -187,17 +176,17 @@ private:
     }
     virtual void set()
     {
+      mp_cs_data->cs_code_0->clear();
+      mp_cs_data->cs_code_1->clear();
+      mp_cs_data->cs_code_2->clear();
+    }
+    virtual void clear()
+    {
       if ((m_index > 0) && (m_index < 8)) {
         set_or_clear_pin(mask_gen(0), mp_cs_data->cs_code_0);
         set_or_clear_pin(mask_gen(1), mp_cs_data->cs_code_1);
         set_or_clear_pin(mask_gen(2), mp_cs_data->cs_code_2);
       }
-    }
-    virtual void clear()
-    {
-      mp_cs_data->cs_code_0->clear();
-      mp_cs_data->cs_code_1->clear();
-      mp_cs_data->cs_code_2->clear();
     }
     virtual void set_dir(gpio_pin_t::dir_t /*a_dir*/)
     {
@@ -208,14 +197,10 @@ private:
     
     irs_u8 mask_gen(irs_u8 a_bit)
     {
-      irs_u8 left_shift = 7 - a_bit;
-      irs_u8 right_shift = a_bit;
-      irs_u8 mask = m_index;
-      mask <<= left_shift;
-      mask >>= left_shift;
-      mask >>= right_shift;
-      mask <<= right_shift;
-      return mask;
+      irs_u8 mask = IRS_U8_MAX;
+      mask >>= 7;
+      mask <<= a_bit;
+      return mask&m_index;
     }
     void set_or_clear_pin(bool a_bit, irs::gpio_pin_t* a_pin)
     {

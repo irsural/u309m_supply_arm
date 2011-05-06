@@ -112,10 +112,10 @@ private:
 class supply_plis_t
 {
 public:
-  enum plis_status_t {
-    BUSY = 1,
-    COMPLETE = 2,
-    ERROR = 3
+  enum status_t
+  {
+    completed,
+    busy
   };
   
   supply_plis_t(
@@ -124,10 +124,11 @@ public:
     irs::gpio_pin_t* ap_cs_pin
   );
   ~supply_plis_t();
-  void read(irs_u8* /*ap_buf*/);
+  void read(irs_u8* ap_buf);
   void write(const irs_u8 *ap_command);
   void tact_on();
   void tact_off();
+  status_t spi_status();
   void tick();
 private:
   enum {
@@ -135,10 +136,10 @@ private:
     TIMER_16_BIT = 0x4,
     PERIODIC_MODE = 0x2
   };
-  enum status_t
+  enum mode_t
   {
     PLIS_SPI_FREE,
-    PLIS_SPI_WRITE
+    PLIS_SPI_RESET
   };
   enum {
     m_size = 2
@@ -148,7 +149,9 @@ private:
   irs::gpio_pin_t* mp_cs_pin;
   irs_u8 mp_buf[m_size];
   status_t m_status;
+  mode_t m_mode;
   bool m_need_write;
+  bool m_need_read;
 }; // supply_plis_t
 
 class supply_comm_t
@@ -163,7 +166,18 @@ public:
   void tick();
 private:
   enum tick_mode_t {
-    command_check
+    mode_command_check,
+    mode_send_command,
+    mode_reset,
+    mode_send_command_end
+  };
+  enum status_t {
+    completed,
+    busy,
+    error
+  };
+  enum {
+    m_read_only = 2
   };
   
   supply_comm_pins_t* mp_supply_comm_pins;
@@ -173,6 +187,10 @@ private:
   bool m_comm_on;
   irs_u16 m_command;
   tick_mode_t m_mode;
+  bool m_plis_reset;
+  
+  status_t get_status();
+  void init_default();
 }; // supply_comm_t
 
 } // namespace u309m
