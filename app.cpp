@@ -8,15 +8,14 @@
 
 u309m::app_t::app_t(cfg_t* ap_cfg):
   mp_cfg(ap_cfg),
-  m_meas_comm_app(
-    //ap_cfg->adc(),
-    ap_cfg->spi_general_purpose(),
-    ap_cfg->spi_supply_comm_plis(),
-    ap_cfg->command_pins()->meas_comm,
-    &ap_cfg->eth_data()->meas_comm
-  ),
-  //m_supply_comm_app(ap_cfg),
-  /*m_supply_200V(ap_cfg->spi_general_purpose(),
+  #ifdef MEAS_COMM_TEST
+  mp_meas_comm(ap_cfg->meas_comm()),
+  #endif // MEAS_COMM_TEST
+  #ifdef SUPPLY_COMM_TEST
+  mp_supply_comm(ap_cfg->supply_comm()),
+  #endif // SUPPLY_COMM_TEST
+  #ifdef SUPPLY_TEST
+  m_supply_200V(ap_cfg->spi_general_purpose(),
     ap_cfg->command_pins()->supply_200V,
     &ap_cfg->eth_data()->supply_200V,
     &ap_cfg->eeprom_data()->supply_200V),
@@ -35,7 +34,8 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_supply_17A(ap_cfg->spi_general_purpose(),
     ap_cfg->command_pins()->supply_17A,
     &ap_cfg->eth_data()->supply_17A,
-    &ap_cfg->eeprom_data()->supply_17A),*/
+    &ap_cfg->eeprom_data()->supply_17A),
+  #endif // SUPPLY_TEST
   m_bistable_rele_change(false),
   m_mode(rele_check_mode),
   m_rele_timer(irs::make_cnt_ms(10)),
@@ -49,16 +49,22 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
 void u309m::app_t::tick()
 {
   mp_cfg->tick();
-  m_meas_comm_app.tick();
+  #ifdef MEAS_COMM_TEST
+  mp_meas_comm->tick();
+  #endif // MEAS_COMM_TEST
+  #ifdef SUPPLY_COMM_TEST
+  mp_supply_comm->tick();
+  #endif // SUPPLY_COMM_TEST
   
-  //m_supply_comm_app.tick();
-  /*m_supply_200V.tick();
+  #ifdef SUPPLY_TEST
+  m_supply_200V.tick();
   m_supply_20V.tick();
   m_supply_2V.tick();
   m_supply_1A.tick();
-  m_supply_17A.tick();*/
+  m_supply_17A.tick();
+  #endif // SUPPLY_TEST
   
-  /*switch (m_mode)
+  switch (m_mode)
   {
     case rele_check_mode:
     {
@@ -126,11 +132,6 @@ void u309m::app_t::tick()
       } else {
         mp_cfg->rele_ext_pins()->SYM_OFF->clear();
       }
-      if (mp_cfg->eth_data()->rele_ext.SYM_OFF_TEST) {
-        mp_cfg->rele_ext_pins()->SYM_OFF_TEST->set();
-      } else {
-        mp_cfg->rele_ext_pins()->SYM_OFF_TEST->clear();
-      }
       if (m_bistable_rele_change) {
         m_rele_timer.start();
         m_mode = rele_voltage_off_mode;
@@ -151,6 +152,7 @@ void u309m::app_t::tick()
         m_mode = rele_check_mode;
       }
     } break;
-  }*/
-  
+  }
+  mp_cfg->eth_data()->rele_ext.SYM_OFF_TEST =
+    mp_cfg->rele_ext_pins()->SYM_OFF_TEST->pin();
 }

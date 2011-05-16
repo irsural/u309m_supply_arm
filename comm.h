@@ -148,6 +148,7 @@ private:
   irs::arm::arm_spi_t* mp_spi;
   irs::gpio_pin_t* mp_cs_pin;
   irs_u8 mp_buf[m_size];
+  irs_u8* mp_read_buf;
   status_t m_status;
   mode_t m_mode;
   bool m_need_write;
@@ -178,6 +179,17 @@ private:
   };
   enum {
     m_read_only = 2
+  };
+  enum {
+    PLIS = (1 << 8),
+    SUPPLY_17A = (1 << 9),
+    SUPPLY_1A = (1 << 10),
+    SUPPLY_2V = (1 << 11),
+    SUPPLY_20V = (1 << 12),
+    SUPPLY_200V = (1 << 13),
+    IZM_TH = (1 << 14),
+    EEPROM = (1 << 15),
+    MISO_MASK_EN = 1
   };
   
   supply_comm_pins_t* mp_supply_comm_pins;

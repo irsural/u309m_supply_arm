@@ -331,6 +331,7 @@ u309m::supply_plis_t::supply_plis_t (
   m_tact_freq(a_tact_freq),
   mp_spi(ap_spi),
   mp_cs_pin(ap_cs_pin),
+  mp_read_buf(IRS_NULL),
   m_status(completed),
   m_mode(PLIS_SPI_FREE),
   m_need_write(false),
@@ -376,7 +377,7 @@ u309m::supply_plis_t::~supply_plis_t()
 
 void u309m::supply_plis_t::read(irs_u8* ap_buf)
 {
-  //mp_buf = ap_buf;
+  mp_read_buf = ap_buf;
   m_need_read = true;
   m_status = busy;
 }
@@ -406,6 +407,7 @@ u309m::supply_plis_t::status_t u309m::supply_plis_t::spi_status()
 
 void u309m::supply_plis_t::tick()
 {
+  mp_spi->tick();
   switch (m_mode) {
     case PLIS_SPI_FREE:
     {
@@ -427,7 +429,7 @@ void u309m::supply_plis_t::tick()
           mp_spi->set_phase(irs::spi_t::LEAD_EDGE);
           mp_spi->lock();
           mp_cs_pin->clear();
-          mp_spi->read(mp_buf, m_size);
+          mp_spi->read(mp_read_buf, m_size);
           m_mode = PLIS_SPI_RESET;
           m_need_read = false;
         }
@@ -459,6 +461,19 @@ u309m::supply_comm_t::supply_comm_t(
   m_mode(mode_command_check),
   m_plis_reset(false)
 {
+  m_plis.tact_on();
+  #ifdef NOP
+  // All ON:
+  irs_u16 command = (PLIS|SUPPLY_17A|SUPPLY_1A|SUPPLY_2V|SUPPLY_20V|
+    SUPPLY_200V|IZM_TH|EEPROM|MISO_MASK_EN);
+  #endif // NOP
+  irs_u16 command = (PLIS|EEPROM|IZM_TH|MISO_MASK_EN);
+  m_plis.write(reinterpret_cast<irs_u8*>(&command));
+  m_plis.tick();
+  while(ap_spi->get_status() != irs::spi_t::FREE) {
+    m_plis.tick();
+  }
+  m_plis.tact_off();
 }
 
 void u309m::supply_comm_t::make_command()
@@ -561,6 +576,7 @@ void u309m::supply_comm_t::tick()
         m_plis.tact_on();
         make_command();
         m_plis.write(reinterpret_cast<irs_u8*>(&m_command));
+        m_mode = mode_send_command_end;
       }
     } break;
     case mode_reset:

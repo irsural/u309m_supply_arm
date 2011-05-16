@@ -263,14 +263,14 @@ struct tr_data_t {
 
 struct supply_eth_data_t {
   irs::conn_data_t<irs_u16> resistance_code;
-  dac_data_t prev_dac_data;
-  adc_data_t prev_adc_data;
-  dac_data_t fin_dac_data;
-  adc_data_t fin_adc_data;
-  tr_data_t base_tr_data;
-  temp_data_t base_temp_data;
-  tr_data_t aux_tr_data;
-  temp_data_t aux_temp_data;
+  dac_data_t prev_dac_data; // 8
+  adc_data_t prev_adc_data; // 8
+  dac_data_t fin_dac_data; // 8
+  adc_data_t fin_adc_data; // 8
+  tr_data_t base_tr_data; // 32
+  temp_data_t base_temp_data; // 8
+  tr_data_t aux_tr_data; // 32
+  temp_data_t aux_temp_data; // 8
 
   supply_eth_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
     irs_uarc* ap_size = IRS_NULL)

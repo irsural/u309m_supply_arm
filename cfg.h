@@ -15,10 +15,17 @@
 #include <irsmbus.h>
 #include <irsmem.h>
 
+#include "comm.h"
 #include "data.h"
 #include "demux.h"
 
 #include <irsfinal.h>
+
+#define MEAS_COMM_TEST
+#define SUPPLY_COMM_TEST
+//#define SUPPLY_TEST
+#define EEPROM_TEST
+#define ARM_ADC_TEST // work
 
 namespace u309m {
 
@@ -67,11 +74,11 @@ struct eth_data_t {
   irs::conn_data_t<irs_u8> ip_1;
   irs::conn_data_t<irs_u8> ip_2;
   irs::conn_data_t<irs_u8> ip_3;
-  rele_ext_eth_data_t rele_ext;
-  supply_comm_data_t supply_comm;
-  meas_comm_data_t meas_comm;
-  arm_adc_data_t arm_adc;
-  supply_eth_data_t supply_200V;
+  rele_ext_eth_data_t rele_ext; // 2
+  supply_comm_data_t supply_comm; // 4
+  meas_comm_data_t meas_comm; // 4
+  arm_adc_data_t arm_adc; // 44
+  supply_eth_data_t supply_200V; // 114
   supply_eth_data_t supply_20V;
   supply_eth_data_t supply_2V;
   supply_eth_data_t supply_1A;
@@ -320,6 +327,8 @@ public:
   eeprom_data_t* eeprom_data();
   irs::hardflow::simple_udp_flow_t* hardflow();
   rele_ext_pins_t* rele_ext_pins();
+  meas_comm_t* meas_comm();
+  supply_comm_t* supply_comm();
   void tick();
   
 private:
@@ -419,11 +428,6 @@ private:
   dac_demux_t::dac_demux_cs_data_t m_dac_demux_cs_data;
   dac_demux_t m_dac_demux;
   
-  /*irs::eeprom_command_t::size_type m_eeprom_size;
-  irs::eeprom_command_t m_eeprom_command;
-  irs::eeprom_spi_t m_eeprom;
-  eeprom_data_t m_eeprom_data;*/
-  
   mxmac_t m_local_mac;
   irs::arm::arm_ethernet_t m_arm_eth;
   mxip_t m_local_ip;
@@ -452,7 +456,14 @@ private:
   supply_pins_t m_supply_17A_pins;
   command_pins_t m_command_pins;
   
-  /*irs::arm::io_pin_t m_SYM_2V_on;
+  #ifdef MEAS_COMM_TEST
+  meas_comm_t m_meas_comm;
+  #endif // MEAS_COMM_TEST
+  #ifdef SUPPLY_COMM_TEST
+  supply_comm_t m_supply_comm;
+  #endif // SUPPLY_COMM_TEST
+  
+  irs::arm::io_pin_t m_SYM_2V_on;
   irs::arm::io_pin_t m_SYM_2V_off;
   irs::arm::io_pin_t m_SYM_20V_on;
   irs::arm::io_pin_t m_SYM_20V_off;
@@ -465,7 +476,14 @@ private:
   irs::arm::io_pin_t m_REL_220V;
   irs::arm::io_pin_t m_SYM_OFF;
   irs::arm::io_pin_t m_SYM_OFF_TEST;
-  rele_ext_pins_t m_rele_ext_pins;*/
+  rele_ext_pins_t m_rele_ext_pins;
+  
+  #ifdef EEPROM_TEST
+  irs::eeprom_command_t::size_type m_eeprom_size;
+  irs::eeprom_command_t m_eeprom_command;
+  irs::eeprom_spi_t m_eeprom;
+  eeprom_data_t m_eeprom_data;
+  #endif // EEPROM_TEST
     
   irs::loop_timer_t m_timer;
 };
