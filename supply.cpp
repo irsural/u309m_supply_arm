@@ -263,7 +263,7 @@ void u309m::supply_t::tick()
   if (temp_base_pid_ki_changed) {
     m_temp_base_pid_data.ki = temp_base_pid_ki;
     #ifdef EEPROM_TEST
-    mp_eeprom_data->temp_base_ki = mp_eth_data->base_tr_data.temp_ki;
+    mp_eeprom_data->temp_base_ki = temp_base_pid_ki;
     #endif // EEPROM_TEST
   }
   
@@ -274,7 +274,7 @@ void u309m::supply_t::tick()
   if (temp_base_pid_kd_changed) {
     m_temp_base_pid_data.kd = temp_base_pid_kd;
     #ifdef EEPROM_TEST
-    mp_eeprom_data->temp_base_kd = mp_eth_data->base_tr_data.temp_kd;
+    mp_eeprom_data->temp_base_kd = temp_base_pid_kd;
     #endif // EEPROM_TEST
   }
 
@@ -300,7 +300,7 @@ void u309m::supply_t::tick()
   if (temp_aux_pid_ki_changed) {
     m_temp_aux_pid_data.ki = temp_aux_pid_ki;
     #ifdef EEPROM_TEST
-    mp_eeprom_data->temp_aux_ki = mp_eth_data->aux_tr_data.temp_ki;
+    mp_eeprom_data->temp_aux_ki = temp_aux_pid_ki;
     #endif // EEPROM_TEST
   }
   
@@ -311,7 +311,7 @@ void u309m::supply_t::tick()
   if (temp_aux_pid_kd_changed) {
     m_temp_aux_pid_data.kd = temp_aux_pid_kd;
     #ifdef EEPROM_TEST
-    mp_eeprom_data->temp_aux_kd = mp_eth_data->aux_tr_data.temp_kd;
+    mp_eeprom_data->temp_aux_kd = temp_aux_pid_kd;
     #endif // EEPROM_TEST
   } 
 
