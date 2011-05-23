@@ -42,8 +42,11 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_SYM_2V(mp_cfg->eth_data()->rele_ext.SYM_2V),
   m_SYM_20V(mp_cfg->eth_data()->rele_ext.SYM_20V),
   m_SYM_200V(mp_cfg->eth_data()->rele_ext.SYM_200V),
-  m_KZ_2V(mp_cfg->eth_data()->rele_ext.KZ_2V)
+  m_KZ_2V(mp_cfg->eth_data()->rele_ext.KZ_2V),
+  //
+  m_rel_220V_timer(irs::make_cnt_s(1))
 {
+  m_rel_220V_timer.start();
 }
 
 void u309m::app_t::tick()
@@ -63,6 +66,13 @@ void u309m::app_t::tick()
   m_supply_1A.tick();
   m_supply_17A.tick();
   #endif // SUPPLY_TEST
+  
+  if (m_rel_220V_timer.check())
+  {
+    m_rel_220V_timer.stop();
+    mp_cfg->rele_ext_pins()->REL_220V->set();
+    mp_cfg->eth_data()->rele_ext.REL_220V = 1;
+  }
   
   switch (m_mode)
   {

@@ -45,6 +45,8 @@ private:
   bool m_SYM_20V;
   bool m_SYM_200V;
   bool m_KZ_2V;
+  //
+  irs::timer_t m_rel_220V_timer;
 }; // app_t
 
 } // namespace u309m

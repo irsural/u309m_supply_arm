@@ -38,7 +38,7 @@ u309m::cfg_t::cfg_t():
   m_dac_cs_code_2(GPIO_PORTB, 2, irs::gpio_pin_t::dir_out),
   m_dac_demux_cs_data(&m_dac_cs_code_0, &m_dac_cs_code_1, &m_dac_cs_code_2),
   m_dac_demux(&m_dac_demux_cs_data),
-  
+
   #ifndef EEPROM_TEST
   m_local_mac(irs::make_mxmac(0, 0, 192, 168, 0, 211)),
   #else // EEPROM_TEST
@@ -155,13 +155,13 @@ u309m::cfg_t::cfg_t():
   irs::string ip_0_str = irst("");
   irs::number_to_string(m_eeprom_data.ip_0, &ip_0_str);
   irs::string ip_1_str = irst("");
-  irs::number_to_string(m_eeprom_data.ip_0, &ip_1_str);
+  irs::number_to_string(m_eeprom_data.ip_1, &ip_1_str);
   irs::string ip_2_str = irst("");
-  irs::number_to_string(m_eeprom_data.ip_0, &ip_2_str);
+  irs::number_to_string(m_eeprom_data.ip_2, &ip_2_str);
   irs::string ip_3_str = irst("");
-  irs::number_to_string(m_eeprom_data.ip_0, &ip_3_str);
-  irs::string ip_str = irst(ip_3_str + "." + ip_2_str + "." +
-    ip_1_str + "." + ip_0_str);
+  irs::number_to_string(m_eeprom_data.ip_3, &ip_3_str);
+  irs::string ip_str = irst(ip_0_str + "." + ip_1_str + "." +
+    ip_2_str + "." + ip_3_str);
   m_simple_hardflow.set_param("local_addr", ip_str);
   #endif // EEPROM_TEST
   m_izm_th_enable.set();
