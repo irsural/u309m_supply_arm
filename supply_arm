@@ -1,0 +1,26 @@
+<NotepadPlus>
+    <Session activeView="0">
+        <mainView activeIndex="2">
+            <File firstVisibleLine="6" xOffset="0" scrollWidth="632" startPos="544" endPos="544" selMode="0" lang="&#x041E;&#x0431;&#x044B;&#x0447;&#x043D;&#x044B;&#x0439; &#x0422;&#x0435;&#x043A;&#x0441;&#x0442;" encoding="-1" filename="D:\Users\Sergey\5-09.txt" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="6608" startPos="0" endPos="0" selMode="0" lang="C++" encoding="-1" filename="D:\Users\Sergey\!Doc\TODO_list.cpp" />
+            <File firstVisibleLine="127" xOffset="0" scrollWidth="37519" startPos="6095" endPos="6095" selMode="0" lang="C++" encoding="-1" filename="D:\Users\Sergey\u309m_supply_arm\cfg.cpp" />
+            <File firstVisibleLine="31" xOffset="0" scrollWidth="37519" startPos="3608" endPos="3608" selMode="0" lang="C++" encoding="-1" filename="D:\Users\Sergey\u309m_supply_arm\supply.cpp" />
+            <File firstVisibleLine="104" xOffset="0" scrollWidth="37519" startPos="5384" endPos="5384" selMode="0" lang="C++" encoding="-1" filename="D:\Users\Sergey\u309m_supply_arm\app.cpp" />
+            <File firstVisibleLine="440" xOffset="0" scrollWidth="37519" startPos="12202" endPos="12202" selMode="0" lang="C++" encoding="-1" filename="D:\Users\Sergey\u309m_supply_arm\comm.cpp" />
+            <File firstVisibleLine="57" xOffset="0" scrollWidth="37519" startPos="1662" endPos="1662" selMode="0" lang="C++" encoding="-1" filename="D:\Users\Sergey\u309m_supply_arm\demux.h" />
+            <File firstVisibleLine="98" xOffset="0" scrollWidth="37519" startPos="2699" endPos="2710" selMode="0" lang="C++" encoding="-1" filename="D:\Users\Sergey\mxsrclib\irsmem.h" />
+            <File firstVisibleLine="45" xOffset="0" scrollWidth="37519" startPos="1205" endPos="1205" selMode="0" lang="C++" encoding="-1" filename="D:\Users\Sergey\mxsrclib\mxdata.h" />
+            <File firstVisibleLine="779" xOffset="0" scrollWidth="37519" startPos="26260" endPos="26260" selMode="0" lang="C++" encoding="-1" filename="D:\Users\Sergey\mxsrclib\irsmem.cpp" />
+        </mainView>
+        <subView activeIndex="1">
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="640" startPos="495" endPos="495" selMode="0" lang="C++" encoding="-1" filename="D:\Users\Sergey\u309m_supply_arm\supply.h" />
+            <File firstVisibleLine="0" xOffset="0" scrollWidth="640" startPos="456" endPos="456" selMode="0" lang="C++" encoding="-1" filename="D:\Users\Sergey\u309m_supply_arm\cfg.h" />
+            <File firstVisibleLine="13" xOffset="0" scrollWidth="640" startPos="414" endPos="414" selMode="0" lang="C++" encoding="-1" filename="D:\Users\Sergey\u309m_supply_arm\app.h" />
+            <File firstVisibleLine="171" xOffset="0" scrollWidth="640" startPos="3659" endPos="3659" selMode="0" lang="C++" encoding="-1" filename="D:\Users\Sergey\u309m_supply_arm\comm.h" />
+            <File firstVisibleLine="44" xOffset="0" scrollWidth="640" startPos="1462" endPos="1462" selMode="0" lang="C++" encoding="-1" filename="D:\Users\Sergey\u309m_supply_arm\main.cpp" />
+            <File firstVisibleLine="333" xOffset="0" scrollWidth="640" startPos="7508" endPos="7508" selMode="0" lang="C++" encoding="-1" filename="D:\Users\Sergey\u309m_supply_arm\data.h" />
+            <File firstVisibleLine="111" xOffset="0" scrollWidth="776" startPos="5078" endPos="5078" selMode="0" lang="C++" encoding="-1" filename="D:\Users\Sergey\u309m_supply_arm\supply.cpp" />
+            <File firstVisibleLine="130" xOffset="0" scrollWidth="640" startPos="6687" endPos="6687" selMode="0" lang="C++" encoding="-1" filename="D:\Users\Sergey\u309m_supply_arm\comm.cpp" />
+        </subView>
+    </Session>
+</NotepadPlus>

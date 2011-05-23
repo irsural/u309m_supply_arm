@@ -1,0 +1,68 @@
+[Interrupts]
+Enabled=1
+[MemoryMap]
+Enabled=0
+Base=0
+UseAuto=0
+TypeViolation=1
+UnspecRange=1
+ActionState=1
+[InterruptLog]
+LogEnabled=0
+SumEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
+SumSortOrder=0
+[TraceHelper]
+Enabled=0
+ShowSource=1
+[DebugChecksum]
+Checksum=683170953
+[DisAssemblyWindow]
+NumStates=_ 1
+State 1=_ 0
+[InstructionProfiling]
+Enabled=_ 0
+[CodeCoverage]
+Enabled=_ 0
+[Profiling]
+Enabled=0
+[StackPlugin]
+Enabled=1
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=1
+WarnHow=0
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[CallStackLog]
+Enabled=0
+[DriverProfiling]
+Enabled=0
+Mode=12217768
+Graph=0
+[Disassemble mode]
+mode=0
+[Breakpoints]
+Bp0=_ "STD_CODE" "0x200000AC" 0 0 0 0 "" 0 "" 0
+Bp1=_ "STD_CODE" "0x20000DA0" 0 0 0 0 "" 0 "" 0
+Bp2=_ "STD_CODE" "0x0000932A" 0 0 0 0 "" 0 "" 0
+Bp3=_ "STD_CODE" "0x0000932C" 0 0 0 0 "" 0 "" 0
+Bp4=_ "STD_CODE" "0x0000932E" 0 0 0 0 "" 0 "" 0
+Bp5=_ "STD_CODE" "0x00009330" 0 0 0 0 "" 0 "" 0
+Bp6=_ "STD_CODE" "0x20001538" 0 0 0 0 "" 0 "" 0
+Bp7=_ "STD_CODE" "0x20000E00" 0 0 0 0 "" 0 "" 0
+Count=8
+[Aliases]
+Count=0
+SuppressDialog=0

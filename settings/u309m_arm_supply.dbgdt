@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Project>
+  <Desktop>
+    <Static>
+      <Debug-Log>
+        
+        
+      <PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Build</Factory></Window><Window><Factory>Find-in-Files</Factory></Window></Windows></PreferedWindows><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1381</ColumnWidth1></Debug-Log>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1035</ColumnWidth1><ColumnWidth2>276</ColumnWidth2><ColumnWidth3>69</ColumnWidth3><PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Debug-Log</Factory></Window><Window><Factory>Find-in-Files</Factory></Window></Windows></PreferedWindows></Build>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>197</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Disassembly>
+        
+        
+        
+      <MixedMode>1</MixedMode><CodeCovShow>1</CodeCovShow><InstrProfShow>1</InstrProfShow></Disassembly>
+      <Watch>
+        <Format>
+          <struct_types/>
+          <watch_formats><Fmt><Key>{W}Watch-0:mask</Key><Value>1</Value></Fmt></watch_formats>
+        </Format>
+        
+        
+        
+        
+      <Column0>255</Column0><Column1>240</Column1><Column2>100</Column2><Column3>100</Column3></Watch>
+      <QuickWatch>
+        <PreferedWindows>
+          
+          
+          
+          
+        <Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Watch</Factory></Window><Window><Factory>Disassembly</Factory></Window><Window><Factory>STACK2</Factory></Window><Window><Factory>CallStack</Factory></Window><Window><Factory>Register</Factory></Window><Window><Factory>Breakpoints</Factory></Window></Windows></PreferedWindows>
+        
+        
+        
+        
+      <Column0>100</Column0><Column1>100</Column1><Column2>100</Column2><Column3>100</Column3></QuickWatch>
+      <STACK2/>
+      <Find-in-Files>
+        
+        
+        
+      <PreferedWindows><Position>3</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows><Window><Factory>Debug-Log</Factory></Window><Window><Factory>Build</Factory></Window></Windows></PreferedWindows><ColumnWidth0>496</ColumnWidth0><ColumnWidth1>70</ColumnWidth1><ColumnWidth2>850</ColumnWidth2></Find-in-Files>
+      <CallStack>
+        
+      <ViewArgs>1</ViewArgs></CallStack>
+    <Register/></Static>
+    <Windows>
+      
+      
+      
+    <Wnd3>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-30781-5567</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>u309m_arm_supply</ExpandedNode><ExpandedNode>u309m_arm_supply/lib</ExpandedNode><ExpandedNode>u309m_arm_supply/lib/arch</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd3><Wnd4>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-28754-11132</Identity>
+            <TabName>Watch</TabName>
+            <Factory>Watch</Factory>
+            <Session>
+              <Expressions>
+                
+              <Expression><Expression>mp_eth_data->comm_meas_data.on</Expression></Expression><Expression><Expression>deque_addr</Expression></Expression><Expression><Expression>deque_addr</Expression></Expression><Expression><Expression>_Map</Expression></Expression><Expression><Expression>m_meas_comm_apply</Expression></Expression><Expression><Expression>ap_buf</Expression></Expression><Expression><Expression>mp_recv_buf</Expression></Expression><Expression><Expression>ee_status</Expression></Expression><Expression><Expression>a_index</Expression></Expression><Expression><Expression>mask</Expression></Expression><Expression><Expression>mask</Expression></Expression><Expression><Expression>p_buf</Expression></Expression><Expression><Expression>*ap_buf</Expression></Expression><Expression><Expression>index</Expression></Expression><Expression><Expression>command</Expression></Expression><Expression><Expression>write_value</Expression></Expression><Expression><Expression>*(float*)ap_buf</Expression></Expression></Expressions>
+              
+              
+              
+              
+              
+            <TabId>0</TabId><Column0>255</Column0><Column1>240</Column1><Column2>100</Column2><Column3>100</Column3></Session>
+          </Tab>
+          <Tab>
+            <Identity>TabID-8762-5570</Identity>
+            <TabName>Disassembly</TabName>
+            <Factory>Disassembly</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-20999-1229</Identity>
+            <TabName>Stack</TabName>
+            <Factory>STACK2</Factory>
+            <Session>
+              
+              
+              
+              
+              
+              
+              
+              
+              
+            <ShowVariables>1</ShowVariables><ShowOffsets>1</ShowOffsets><UnitWidth>4</UnitWidth><SelectedStack>0</SelectedStack><AddressColWidth>95</AddressColWidth><StackColWidth>95</StackColWidth><SymbolColWidth>90</SymbolColWidth><ValueColWidth>60</ValueColWidth><FrameColWidth>60</FrameColWidth></Session>
+          </Tab>
+          <Tab>
+            <Identity>TabID-3039-20806</Identity>
+            <TabName>Call Stack</TabName>
+            <Factory>CallStack</Factory>
+            <Session/>
+          </Tab>
+        <Tab><Identity>TabID-2140-29076</Identity><TabName>Register</TabName><Factory>Register</Factory><Session><State8>SHCSR</State8><REG1>0</REG1><REG2>0</REG2><Group>7</Group><States>8</States><State0>CFSR</State0><State1>FMC</State1><State2>MACIA0</State2><State3>MACIA1</State3><State4>MACMDV</State4><State5>MACNP</State5><State6>MACTHR</State6><State7>SHCSR</State7></Session></Tab><Tab><Identity>TabID-13408-8999</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory></Tab><Tab><Identity>TabID-4881-2722</Identity><TabName>Watch</TabName><Factory>Watch</Factory><Session><Expressions><Expression><Expression>crc32_flash</Expression></Expression><Expression><Expression>crc_new</Expression></Expression><Expression><Expression>crc_old</Expression></Expression><Expression><Expression>m_status</Expression></Expression><Expression><Expression>status</Expression></Expression><Expression><Expression>index</Expression></Expression></Expressions><TabId>1</TabId><Column0>255</Column0><Column1>240</Column1><Column2>100</Column2><Column3>100</Column3></Session></Tab></Tabs>
+        
+      <SelectedTab>6</SelectedTab></Wnd4><Wnd5><Tabs><Tab><Identity>TabID-22235-18525</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd5></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\data.h</Filename><XPos>0</XPos><YPos>197</YPos><SelStart>5573</SelStart><SelEnd>6110</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\comm.h</Filename><XPos>0</XPos><YPos>174</YPos><SelStart>3601</SelStart><SelEnd>3607</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\supply.cpp</Filename><XPos>0</XPos><YPos>109</YPos><SelStart>4276</SelStart><SelEnd>4276</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\supply.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>437</SelStart><SelEnd>437</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\app.h</Filename><XPos>0</XPos><YPos>24</YPos><SelStart>396</SelStart><SelEnd>396</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\comm.cpp</Filename><XPos>0</XPos><YPos>423</YPos><SelStart>11796</SelStart><SelEnd>11796</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\app.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>289</SelStart><SelEnd>289</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\irsadc.cpp</Filename><XPos>0</XPos><YPos>122</YPos><SelStart>3047</SelStart><SelEnd>3047</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\demux.h</Filename><XPos>0</XPos><YPos>63</YPos><SelStart>2083</SelStart><SelEnd>2083</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\irsmem.h</Filename><XPos>0</XPos><YPos>94</YPos><SelStart>2458</SelStart><SelEnd>2469</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\arch\arm\irsarchint.cpp</Filename><XPos>0</XPos><YPos>29</YPos><SelStart>927</SelStart><SelEnd>927</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\irsmem.cpp</Filename><XPos>0</XPos><YPos>807</YPos><SelStart>25725</SelStart><SelEnd>25725</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\arch\arm\armspi.cpp</Filename><XPos>0</XPos><YPos>684</YPos><SelStart>15227</SelStart><SelEnd>15227</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\arch\arm\irsarmutil.h</Filename><XPos>0</XPos><YPos>12</YPos><SelStart>862</SelStart><SelEnd>862</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\cfg.cpp</Filename><XPos>0</XPos><YPos>126</YPos><SelStart>6261</SelStart><SelEnd>6261</SelEnd></Tab><ActiveTab>14</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\timer.cpp</Filename><XPos>0</XPos><YPos>194</YPos><SelStart>3784</SelStart><SelEnd>3784</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main.cpp</Filename><XPos>0</XPos><YPos>30</YPos><SelStart>828</SelStart><SelEnd>828</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\cfg.h</Filename><XPos>0</XPos><YPos>212</YPos><SelStart>7609</SelStart><SelEnd>7609</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\irserror.h</Filename><XPos>0</XPos><YPos>489</YPos><SelStart>14327</SelStart><SelEnd>14327</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\mxdatastd.h</Filename><XPos>0</XPos><YPos>167</YPos><SelStart>4955</SelStart><SelEnd>4955</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\irsmbus.cpp</Filename><XPos>0</XPos><YPos>884</YPos><SelStart>34998</SelStart><SelEnd>34998</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-00b0aa48><key>iaridepm.enu1</key></Toolbar-00b0aa48><Toolbar-05fc1c80><key>armjlink.enu1</key></Toolbar-05fc1c80></Sizes></Row0><Row1><Sizes><Toolbar-0612fa70><key>debuggergui.enu1</key></Toolbar-0612fa70></Sizes></Row1></Top><Left><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>540</Bottom><Right>287</Right><x>-2</x><y>-2</y><xscreen>145</xscreen><yscreen>156</yscreen><sizeHorzCX>100694</sizeHorzCX><sizeHorzCY>192831</sizeHorzCY><sizeVertCX>200694</sizeVertCX><sizeVertCY>669963</sizeVertCY></Rect></Wnd3></Sizes></Row0></Left><Right><Row0><Sizes><Wnd4><Rect><Top>-2</Top><Left>-2</Left><Bottom>540</Bottom><Right>546</Right><x>-2</x><y>-2</y><xscreen>145</xscreen><yscreen>156</yscreen><sizeHorzCX>100694</sizeHorzCX><sizeHorzCY>192831</sizeHorzCY><sizeVertCX>380556</sizeVertCX><sizeVertCY>669963</sizeVertCY></Rect></Wnd4></Sizes></Row0></Right><Bottom><Row0><Sizes><Wnd5><Rect><Top>-2</Top><Left>-2</Left><Bottom>201</Bottom><Right>1442</Right><x>-2</x><y>-2</y><xscreen>1444</xscreen><yscreen>203</yscreen><sizeHorzCX>1002778</sizeHorzCX><sizeHorzCY>250927</sizeHorzCY><sizeVertCX>139583</sizeVertCX><sizeVertCY>250927</sizeVertCY></Rect></Wnd5></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Project>
+
+
