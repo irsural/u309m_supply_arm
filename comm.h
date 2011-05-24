@@ -14,6 +14,11 @@
 
 namespace u309m {
 
+enum
+{
+  plis_tact_freq = 1000000
+};
+
 class meas_plis_t
 {
 public:
@@ -22,7 +27,7 @@ public:
     COMPLETE = 2,
     ERROR = 3
   };
-  
+
   meas_plis_t(
     irs_u32 a_tact_freq,
     irs::arm::arm_spi_t* ap_spi,
@@ -68,7 +73,7 @@ public:
   void make_command();
   void init_default();
   void tick();
-  
+
 private:
   enum meas_mode_t {
     COILS,
@@ -117,7 +122,7 @@ public:
     completed,
     busy
   };
-  
+
   supply_plis_t(
     irs_u32 a_tact_freq,
     irs::arm::arm_spi_t* ap_spi,
@@ -191,7 +196,7 @@ private:
     EEPROM = (1 << 15),
     MISO_MASK_EN = 1
   };
-  
+
   supply_comm_pins_t* mp_supply_comm_pins;
   supply_comm_data_t* mp_supply_comm_data;
   supply_plis_t m_plis;
@@ -200,7 +205,7 @@ private:
   irs_u16 m_command;
   tick_mode_t m_mode;
   bool m_plis_reset;
-  
+
   status_t get_status();
   void init_default();
 }; // supply_comm_t

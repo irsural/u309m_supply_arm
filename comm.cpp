@@ -19,18 +19,18 @@ u309m::meas_plis_t::meas_plis_t (
   m_need_write(false)
 {
   memset((void*)mp_buf, 0, m_size);
-  
+
   // Timer Initialization
   RCGC1_bit.TIMER1 = 1;
   RCGC2_bit.PORTE = 1;
   for (irs_u8 i = 10; i; i--);
-  
+
   GPIOEDEN_bit.no1 = 1;
   GPIOEAFSEL_bit.no1 = 1;
   GPIOEPCTL_bit.PMC1 = CCP2;
-  
+
   GPTM1CTL_bit.TBEN = 0;
-  
+
   GPTM1CFG_bit.GPTMCFG = TIMER_16_BIT;
   GPTM1TAMR_bit.TAAMS = 1;
   GPTM1TAMR_bit.TACMR = 0;
@@ -38,10 +38,10 @@ u309m::meas_plis_t::meas_plis_t (
   GPTM1CTL_bit.TAPWML = 0;
   GPTM1TAILR = static_cast<irs_u16>(irs::cpu_traits_t::frequency()/a_tact_freq);
   GPTM1TAMATCHR = GPTM1TAILR/2;
-  
+
   GPTM1ICR_bit.TAMCINT = 1;
   GPTM1ICR_bit.TATOCINT = 1;
-  
+
   for (; mp_spi->get_status() != irs::spi_t::FREE; )
     mp_spi->tick();
   mp_spi->set_order(irs::spi_t::MSB);
@@ -53,7 +53,7 @@ u309m::meas_plis_t::meas_plis_t (
 
 u309m::meas_plis_t::~meas_plis_t()
 {
-  
+
 }
 
 void u309m::meas_plis_t::write(const irs_u8* ap_command)
@@ -185,10 +185,10 @@ void u309m::meas_comm_t::tick()
   m_th3.tick();
   m_th4.tick();
   m_th5.tick();
-  
+
   mp_meas_comm_data->error =
     mp_meas_comm_pins->error->pin();
-  
+
   bool plis_reset_change =
     (m_plis_reset != mp_meas_comm_data->reset);
   if (plis_reset_change) {
@@ -200,7 +200,7 @@ void u309m::meas_comm_t::tick()
       m_mode = meas_reset_start;
     }
   }
-  
+
   switch (m_mode) {
     case command_check:
     {
@@ -296,8 +296,8 @@ void u309m::meas_comm_t::tick()
     {
     } break;
   }
-  
-  if (m_timer.check()) {  
+
+  if (m_timer.check()) {
     /*mp_meas_comm_data->meas_rele_power_voltage =
       (mp_adc->get_data(0)/0.73f);
     mp_meas_comm_data->power_voltage = mp_adc->get_data(1);
@@ -305,15 +305,15 @@ void u309m::meas_comm_t::tick()
       (mp_adc->get_data(0)/0.44f);
     mp_meas_comm_data->internal_temp =
       mp_adc->get_temperature();*/
-    mp_meas_comm_data->th1_value = 
+    mp_meas_comm_data->th1_value =
       (m_th1_data.temperature_code*m_th1.get_conv_koef());
-    mp_meas_comm_data->th2_value = 
+    mp_meas_comm_data->th2_value =
       (m_th2_data.temperature_code*m_th2.get_conv_koef());
-    mp_meas_comm_data->th3_value = 
+    mp_meas_comm_data->th3_value =
       (m_th3_data.temperature_code*m_th3.get_conv_koef());
-    mp_meas_comm_data->th4_value = 
+    mp_meas_comm_data->th4_value =
       (m_th4_data.temperature_code*m_th4.get_conv_koef());
-    mp_meas_comm_data->th5_value = 
+    mp_meas_comm_data->th5_value =
       (m_th5_data.temperature_code*m_th5.get_conv_koef());
   }
 
@@ -338,18 +338,18 @@ u309m::supply_plis_t::supply_plis_t (
   m_need_read(false)
 {
   memset((void*)mp_buf, 0, m_size);
-  
+
   // Timer Initialization
   RCGC1_bit.TIMER0 = 1;
   RCGC2_bit.PORTF = 1;
   for (irs_u8 i = 10; i; i--);
-  
+
   GPIOFDEN_bit.no4 = 1;
   GPIOFAFSEL_bit.no4 = 1;
   GPIOFPCTL_bit.PMC4 = CCP0;
-  
+
   GPTM0CTL_bit.TBEN = 0;
-  
+
   GPTM0CFG_bit.GPTMCFG = TIMER_16_BIT;
   GPTM0TAMR_bit.TAAMS = 1;
   GPTM0TAMR_bit.TACMR = 0;
@@ -357,10 +357,10 @@ u309m::supply_plis_t::supply_plis_t (
   GPTM0CTL_bit.TAPWML = 0;
   GPTM0TAILR = static_cast<irs_u16>(irs::cpu_traits_t::frequency()/a_tact_freq);
   GPTM0TAMATCHR = GPTM0TAILR/2;
-  
+
   GPTM0ICR_bit.TAMCINT = 1;
   GPTM0ICR_bit.TATOCINT = 1;
-  
+
   for (; mp_spi->get_status() != irs::spi_t::FREE; )
     mp_spi->tick();
   mp_spi->set_order(irs::spi_t::MSB);
@@ -372,7 +372,7 @@ u309m::supply_plis_t::supply_plis_t (
 
 u309m::supply_plis_t::~supply_plis_t()
 {
-  
+
 }
 
 void u309m::supply_plis_t::read(irs_u8* ap_buf)
@@ -454,14 +454,20 @@ u309m::supply_comm_t::supply_comm_t(
 ):
   mp_supply_comm_pins(ap_supply_comm_pins),
   mp_supply_comm_data(ap_supply_comm_data),
-  m_plis(4000000, ap_spi, mp_supply_comm_pins->cs),
+  m_plis(plis_tact_freq, ap_spi, mp_supply_comm_pins->cs),
   m_command_apply(false),
   m_comm_on(false),
   m_command(0),
   m_mode(mode_command_check),
   m_plis_reset(false)
 {
+  irs::timer_t start_timer(irs::make_cnt_ms(1));
   m_plis.tact_on();
+  start_timer.start();
+  mp_supply_comm_pins->reset->set();
+  while (!start_timer.check());
+  mp_supply_comm_pins->reset->clear();
+  start_timer.set(irs::make_cnt_ms(100));
   #ifdef NOP
   // All ON:
   irs_u16 command = (PLIS|SUPPLY_17A|SUPPLY_1A|SUPPLY_2V|SUPPLY_20V|
@@ -473,6 +479,7 @@ u309m::supply_comm_t::supply_comm_t(
   while(ap_spi->get_status() != irs::spi_t::FREE) {
     m_plis.tick();
   }
+  while (!start_timer.check());
   m_plis.tact_off();
 }
 
@@ -503,7 +510,10 @@ u309m::supply_comm_t::status_t u309m::supply_comm_t::get_status()
   m_plis.tact_on();
   irs_u16 response = 0;
   m_plis.read(reinterpret_cast<irs_u8*>(&response));
-  while(m_plis.spi_status() != supply_plis_t::completed);
+  while(m_plis.spi_status() != supply_plis_t::completed)
+  {
+    m_plis.tick();
+  }
   m_plis.tact_off();
   irs_u16 status_mask = IRS_U16_MAX;
   status_mask <<= 14;
@@ -537,7 +547,7 @@ void u309m::supply_comm_t::tick()
       m_mode = mode_reset;
     }
   }
-  
+
   switch (m_mode) {
     case mode_command_check:
     {
