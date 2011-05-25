@@ -128,13 +128,14 @@ u309m::meas_comm_t::meas_comm_t(
     irs::make_cnt_ms(300)),
   m_th5_data(&m_th5),
   m_timer(irs::make_cnt_ms(200)),
-  m_plis(4000000, ap_spi_meas_comm_plis,
+  m_plis(plis_tact_freq, ap_spi_meas_comm_plis,
     mp_meas_comm_pins->cs),
   m_command_apply(false),
   m_comm_on(false),
   m_plis_reset(false),
   m_command(0),
-  m_mode(command_check)
+  //m_mode(command_check)
+  m_mode(meas_reset_start)
 {
 }
 
@@ -185,20 +186,26 @@ void u309m::meas_comm_t::tick()
   m_th3.tick();
   m_th4.tick();
   m_th5.tick();
+  
+  m_plis.tick();
 
   mp_meas_comm_data->error =
     mp_meas_comm_pins->error->pin();
 
-  bool plis_reset_change =
+  /*bool plis_reset_change =
     (m_plis_reset != mp_meas_comm_data->reset);
   if (plis_reset_change) {
     m_plis_reset = mp_meas_comm_data->reset;
     if (m_plis_reset) {
-      init_default();
-      mp_meas_comm_pins->reset->set();
-      m_plis.tact_on();
       m_mode = meas_reset_start;
     }
+  }*/
+  bool reset_mode = (m_mode == meas_reset_start ||
+                     m_mode == meas_reset_process ||
+                     m_mode == meas_reset_complete);
+  if (mp_meas_comm_data->reset && !reset_mode)
+  {
+    m_mode = meas_reset_start;
   }
 
   switch (m_mode) {
@@ -279,13 +286,21 @@ void u309m::meas_comm_t::tick()
     } break;
     case meas_reset_start:
     {
+      init_default();
+      mp_meas_comm_pins->reset->set();
+      m_plis.tact_on();
+      m_mode = meas_reset_process;
+    } break;
+    case meas_reset_process:
+    {
       if (mp_meas_comm_pins->apply->pin()) {
         m_mode = meas_reset_complete;
       }
     } break;
     case meas_reset_complete:
     {
-      if (!mp_meas_comm_pins->apply->pin()) {
+      if (!mp_meas_comm_pins->apply->pin()) 
+      {
         mp_meas_comm_data->reset = 0;
         mp_meas_comm_pins->reset->clear();
         m_plis.tact_off();
@@ -467,13 +482,13 @@ u309m::supply_comm_t::supply_comm_t(
   mp_supply_comm_pins->reset->set();
   while (!start_timer.check());
   mp_supply_comm_pins->reset->clear();
-  start_timer.set(irs::make_cnt_ms(100));
+  start_timer.set(2 * plis_relay_delay, plis_tact_freq);
   #ifdef NOP
   // All ON:
   irs_u16 command = (PLIS|SUPPLY_17A|SUPPLY_1A|SUPPLY_2V|SUPPLY_20V|
     SUPPLY_200V|IZM_TH|EEPROM|MISO_MASK_EN);
   #endif // NOP
-  irs_u16 command = (PLIS|EEPROM|IZM_TH|MISO_MASK_EN);
+  irs_u16 command = (PLIS|SUPPLY_17A|EEPROM|IZM_TH|MISO_MASK_EN);
   m_plis.write(reinterpret_cast<irs_u8*>(&command));
   m_plis.tick();
   while(ap_spi->get_status() != irs::spi_t::FREE) {

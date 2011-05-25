@@ -16,7 +16,8 @@ namespace u309m {
 
 enum
 {
-  plis_tact_freq = 1000000
+  plis_tact_freq = 400000,
+  plis_relay_delay = 50000
 };
 
 class meas_plis_t
@@ -89,6 +90,7 @@ private:
     meas_apply_busy,
     meas_apply_complete,
     meas_reset_start,
+    meas_reset_process,
     meas_reset_complete
   };
 
