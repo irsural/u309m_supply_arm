@@ -32,8 +32,8 @@ private:
   supply_comm_t* mp_supply_comm;
   #endif // SUPPLY_COMM_TEST
   #ifdef SUPPLY_TEST
-  supply_t m_supply_200V;
   supply_t m_supply_20V;
+  supply_t m_supply_200V;
   supply_t m_supply_2V;
   supply_t m_supply_1A;
   supply_t m_supply_17A;

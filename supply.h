@@ -8,6 +8,7 @@
 #include <armspi.h>
 
 #include "data.h"
+#include "cfg.h"
 
 #include <irsfinal.h>
 

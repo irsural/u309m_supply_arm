@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=180505610
+Checksum=-480240150
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -22,7 +22,9 @@ ByteLimit=50
 [Disassemble mode]
 mode=0
 [Breakpoints]
-Count=0
+Bp0=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\irsmem.cpp}.822.3@1" 0 0 0 0 "" 0 "" 0
+Bp1=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\irsmem.cpp}.790.5@1" 0 0 0 0 "" 0 "" 0
+Count=2
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -37,5 +39,5 @@ SuppressDialog=0
 Enabled=0
 [DriverProfiling]
 Enabled=0
-Mode=69184400
+Mode=65706560
 Graph=0

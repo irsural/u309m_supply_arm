@@ -20,11 +20,11 @@ int main()
   CCR_bit.DIV_0_TRP = 1;*/
   //CCR_bit.UNALIGN_TRP = 1;
 
-  static hard_fault_event_t hard_fault_event(GPIO_PORTC, 5);
+  static hard_fault_event_t hard_fault_event(GPIO_PORTJ, 5);
   
   static irs::arm::com_buf log_buf(1, 10, 1000000);
   irs::mlog().rdbuf(&log_buf);
-  static irs::mc_error_handler_t error_handler(GPIO_PORTC, 7, &irs::mlog());
+  //static irs::mc_error_handler_t error_handler(GPIO_PORTC, 7, &irs::mlog());
     
   static irs::blink_t F0_blink(GPIO_PORTF, 0, irs::make_cnt_ms(100));
   

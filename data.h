@@ -478,10 +478,10 @@ struct eeprom_data_t
     {
       case sup_200V:
       {
-        supply_200V.koef_adc_volt_prev = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_200V.koef_adc_volt_fin = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_200V.koef_reg_prev = 2633;
-        supply_200V.koef_reg_fin = 2702;
+        supply_200V.koef_adc_volt_prev = 0.259343223;//(4.096/1024)*(23.9/3.9)*1.2;
+        supply_200V.koef_adc_volt_fin = 0.259343223;//(4.096/1024)*(23.9/3.9)*1.2;
+        supply_200V.koef_reg_prev = 297.571537;//2633;
+        supply_200V.koef_reg_fin = 297.571537;//2702;
         
         supply_200V.temp_base_ref = 60;
         supply_200V.temp_base_k = 15000;
@@ -500,10 +500,10 @@ struct eeprom_data_t
       } break;
       case sup_20V:
       {
-        supply_20V.koef_adc_volt_prev = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_20V.koef_adc_volt_fin = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_20V.koef_reg_prev = 2633;
-        supply_20V.koef_reg_fin = 2702;
+        supply_20V.koef_adc_volt_prev = 0.029538188;//(4.096/1024)*(23.9/3.9)*1.2;
+        supply_20V.koef_adc_volt_fin = 0.025330844;//(4.096/1024)*(23.9/3.9)*1.2;
+        supply_20V.koef_reg_prev = 2610.304968;//2633;
+        supply_20V.koef_reg_fin = 3043.865432;//2702;
         
         supply_20V.temp_base_ref = 60;
         supply_20V.temp_base_k = 15000;
@@ -522,10 +522,10 @@ struct eeprom_data_t
       } break;
       case sup_2V:
       {
-        supply_2V.koef_adc_volt_prev = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_2V.koef_adc_volt_fin = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_2V.koef_reg_prev = 2633;
-        supply_2V.koef_reg_fin = 2702;
+        supply_2V.koef_adc_volt_prev = 0.00962346;//(4.096/1024)*(23.9/3.9)*1.2;
+        supply_2V.koef_adc_volt_fin = 0.006859275;//(4.096/1024)*(23.9/3.9)*1.2;
+        supply_2V.koef_reg_prev = 15999.2186;//2633;
+        supply_2V.koef_reg_fin = 22446.6649;//2702;
         
         supply_2V.temp_base_ref = 60;
         supply_2V.temp_base_k = 15000;
@@ -544,10 +544,10 @@ struct eeprom_data_t
       } break;
       case sup_1A:
       {
-        supply_1A.koef_adc_volt_prev = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_1A.koef_adc_volt_fin = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_1A.koef_reg_prev = 2633;
-        supply_1A.koef_reg_fin = 2702;
+        supply_1A.koef_adc_volt_prev = 0.004820137;//4.931/1024.0;
+        supply_1A.koef_adc_volt_fin = 0.001420473;//(4.096/1024)*(23.9/3.9)*1.2;
+        supply_1A.koef_reg_prev = 15998.82792;//2633;
+        supply_1A.koef_reg_fin = 54289.35609;//2702;
         
         supply_1A.temp_base_ref = 60;
         supply_1A.temp_base_k = 15000;
@@ -566,10 +566,10 @@ struct eeprom_data_t
       } break;
       case sup_17A:
       {
-        supply_17A.koef_adc_volt_prev = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_17A.koef_adc_volt_fin = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_17A.koef_reg_prev = 2633;
-        supply_17A.koef_reg_fin = 2702;
+        supply_17A.koef_adc_volt_prev = 0.004798729;//(4.096/1024)*(23.9/3.9)*1.2;
+        supply_17A.koef_adc_volt_fin = 0.020719409;//(4.096/1024)*(23.9/3.9)*1.2;
+        supply_17A.koef_reg_prev = 15996.48429;//2633;
+        supply_17A.koef_reg_fin = 3704.873815;//2702;
         
         supply_17A.temp_base_ref = 60;
         supply_17A.temp_base_k = 15000;

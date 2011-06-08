@@ -128,9 +128,13 @@ u309m::cfg_t::cfg_t():
     &m_KZ_1A, &m_KZ_17A, &m_REL_220V, &m_SYM_OFF, &m_SYM_OFF_TEST),
   #ifdef EEPROM_TEST
   m_eeprom_size(334),
-  m_eeprom_command(&m_spi_general_purpose, m_spi_demux.cs_code(CS_EE),
-    irs::eeprom_command_t::at25128a),
-  m_eeprom(&m_eeprom_command, m_eeprom_size),
+  #ifdef USE_FLASH
+    m_eeprom(m_eeprom_size),
+  #else
+    m_eeprom_command(&m_spi_general_purpose, m_spi_demux.cs_code(CS_EE),
+      irs::eeprom_command_t::at25128a),
+    m_eeprom(&m_eeprom_command, m_eeprom_size),
+  #endif  //  USE_FLASH
   m_eeprom_data(&m_eeprom),
   #endif // EEPROM_TEST
   m_timer(irs::make_cnt_ms(200))
@@ -152,17 +156,18 @@ u309m::cfg_t::cfg_t():
   m_eth_data.ip_1 = m_eeprom_data.ip_1;
   m_eth_data.ip_2 = m_eeprom_data.ip_2;
   m_eth_data.ip_3 = m_eeprom_data.ip_3;
-  irs::string ip_0_str = irst("");
-  irs::number_to_string(m_eeprom_data.ip_0, &ip_0_str);
-  irs::string ip_1_str = irst("");
-  irs::number_to_string(m_eeprom_data.ip_1, &ip_1_str);
-  irs::string ip_2_str = irst("");
-  irs::number_to_string(m_eeprom_data.ip_2, &ip_2_str);
-  irs::string ip_3_str = irst("");
-  irs::number_to_string(m_eeprom_data.ip_3, &ip_3_str);
-  irs::string ip_str = irst(ip_0_str + "." + ip_1_str + "." +
-    ip_2_str + "." + ip_3_str);
-  m_simple_hardflow.set_param("local_addr", ip_str);
+//  irs::string ip_0_str = irst("");
+//  irs::number_to_string(m_eeprom_data.ip_0, &ip_0_str);
+//  irs::string ip_1_str = irst("");
+//  irs::number_to_string(m_eeprom_data.ip_1, &ip_1_str);
+//  irs::string ip_2_str = irst("");
+//  irs::number_to_string(m_eeprom_data.ip_2, &ip_2_str);
+//  irs::string ip_3_str = irst("");
+//  irs::number_to_string(m_eeprom_data.ip_3, &ip_3_str);
+//  irs::string ip_str = irst(ip_0_str + "." + ip_1_str + "." +
+//    ip_2_str + "." + ip_3_str);
+//  m_simple_hardflow.set_param("local_addr", ip_str);
+  m_simple_hardflow.set_param("local_addr", "192.168.0.211");
   #endif // EEPROM_TEST
   m_izm_th_enable.set();
   m_meas_comm_reset.clear();

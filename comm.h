@@ -16,7 +16,7 @@ namespace u309m {
 
 enum
 {
-  plis_tact_freq = 400000,
+  plis_tact_freq = 4000000,
   plis_relay_delay = 50000
 };
 

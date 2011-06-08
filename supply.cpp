@@ -400,7 +400,7 @@ void u309m::supply_t::tick()
     mp_eth_data->base_tr_data.dac_value = 
       m_temp_reg_data.voltage_code_A;
     mp_eth_data->base_tr_data.int_val =
-      static_cast<irs_u8>(m_temp_base_pid_data.int_val*m_temp_base_pid_data.k*
+      static_cast<irs_i32>(m_temp_base_pid_data.int_val*m_temp_base_pid_data.k*
       m_temp_base_pid_data.ki);
     
     double aux_pid_reg_data_in =
@@ -412,7 +412,7 @@ void u309m::supply_t::tick()
     mp_eth_data->aux_tr_data.dac_value =
       m_temp_reg_data.voltage_code_B;
     mp_eth_data->aux_tr_data.int_val =
-      static_cast<irs_u8>(m_temp_aux_pid_data.int_val*m_temp_aux_pid_data.k*
+      static_cast<irs_i32>(m_temp_aux_pid_data.int_val*m_temp_aux_pid_data.k*
       m_temp_aux_pid_data.ki);
   }
 }

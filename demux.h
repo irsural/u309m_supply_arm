@@ -72,6 +72,10 @@ private:
     }
     virtual void clear()
     {
+      set_or_clear_pin(mask_gen_demux(0), mp_cs_data->cs_code_3);
+      set_or_clear_pin(mask_gen_demux(1), mp_cs_data->cs_code_2);
+      set_or_clear_pin(mask_gen_demux(2), mp_cs_data->cs_code_1);
+      set_or_clear_pin(mask_gen_demux(3), mp_cs_data->cs_code_0);
       if (m_index <= first_demux_end) {
         mp_cs_data->cs_code_4->clear();
       } else if ((m_index >= second_demux_begin) &&
@@ -79,10 +83,6 @@ private:
       {
         mp_cs_data->cs_code_4->set();
       }
-      set_or_clear_pin(mask_gen_demux(0), mp_cs_data->cs_code_3);
-      set_or_clear_pin(mask_gen_demux(1), mp_cs_data->cs_code_2);
-      set_or_clear_pin(mask_gen_demux(2), mp_cs_data->cs_code_1);
-      set_or_clear_pin(mask_gen_demux(3), mp_cs_data->cs_code_0);
       mp_cs_data->cs_enable->set();
     }
     virtual void set_dir(gpio_pin_t::dir_t /*a_dir*/)
@@ -215,7 +215,7 @@ private:
     }
   }; // dac_demux_cs_t
   enum {
-    number_of_spi_devices = 5
+    number_of_spi_devices = 6
   };
   
   vector<dac_demux_cs_t> m_demux_cs_vec;

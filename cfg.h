@@ -14,6 +14,7 @@
 #include <hardflowg.h>
 #include <irsmbus.h>
 #include <irsmem.h>
+#include <armflash.h>
 
 #include "comm.h"
 #include "data.h"
@@ -23,9 +24,10 @@
 
 #define MEAS_COMM_TEST
 #define SUPPLY_COMM_TEST
-//#define SUPPLY_TEST
+#define SUPPLY_TEST
 #define EEPROM_TEST
 #define ARM_ADC_TEST // work
+#define USE_FLASH
 
 namespace u309m {
 
@@ -480,8 +482,12 @@ private:
   
   #ifdef EEPROM_TEST
   irs::eeprom_command_t::size_type m_eeprom_size;
-  irs::eeprom_command_t m_eeprom_command;
-  irs::eeprom_spi_t m_eeprom;
+  #ifdef USE_FLASH
+    irs::arm::flash_t m_eeprom;
+  #else
+    irs::eeprom_command_t m_eeprom_command;
+    irs::eeprom_spi_t m_eeprom;
+  #endif  //  USE_FLASH
   eeprom_data_t m_eeprom_data;
   #endif // EEPROM_TEST
     

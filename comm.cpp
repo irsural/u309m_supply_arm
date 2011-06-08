@@ -483,12 +483,12 @@ u309m::supply_comm_t::supply_comm_t(
   while (!start_timer.check());
   mp_supply_comm_pins->reset->clear();
   start_timer.set(2 * plis_relay_delay, plis_tact_freq);
-  #ifdef NOP
+  //#ifdef NOP
   // All ON:
   irs_u16 command = (PLIS|SUPPLY_17A|SUPPLY_1A|SUPPLY_2V|SUPPLY_20V|
     SUPPLY_200V|IZM_TH|EEPROM|MISO_MASK_EN);
-  #endif // NOP
-  irs_u16 command = (PLIS|SUPPLY_17A|EEPROM|IZM_TH|MISO_MASK_EN);
+  //#endif // NOP
+  //irs_u16 command = (PLIS|SUPPLY_20V|SUPPLY_2V|EEPROM|IZM_TH|MISO_MASK_EN);
   m_plis.write(reinterpret_cast<irs_u8*>(&command));
   m_plis.tick();
   while(ap_spi->get_status() != irs::spi_t::FREE) {
