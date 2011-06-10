@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-480240150
+Checksum=-1836685415
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -24,7 +24,9 @@ mode=0
 [Breakpoints]
 Bp0=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\irsmem.cpp}.822.3@1" 0 0 0 0 "" 0 "" 0
 Bp1=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\irsmem.cpp}.790.5@1" 0 0 0 0 "" 0 "" 0
-Count=2
+Bp2=_ "STD_CODE" "{$PROJ_DIR$\comm.cpp}.643.9@1" 1 0 0 0 "" 0 "" 0
+Bp3=_ "STD_CODE" "{$PROJ_DIR$\comm.cpp}.633.9@1" 1 0 0 0 "" 0 "" 0
+Count=4
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -39,5 +41,5 @@ SuppressDialog=0
 Enabled=0
 [DriverProfiling]
 Enabled=0
-Mode=65706560
+Mode=65236528
 Graph=0

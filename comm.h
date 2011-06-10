@@ -17,7 +17,7 @@ namespace u309m {
 enum
 {
   plis_tact_freq = 4000000,
-  plis_relay_delay = 50000
+  plis_relay_delay = 4000000//50000
 };
 
 class meas_plis_t
@@ -119,24 +119,21 @@ private:
 class supply_plis_t
 {
 public:
-  enum status_t
-  {
-    completed,
-    busy
-  };
-
   supply_plis_t(
     irs_u32 a_tact_freq,
     irs::arm::arm_spi_t* ap_spi,
-    irs::gpio_pin_t* ap_cs_pin
+    irs::gpio_pin_t* ap_cs_pin,
+    irs_u8* ap_write_buf,
+    irs_u8* ap_read_buf
   );
   ~supply_plis_t();
-  void read(irs_u8* ap_buf);
-  void write(const irs_u8 *ap_command);
+  void read();
+  void write();
+  void read_write();
   void tact_on();
   void tact_off();
-  status_t spi_status();
   void tick();
+  inline bool ready() { return m_ready; };
 private:
   enum {
     CCP0 = 0x1,
@@ -145,21 +142,27 @@ private:
   };
   enum mode_t
   {
-    PLIS_SPI_FREE,
-    PLIS_SPI_RESET
+    FREE,
+    SPI_BUSY
   };
   enum {
     m_size = 2
   };
+  enum target_t
+  {
+    NOTHING,
+    READ,
+    WRITE,
+    READ_WRITE
+  };
   irs_u32 m_tact_freq;
   irs::arm::arm_spi_t* mp_spi;
   irs::gpio_pin_t* mp_cs_pin;
-  irs_u8 mp_buf[m_size];
+  irs_u8* mp_write_buf;
   irs_u8* mp_read_buf;
-  status_t m_status;
+  bool m_ready;
   mode_t m_mode;
-  bool m_need_write;
-  bool m_need_read;
+  target_t m_target;
 }; // supply_plis_t
 
 class supply_comm_t
@@ -174,10 +177,15 @@ public:
   void tick();
 private:
   enum tick_mode_t {
+    mode_reset_start,
+    mode_reset_clear,
+    mode_reset_get_status,
+    mode_reset,
     mode_command_check,
     mode_send_command,
-    mode_reset,
-    mode_send_command_end
+    mode_send_request,
+    mode_recieve_request,
+    mode_wait
   };
   enum status_t {
     completed,
@@ -198,17 +206,40 @@ private:
     EEPROM = (1 << 15),
     MISO_MASK_EN = 1
   };
+  enum
+  {
+    READ_ONLY_POS = 1,
+    ON_POS = 2,
+    POL_CH_POS = 3,
+    POL_ET_POS = 4,
+    CHECKED_POS = 5,
+    ETALON_POS = 9,
+    SUPPLY_POS =  13,
+    ERROR_POS = 0,
+    BUSY_POS = 1,
+    READY_POS = 2
+  };
+  enum
+  {
+    transaction_cnt_limit = 5
+  };
 
+  const counter_t m_reset_interval;
+  const counter_t m_transaction_interval;
   supply_comm_pins_t* mp_supply_comm_pins;
   supply_comm_data_t* mp_supply_comm_data;
   supply_plis_t m_plis;
   bool m_command_apply;
-  bool m_comm_on;
+  bool m_error;
+  bool m_busy;
+  bool m_ready;
+  irs_u16 m_answer;
   irs_u16 m_command;
   tick_mode_t m_mode;
   bool m_plis_reset;
+  irs::timer_t m_timer;
+  irs_u8 m_transaction_cnt;
 
-  status_t get_status();
   void init_default();
 }; // supply_comm_t
 

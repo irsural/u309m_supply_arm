@@ -1692,12 +1692,111 @@
         <name>$PROJ_DIR$\..\mxsrclib\arch\arm\irsarmutil.h</name>
       </file>
     </group>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\hardflowg.cpp</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\hardflowg.h</name>
-    </file>
+    <group>
+      <name>&#x41D;&#x435;&#x43D;&#x443;&#x436;&#x43D;&#x43e;&#x435;</name>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\hardflowg.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\hardflowg.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsalg.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsalg.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsconfig.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irscpp.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsdefs.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irserror.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irserror.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsexcept.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsexcept.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsfinal.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irslimits.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsmbus.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsmbus.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsnetdefs.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsstd.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsstd.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsstring.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsstrm.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsstrmstd.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irssysutils.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irstable.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irstcpip.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irstcpip.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irstest.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irstime.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irstime.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\measdef.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\meassup.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\meassup.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\mxdata.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\mxdata.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\mxdatastd.h</name>
+      </file>
+    </group>
     <file>
       <name>$PROJ_DIR$\..\mxsrclib\irsadc.cpp</name>
     </file>
@@ -1705,25 +1804,10 @@
       <name>$PROJ_DIR$\..\mxsrclib\irsadc.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irsalg.cpp</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irsalg.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irsconfig.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irscpp.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\mxsrclib\irscpu.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\mxsrclib\irscpu.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irsdefs.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\mxsrclib\irsdev.cpp</name>
@@ -1738,21 +1822,6 @@
       <name>$PROJ_DIR$\..\mxsrclib\irsdsp.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irserror.cpp</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irserror.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irsexcept.cpp</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irsexcept.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irsfinal.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\mxsrclib\irsgpio.h</name>
     </file>
     <file>
@@ -1762,79 +1831,13 @@
       <name>$PROJ_DIR$\..\mxsrclib\irsint.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irslimits.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irsmbus.cpp</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irsmbus.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\mxsrclib\irsmem.cpp</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\mxsrclib\irsmem.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irsnetdefs.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\mxsrclib\irsspi.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irsstd.cpp</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irsstd.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irsstring.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irsstrm.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irsstrmstd.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irssysutils.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irstable.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irstcpip.cpp</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irstcpip.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irstest.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irstime.cpp</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\irstime.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\measdef.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\meassup.cpp</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\meassup.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\mxdata.cpp</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\mxdata.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\mxsrclib\mxdatastd.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\mxsrclib\timer.cpp</name>
