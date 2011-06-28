@@ -419,7 +419,7 @@ void u309m::supply_plis_t::tick()
   {
     case FREE:
     {
-      if (mp_spi->get_status() == irs::spi_t::FREE && !mp_spi->get_lock())
+      if ((mp_spi->get_status() == irs::spi_t::FREE) && (!mp_spi->get_lock()))
       {
         if (m_target != NOTHING)
         {
@@ -428,7 +428,8 @@ void u309m::supply_plis_t::tick()
           mp_spi->set_phase(irs::spi_t::LEAD_EDGE);
           mp_spi->lock();
           mp_cs_pin->clear();
-          m_mode = SPI_BUSY;
+          for (volatile irs_u8 i = 20; i; i--);
+          //m_mode = SPI_BUSY;
           
           switch (m_target)
           {
@@ -450,13 +451,33 @@ void u309m::supply_plis_t::tick()
               break;
             }
           }
+          
+          while (mp_spi->get_status() != irs::spi_t::FREE) mp_spi->tick(); 
+          {
+            for (volatile irs_u8 i = 20; i; i--);
+            mp_cs_pin->set();
+            mp_spi->unlock();
+            
+            if (m_target == READ || m_target == READ_WRITE)
+            {
+              irs_u8 byte = mp_read_buf[0];
+              mp_read_buf[0] = mp_read_buf[1];
+              mp_read_buf[1] = byte;
+            }
+            
+            m_target = NOTHING;
+            m_ready = true;
+            m_mode = FREE;
+          }
         }
       }
       break;
     }
     case SPI_BUSY:
     {
-      if (mp_spi->get_status() == irs::spi_t::FREE) {
+      if (mp_spi->get_status() == irs::spi_t::FREE) 
+      {
+        for (volatile irs_u8 i = 20; i; i--);
         mp_cs_pin->set();
         mp_spi->unlock();
         
@@ -498,12 +519,12 @@ u309m::supply_comm_t::supply_comm_t(
   m_timer(m_reset_interval),
   m_transaction_cnt(0)
 {
-  while (m_mode != mode_command_check) tick();
-  m_command = (PLIS|SUPPLY_17A|SUPPLY_1A|SUPPLY_2V|SUPPLY_20V|
-    SUPPLY_200V|IZM_TH|EEPROM|MISO_MASK_EN);
+//  while (m_mode != mode_command_check) tick();
+//  m_command = (PLIS|SUPPLY_17A|SUPPLY_1A|SUPPLY_2V|SUPPLY_20V|
+//    SUPPLY_200V|IZM_TH|EEPROM|MISO_MASK_EN);
   m_plis.tact_on();
-  m_plis.write();
-  while(!m_plis.ready()) m_plis.tick();
+//  m_plis.write();
+  while(m_mode != mode_command_check) tick();
   //m_plis.tact_off();
 }
 
@@ -568,21 +589,15 @@ void u309m::supply_comm_t::tick()
     }
     case mode_reset_clear:
     {
-      if (m_timer.check())
+      if (m_timer.check() && m_plis.ready())
       {
         mp_supply_comm_pins->reset->clear();
         m_timer.set(m_transaction_interval);
         m_timer.start();
-        m_mode = mode_reset_get_status;
-      }
-      break;
-    }
-    case mode_reset_get_status:
-    {
-      if (m_timer.check() && m_plis.ready())
-      {
-        m_plis.read();
         m_mode = mode_reset;
+        m_command = (PLIS|SUPPLY_17A|SUPPLY_1A|SUPPLY_2V|SUPPLY_20V|
+          SUPPLY_200V|IZM_TH|EEPROM|MISO_MASK_EN);
+        m_plis.write();
       }
       break;
     }
@@ -590,13 +605,9 @@ void u309m::supply_comm_t::tick()
     {
       if (m_plis.ready())
       {
-        if (m_answer != 0)
-        {
-          mp_supply_comm_data->error = 1;
-        }
-        else mp_supply_comm_data->error = 0;
-        mp_supply_comm_data->reset = 0;
         //m_plis.tact_off();
+        m_plis_reset = false;
+        mp_supply_comm_data->reset = m_plis_reset;
         m_mode = mode_command_check;
       }
       break;
@@ -649,6 +660,7 @@ void u309m::supply_comm_t::tick()
           {
             m_timer.set(m_transaction_interval);
             m_timer.start();
+            m_transaction_cnt++;
             m_mode = mode_wait;
           }
           else

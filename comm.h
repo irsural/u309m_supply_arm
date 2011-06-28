@@ -16,7 +16,7 @@ namespace u309m {
 
 enum
 {
-  plis_tact_freq = 4000000,
+  plis_tact_freq = 7000000,
   plis_relay_delay = 4000000//50000
 };
 
@@ -179,7 +179,6 @@ private:
   enum tick_mode_t {
     mode_reset_start,
     mode_reset_clear,
-    mode_reset_get_status,
     mode_reset,
     mode_command_check,
     mode_send_command,
