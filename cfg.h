@@ -41,7 +41,7 @@ struct rele_ext_eth_data_t {
   irs::bit_data_t REL_220V;
   irs::bit_data_t SYM_OFF;
   irs::bit_data_t SYM_OFF_TEST;
-  
+
   rele_ext_eth_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
     irs_uarc* ap_size = IRS_NULL)
   {
@@ -50,11 +50,11 @@ struct rele_ext_eth_data_t {
       *ap_size = size;
     }
   }
-  
+
   irs_uarc connect(irs::mxdata_t *ap_data, irs_uarc a_index)
   {
     irs_uarc index = a_index;
-    
+
     SYM_2V.connect(ap_data, index, 0);
     SYM_20V.connect(ap_data, index, 1);
     SYM_200V.connect(ap_data, index, 2);
@@ -66,7 +66,7 @@ struct rele_ext_eth_data_t {
     index++;
     SYM_OFF_TEST.connect(ap_data, index, 0);
     index++;
-    
+
     return index;
   }
 }; // rele_ext_eth_data_t
@@ -97,7 +97,7 @@ struct eth_data_t {
   irs_uarc connect(irs::mxdata_t *ap_data, irs_uarc a_index)
   {
     irs_uarc index = a_index;
-    
+
     index = ip_0.connect(ap_data, index);
     index = ip_1.connect(ap_data, index);
     index = ip_2.connect(ap_data, index);
@@ -111,7 +111,7 @@ struct eth_data_t {
     index = supply_2V.connect(ap_data, index);
     index = supply_1A.connect(ap_data, index);
     index = supply_17A.connect(ap_data, index);
-    
+
     return index;
   }
   void reset_to_default(supply_type_t a_supply_type)
@@ -128,14 +128,14 @@ struct eth_data_t {
         supply_200V.fin_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
         supply_200V.prev_dac_data.koef = 2633;
         supply_200V.fin_dac_data.koef = 2702;
-        
+
         supply_200V.base_tr_data.temperature_ref = 60;
         supply_200V.base_tr_data.temp_k = 15000;
         supply_200V.base_tr_data.temp_ki = 0.00075;
         supply_200V.base_tr_data.temp_kd = 200;
         supply_200V.base_tr_data.temp_prop_koef = 0;
         supply_200V.base_tr_data.temp_time_const = 20;
-        
+
         supply_200V.aux_tr_data.temperature_ref = 60;
         supply_200V.aux_tr_data.temp_k = 15000;
         supply_200V.aux_tr_data.temp_ki = 0.00075;
@@ -150,14 +150,14 @@ struct eth_data_t {
         supply_20V.fin_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
         supply_20V.prev_dac_data.koef = 2633;
         supply_20V.fin_dac_data.koef = 2702;
-        
+
         supply_20V.base_tr_data.temperature_ref = 60;
         supply_20V.base_tr_data.temp_k = 15000;
         supply_20V.base_tr_data.temp_ki = 0.00075;
         supply_20V.base_tr_data.temp_kd = 200;
         supply_20V.base_tr_data.temp_prop_koef = 0;
         supply_20V.base_tr_data.temp_time_const = 20;
-        
+
         supply_20V.aux_tr_data.temperature_ref = 60;
         supply_20V.aux_tr_data.temp_k = 15000;
         supply_20V.aux_tr_data.temp_ki = 0.00075;
@@ -172,14 +172,14 @@ struct eth_data_t {
         supply_2V.fin_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
         supply_2V.prev_dac_data.koef = 2633;
         supply_2V.fin_dac_data.koef = 2702;
-        
+
         supply_2V.base_tr_data.temperature_ref = 60;
         supply_2V.base_tr_data.temp_k = 15000;
         supply_2V.base_tr_data.temp_ki = 0.00075;
         supply_2V.base_tr_data.temp_kd = 200;
         supply_2V.base_tr_data.temp_prop_koef = 0;
         supply_2V.base_tr_data.temp_time_const = 20;
-        
+
         supply_2V.aux_tr_data.temperature_ref = 60;
         supply_2V.aux_tr_data.temp_k = 15000;
         supply_2V.aux_tr_data.temp_ki = 0.00075;
@@ -194,14 +194,14 @@ struct eth_data_t {
         supply_1A.fin_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
         supply_1A.prev_dac_data.koef = 2633;
         supply_1A.fin_dac_data.koef = 2702;
-        
+
         supply_1A.base_tr_data.temperature_ref = 60;
         supply_1A.base_tr_data.temp_k = 15000;
         supply_1A.base_tr_data.temp_ki = 0.00075;
         supply_1A.base_tr_data.temp_kd = 200;
         supply_1A.base_tr_data.temp_prop_koef = 0;
         supply_1A.base_tr_data.temp_time_const = 20;
-        
+
         supply_1A.aux_tr_data.temperature_ref = 60;
         supply_1A.aux_tr_data.temp_k = 15000;
         supply_1A.aux_tr_data.temp_ki = 0.00075;
@@ -216,14 +216,14 @@ struct eth_data_t {
         supply_17A.fin_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
         supply_17A.prev_dac_data.koef = 2633;
         supply_17A.fin_dac_data.koef = 2702;
-        
+
         supply_17A.base_tr_data.temperature_ref = 60;
         supply_17A.base_tr_data.temp_k = 15000;
         supply_17A.base_tr_data.temp_ki = 0.00075;
         supply_17A.base_tr_data.temp_kd = 200;
         supply_17A.base_tr_data.temp_prop_koef = 0;
         supply_17A.base_tr_data.temp_time_const = 20;
-        
+
         supply_17A.aux_tr_data.temperature_ref = 60;
         supply_17A.aux_tr_data.temp_k = 15000;
         supply_17A.aux_tr_data.temp_ki = 0.00075;
@@ -248,7 +248,7 @@ struct command_pins_t {
   supply_pins_t* supply_2V;
   supply_pins_t* supply_1A;
   supply_pins_t* supply_17A;
-  
+
   command_pins_t(
     meas_comm_pins_t* ap_meas_comm_pins,
     supply_comm_pins_t* ap_supply_comm_pins,
@@ -283,7 +283,7 @@ struct rele_ext_pins_t {
   irs::gpio_pin_t* REL_220V;
   irs::gpio_pin_t* SYM_OFF;
   irs::gpio_pin_t* SYM_OFF_TEST;
-  
+
   rele_ext_pins_t(
     irs::gpio_pin_t* ap_SYM_2V_on,
     irs::gpio_pin_t* ap_SYM_2V_off,
@@ -321,7 +321,7 @@ class cfg_t
 public:
   cfg_t();
   command_pins_t* command_pins();
-  irs::arm::adc_t* adc();
+  irs::adc_t* adc();
   irs::arm::arm_spi_t* spi_meas_comm_plis();
   irs::arm::arm_spi_t* spi_supply_comm_plis();
   irs::arm::arm_spi_t* spi_general_purpose();
@@ -332,7 +332,7 @@ public:
   meas_comm_t* meas_comm();
   supply_comm_t* supply_comm();
   void tick();
-  
+
 private:
   class plis_ready_t
   {
@@ -385,7 +385,7 @@ private:
     CS_TH1_2V = 29,
     CS_TC_2V = 30,
     CS_PLIS = 31,
-    
+
     CS_DAC_17A = 1,
     CS_DAC_1A = 2,
     CS_DAC_2V = 3,
@@ -393,28 +393,28 @@ private:
     CS_DAC_200V = 5
   };
   enum {
-    PTC_A_channel = 0,
-    PTC_LC_channel = 1,
-    TR_24V_TEST_channel = 2,
-    IZM_3_3V_TEST_channel = 3,
-    IZM_6V_TEST_channel = 4,
-    IZM_1_2V_TEST_channel = 5,
-    TEST_24V_channel = 6,
-    TEST_5V_channel = 7,
-    PTC_PWR_channel = 8,
-    PTC_17A_channel = 9
+    PTC_A_channel = 15,
+    PTC_LC_channel = 14,
+    TR_24V_TEST_channel = 7,
+    IZM_3_3V_TEST_channel = 6,
+    IZM_6V_TEST_channel = 5,
+    IZM_1_2V_TEST_channel = 4,
+    TEST_24V_channel = 3,
+    TEST_5V_channel = 2,
+    PTC_PWR_channel = 1,
+    PTC_17A_channel = 0
   };
-  
+
   irs::arm::io_pin_t m_supply_comm_cfg_done;
   plis_ready_t m_ipt_plis_ready;
   irs::arm::io_pin_t m_meas_comm_cfg_done;
   plis_ready_t m_meas_plis_ready;
   irs_u8 m_spi_buf_size;
   irs_u32 m_f_osc;
-  irs::arm::adc_t m_adc;
+  irs::arm::adc_stellaris_t m_adc;
   irs::arm::arm_spi_t m_spi_meas_comm_plis;
   irs::arm::arm_spi_t m_spi_general_purpose;
-  
+
   irs::arm::io_pin_t m_spi_cs_code_0;
   irs::arm::io_pin_t m_spi_cs_code_1;
   irs::arm::io_pin_t m_spi_cs_code_2;
@@ -423,13 +423,13 @@ private:
   irs::arm::io_pin_t m_spi_cs_enable;
   spi_demux_t::spi_demux_cs_data_t m_spi_demux_cs_data;
   spi_demux_t m_spi_demux;
-  
+
   irs::arm::io_pin_t m_dac_cs_code_0;
   irs::arm::io_pin_t m_dac_cs_code_1;
   irs::arm::io_pin_t m_dac_cs_code_2;
   dac_demux_t::dac_demux_cs_data_t m_dac_demux_cs_data;
   dac_demux_t m_dac_demux;
-  
+
   mxmac_t m_local_mac;
   irs::arm::arm_ethernet_t m_arm_eth;
   mxip_t m_local_ip;
@@ -440,31 +440,31 @@ private:
   irs::hardflow::simple_udp_flow_t m_simple_hardflow;
   irs::modbus_server_t m_modbus_server;
   eth_data_t m_eth_data;
-  
+
   irs::arm::io_pin_t m_izm_th_enable;
   irs::arm::io_pin_t m_meas_comm_cs;
   irs::arm::io_pin_t m_meas_comm_reset;
   irs::arm::io_pin_t m_meas_comm_apply;
   irs::arm::io_pin_t m_meas_comm_error;
   meas_comm_pins_t m_meas_comm_pins;
-  
+
   irs::arm::io_pin_t m_supply_comm_reset;
   supply_comm_pins_t m_supply_comm_pins;
-  
+
   supply_pins_t m_supply_200V_pins;
   supply_pins_t m_supply_20V_pins;
   supply_pins_t m_supply_2V_pins;
   supply_pins_t m_supply_1A_pins;
   supply_pins_t m_supply_17A_pins;
   command_pins_t m_command_pins;
-  
+
   #ifdef MEAS_COMM_TEST
   meas_comm_t m_meas_comm;
   #endif // MEAS_COMM_TEST
   #ifdef SUPPLY_COMM_TEST
   supply_comm_t m_supply_comm;
   #endif // SUPPLY_COMM_TEST
-  
+
   irs::arm::io_pin_t m_SYM_2V_on;
   irs::arm::io_pin_t m_SYM_2V_off;
   irs::arm::io_pin_t m_SYM_20V_on;
@@ -479,7 +479,7 @@ private:
   irs::arm::io_pin_t m_SYM_OFF;
   irs::arm::io_pin_t m_SYM_OFF_TEST;
   rele_ext_pins_t m_rele_ext_pins;
-  
+
   #ifdef EEPROM_TEST
   irs::eeprom_command_t::size_type m_eeprom_size;
   #ifdef USE_FLASH
@@ -490,7 +490,7 @@ private:
   #endif  //  USE_FLASH
   eeprom_data_t m_eeprom_data;
   #endif // EEPROM_TEST
-    
+
   irs::loop_timer_t m_timer;
 };
 
