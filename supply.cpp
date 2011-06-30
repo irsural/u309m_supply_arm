@@ -47,8 +47,14 @@ u309m::supply_t::supply_t(
   m_temp_aux_isodr(),
   m_temp_aux_time_const(0)
 {
+  #ifdef EEPROM_TEST
+  mp_eth_data->resistance_code = mp_eeprom_data->resistance_code;
+  m_ad5293_data.resistance_code = mp_eeprom_data->resistance_code;
+  m_tc_write = mp_eeprom_data->resistance_code;
+  #else
   mp_eth_data->resistance_code = m_ad5293_data.resistance_code;
   m_tc_write = mp_eeprom_data->resistance_code;
+  #endif // EEPROM_TEST
   #ifdef EEPROM_TEST
   m_prev_adc_koef = mp_eeprom_data->koef_adc_volt_prev;
   m_fin_adc_koef = mp_eeprom_data->koef_adc_volt_fin;
@@ -181,8 +187,14 @@ void u309m::supply_t::tick()
       m_tc_write = 1023;
       m_ad5293_data.resistance_code = m_tc_write;
       mp_eth_data->resistance_code = m_tc_write;
+      #ifdef EEPROM_TEST
+      mp_eeprom_data->resistance_code = m_tc_write;
+      #endif  //  EEPROM_TEST
     } else {
       m_ad5293_data.resistance_code = m_tc_write;
+      #ifdef EEPROM_TEST
+      mp_eeprom_data->resistance_code = m_tc_write;
+      #endif  //  EEPROM_TEST
     } 
   }
   bool prev_dac_reg_change = 

@@ -16,11 +16,11 @@ u309m::cfg_t::cfg_t():
   m_spi_buf_size(3),
   m_f_osc(80000000),
   #ifdef ARM_ADC_TEST
-  m_adc(((1 << PTC_A_channel) || (1 << PTC_LC_channel) ||
-        (1 << TR_24V_TEST_channel) || (1 << IZM_3_3V_TEST_channel) ||
-        (1 << IZM_6V_TEST_channel) || (1 << IZM_1_2V_TEST_channel) ||
-        (1 << TEST_24V_channel) || (1 << TEST_5V_channel) ||
-        (1 << PTC_PWR_channel) || (1 << PTC_17A_channel)),
+  m_adc(((1 << PTC_A_channel) | (1 << PTC_LC_channel) |
+        (1 << TR_24V_TEST_channel) | (1 << IZM_3_3V_TEST_channel) |
+        (1 << IZM_6V_TEST_channel) | (1 << IZM_1_2V_TEST_channel) |
+        (1 << TEST_24V_channel) | (1 << TEST_5V_channel) |
+        (1 << PTC_PWR_channel) | (1 << PTC_17A_channel)),
         irs::arm::adc_stellaris_t::EXT_REF),
   #endif // ARM_ADC_TEST
   m_spi_meas_comm_plis(m_spi_buf_size, m_f_osc, irs::arm::arm_spi_t::SPI,
@@ -264,30 +264,33 @@ void u309m::cfg_t::tick()
 
   if (m_timer.check()) {
     #ifdef ARM_ADC_TEST
-    m_eth_data.arm_adc.PTC_A = m_adc.get_float_data(PTC_A_channel);
-    if (m_eth_data.arm_adc.PTC_A > 1) {
+    m_eth_data.arm_adc.PTC_A = m_adc.get_float_data(PTC_A_num);
+    if (m_eth_data.arm_adc.PTC_A > .33f) {
       // ALARM!!! OVERHEAT!!!
     }
-    m_eth_data.arm_adc.PTC_LC = m_adc.get_float_data(PTC_LC_channel);
-    if (m_eth_data.arm_adc.PTC_LC > 1) {
+    m_eth_data.arm_adc.PTC_LC = m_adc.get_float_data(PTC_LC_num);
+    if (m_eth_data.arm_adc.PTC_LC > .33f) {
       // ALARM!!! OVERHEAT!!!
     }
     m_eth_data.arm_adc.TR_24V_TEST =
-      m_adc.get_float_data(TR_24V_TEST_channel)*11.f;
+      m_adc.get_float_data(TR_24V_TEST_num) * 36.348f;
     m_eth_data.arm_adc.IZM_3_3V_TEST =
-      m_adc.get_float_data(IZM_3_3V_TEST_channel)*3.f;
+      m_adc.get_float_data(IZM_3_3V_TEST_num) * 9.446f;
     m_eth_data.arm_adc.IZM_6V_TEST =
-      m_adc.get_float_data(IZM_6V_TEST_channel)*3.f;
+      m_adc.get_float_data(IZM_6V_TEST_num) * 9.313f;
     m_eth_data.arm_adc.IZM_1_2V_TEST =
-      m_adc.get_float_data(IZM_1_2V_TEST_channel)*3.f;
-    m_eth_data.arm_adc.TEST_24V = m_adc.get_float_data(TEST_24V_channel)*11.f;
-    m_eth_data.arm_adc.TEST_5V = m_adc.get_float_data(TEST_5V_channel)*11.f;
-    m_eth_data.arm_adc.PTC_PWR = m_adc.get_float_data(PTC_PWR_channel);
-    if (m_eth_data.arm_adc.PTC_PWR > 1) {
+      m_adc.get_float_data(IZM_1_2V_TEST_num) * 10.028f;
+    m_eth_data.arm_adc.TEST_24V 
+      = m_adc.get_float_data(TEST_24V_num) * 32.999f;
+    m_eth_data.arm_adc.TEST_5V 
+      = m_adc.get_float_data(TEST_5V_num) * 35.163f;
+    m_eth_data.arm_adc.PTC_PWR 
+      = m_adc.get_float_data(PTC_PWR_num);
+    if (m_eth_data.arm_adc.PTC_PWR > .33f) {
       // ALARM!!! OVERHEAT!!!
     }
-    m_eth_data.arm_adc.PTC_17A = m_adc.get_float_data(PTC_17A_channel);
-    if (m_eth_data.arm_adc.PTC_17A > 1) {
+    m_eth_data.arm_adc.PTC_17A = m_adc.get_float_data(PTC_17A_num);
+    if (m_eth_data.arm_adc.PTC_17A > .33f) {
       // ALARM!!! OVERHEAT!!!
     }
     m_eth_data.arm_adc.internal_temp = m_adc.get_temperature();

@@ -352,6 +352,14 @@ private:
   private:
     irs::timer_t m_timer;
   }; // plis_ready_t
+  
+  /*class value_check_t
+  {
+  public:
+    value_check_t(float a_min);
+    check(float a_value);
+  };*/
+  
   enum {
     CS_TR_3 = 0,
     CS_TR_4 = 1,
@@ -403,6 +411,18 @@ private:
     TEST_5V_channel = 2,
     PTC_PWR_channel = 1,
     PTC_17A_channel = 0
+  };
+  enum {
+    PTC_A_num = 9,
+    PTC_LC_num = 8,
+    TR_24V_TEST_num = 7,
+    IZM_3_3V_TEST_num = 6,
+    IZM_6V_TEST_num = 5,
+    IZM_1_2V_TEST_num = 4,
+    TEST_24V_num = 3,
+    TEST_5V_num = 2,
+    PTC_PWR_num = 1,
+    PTC_17A_num = 0
   };
 
   irs::arm::io_pin_t m_supply_comm_cfg_done;
