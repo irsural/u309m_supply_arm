@@ -61,7 +61,8 @@ u309m::cfg_t::cfg_t():
   m_tcpip(&m_arm_eth, m_local_ip, m_dest_ip, 10),
   m_simple_hardflow(&m_tcpip, m_local_ip, m_local_port,
     m_dest_ip, m_dest_port, 10),
-  m_modbus_server(&m_simple_hardflow, 0, 14, 317, 0, irs::make_cnt_ms(200)),
+  //m_modbus_server(&m_simple_hardflow, 0, 14, 317, 0, irs::make_cnt_ms(200)),
+  m_modbus_server(&m_simple_hardflow, 0, 14, 321, 0, irs::make_cnt_ms(200)),
   m_eth_data(&m_modbus_server),
 
   m_izm_th_enable(GPIO_PORTG, 1, irs::gpio_pin_t::dir_out),
@@ -265,13 +266,7 @@ void u309m::cfg_t::tick()
   if (m_timer.check()) {
     #ifdef ARM_ADC_TEST
     m_eth_data.arm_adc.PTC_A = m_adc.get_float_data(PTC_A_num);
-    if (m_eth_data.arm_adc.PTC_A > .33f) {
-      // ALARM!!! OVERHEAT!!!
-    }
     m_eth_data.arm_adc.PTC_LC = m_adc.get_float_data(PTC_LC_num);
-    if (m_eth_data.arm_adc.PTC_LC > .33f) {
-      // ALARM!!! OVERHEAT!!!
-    }
     m_eth_data.arm_adc.TR_24V_TEST =
       m_adc.get_float_data(TR_24V_TEST_num) * 36.348f;
     m_eth_data.arm_adc.IZM_3_3V_TEST =
@@ -280,19 +275,12 @@ void u309m::cfg_t::tick()
       m_adc.get_float_data(IZM_6V_TEST_num) * 9.313f;
     m_eth_data.arm_adc.IZM_1_2V_TEST =
       m_adc.get_float_data(IZM_1_2V_TEST_num) * 10.028f;
-    m_eth_data.arm_adc.TEST_24V 
+    m_eth_data.arm_adc.TEST_24V
       = m_adc.get_float_data(TEST_24V_num) * 32.999f;
-    m_eth_data.arm_adc.TEST_5V 
+    m_eth_data.arm_adc.TEST_5V
       = m_adc.get_float_data(TEST_5V_num) * 35.163f;
-    m_eth_data.arm_adc.PTC_PWR 
-      = m_adc.get_float_data(PTC_PWR_num);
-    if (m_eth_data.arm_adc.PTC_PWR > .33f) {
-      // ALARM!!! OVERHEAT!!!
-    }
+    m_eth_data.arm_adc.PTC_PWR = m_adc.get_float_data(PTC_PWR_num);
     m_eth_data.arm_adc.PTC_17A = m_adc.get_float_data(PTC_17A_num);
-    if (m_eth_data.arm_adc.PTC_17A > .33f) {
-      // ALARM!!! OVERHEAT!!!
-    }
     m_eth_data.arm_adc.internal_temp = m_adc.get_temperature();
     #endif // ARM_ADC_TEST
   }

@@ -23,6 +23,9 @@ public:
     supply_eth_data_t* ap_supply_eth_data,
     eeprom_supply_data_t* ap_supply_eeprom_data
   );
+  void on();
+  void off();
+  inline bool operated() { return m_operate; };
   void tick();
 private:
   supply_pins_t* mp_supply_pins;
@@ -48,8 +51,12 @@ private:
   float m_fin_adc_koef;
   float m_prev_dac_koef;
   float m_fin_dac_koef;
-  float m_prev_tr_reg;
-  float m_fin_tr_reg;
+  //float m_prev_tr_reg;  - чо это?
+  //float m_fin_tr_reg;
+  float m_temp_base_ki;
+  float m_temp_base_kd;
+  float m_temp_aux_ki;
+  float m_temp_aux_kd;
   irs::pid_data_t m_temp_base_pid_data;
   irs::pid_data_t m_temp_aux_pid_data;
   float m_dt;
@@ -58,6 +65,7 @@ private:
   float m_temp_base_time_const;
   irs::isodr_data_t m_temp_aux_isodr;
   float m_temp_aux_time_const;
+  bool m_operate;
 }; // supply_t
 
 } // namespace u309m

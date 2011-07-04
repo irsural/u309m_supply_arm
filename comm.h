@@ -71,8 +71,9 @@ public:
     meas_comm_pins_t* ap_meas_comm_pins,
     meas_comm_data_t* ap_meas_comm_data
   );
-  void make_command();
-  void init_default();
+  inline void on() { m_need_on = true; };
+  inline void off() { m_need_off = true; };
+  inline bool operated() { return m_operate; };
   void tick();
 
 private:
@@ -114,6 +115,12 @@ private:
   bool m_plis_reset;
   irs_u16 m_command;
   tick_mode_t m_mode;
+  bool m_operate;
+  bool m_need_on;
+  bool m_need_off;
+
+  void make_command();
+  void init_default();
 }; // meas_comm_t
 
 class supply_plis_t
@@ -173,7 +180,9 @@ public:
     supply_comm_pins_t* ap_supply_comm_pins,
     supply_comm_data_t* ap_supply_comm_data
   );
-  void make_command();
+  inline void on() { m_need_on = true; };
+  inline void off() { m_need_off = true; };
+  inline bool operated() { return m_operate; };
   void tick();
 private:
   enum tick_mode_t {
@@ -238,7 +247,12 @@ private:
   bool m_plis_reset;
   irs::timer_t m_timer;
   irs_u8 m_transaction_cnt;
+  bool m_operate;
+  bool m_need_on;
+  bool m_need_off;
 
+  void make_command();
+  void reset_command();
   void init_default();
 }; // supply_comm_t
 

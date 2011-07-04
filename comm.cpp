@@ -135,7 +135,10 @@ u309m::meas_comm_t::meas_comm_t(
   m_plis_reset(false),
   m_command(0),
   //m_mode(command_check)
-  m_mode(meas_reset_start)
+  m_mode(meas_reset_start),
+  m_operate(false),
+  m_need_on(false),
+  m_need_off(false)
 {
 }
 
@@ -186,7 +189,7 @@ void u309m::meas_comm_t::tick()
   m_th3.tick();
   m_th4.tick();
   m_th5.tick();
-  
+
   m_plis.tick();
 
   mp_meas_comm_data->error =
@@ -208,33 +211,59 @@ void u309m::meas_comm_t::tick()
     m_mode = meas_reset_start;
   }
 
-  switch (m_mode) {
+  switch (m_mode)
+  {
     case command_check:
     {
-      bool meas_comm_on_change =
-        (m_comm_on != mp_meas_comm_data->on);
-      if (meas_comm_on_change) {
-        m_comm_on = mp_meas_comm_data->on;
-        if (!m_comm_on) {
-          m_mode = meas_on_start;
-          break;
-        }
+      if (m_need_on)
+      {
+        m_operate = true;
+        m_need_on = false;
       }
-      if (m_comm_on) {
-        bool meas_comm_apply_bit_change =
-          (m_command_apply != mp_meas_comm_data->apply);
-        if (meas_comm_apply_bit_change) {
-          m_command_apply = mp_meas_comm_data->apply;
-          if (m_command_apply) {
-            m_mode = meas_apply_start;
+      if (m_need_off)
+      {
+        m_operate = false;
+        m_need_off = false;
+        m_comm_on = false;
+        mp_meas_comm_data->on = 0;
+        m_mode = meas_on_start;
+      }
+      else
+      {
+        if (m_comm_on != mp_meas_comm_data->on)
+        {
+          if (m_operate)
+          {
+            m_comm_on = mp_meas_comm_data->on;
+            if (!m_comm_on)
+            {
+              m_mode = meas_on_start;
+              break;
+            }
+          }
+          else mp_meas_comm_data->on = 0;
+        }
+        if (m_comm_on & m_operate)
+        {
+          if (m_command_apply != mp_meas_comm_data->apply)
+          {
+            m_command_apply = mp_meas_comm_data->apply;
+            if (m_command_apply)
+            {
+              m_mode = meas_apply_start;
+            }
           }
         }
-      } else {
-        if (mp_meas_comm_data->apply) {
-          mp_meas_comm_data->apply = 0;
+        else
+        {
+          if (mp_meas_comm_data->apply)
+          {
+            mp_meas_comm_data->apply = 0;
+          }
         }
       }
-    } break;
+      break;
+    }
     case meas_on_start:
     {
       /*if (m_comm_on) {
@@ -299,7 +328,7 @@ void u309m::meas_comm_t::tick()
     } break;
     case meas_reset_complete:
     {
-      if (!mp_meas_comm_pins->apply->pin()) 
+      if (!mp_meas_comm_pins->apply->pin())
       {
         mp_meas_comm_data->reset = 0;
         mp_meas_comm_pins->reset->clear();
@@ -415,7 +444,7 @@ void u309m::supply_plis_t::tact_off()
 void u309m::supply_plis_t::tick()
 {
   mp_spi->tick();
-  switch (m_mode) 
+  switch (m_mode)
   {
     case FREE:
     {
@@ -430,19 +459,19 @@ void u309m::supply_plis_t::tick()
           mp_cs_pin->clear();
           for (volatile irs_u8 i = 20; i; i--);
           //m_mode = SPI_BUSY;
-          
+
           switch (m_target)
           {
             case READ: mp_spi->read(mp_read_buf, m_size); break;
-            case WRITE: 
+            case WRITE:
             {
               irs_u8 write_buf[m_size];
               write_buf[0] = mp_write_buf[1];
               write_buf[1] = mp_write_buf[0];
-              mp_spi->write(write_buf, m_size); 
+              mp_spi->write(write_buf, m_size);
               break;
             }
-            case READ_WRITE: 
+            case READ_WRITE:
             {
               irs_u8 write_buf[m_size];
               write_buf[0] = mp_write_buf[1];
@@ -451,20 +480,20 @@ void u309m::supply_plis_t::tick()
               break;
             }
           }
-          
-          while (mp_spi->get_status() != irs::spi_t::FREE) mp_spi->tick(); 
+
+          while (mp_spi->get_status() != irs::spi_t::FREE) mp_spi->tick();
           {
             for (volatile irs_u8 i = 20; i; i--);
             mp_cs_pin->set();
             mp_spi->unlock();
-            
+
             if (m_target == READ || m_target == READ_WRITE)
             {
               irs_u8 byte = mp_read_buf[0];
               mp_read_buf[0] = mp_read_buf[1];
               mp_read_buf[1] = byte;
             }
-            
+
             m_target = NOTHING;
             m_ready = true;
             m_mode = FREE;
@@ -475,19 +504,19 @@ void u309m::supply_plis_t::tick()
     }
     case SPI_BUSY:
     {
-      if (mp_spi->get_status() == irs::spi_t::FREE) 
+      if (mp_spi->get_status() == irs::spi_t::FREE)
       {
         for (volatile irs_u8 i = 20; i; i--);
         mp_cs_pin->set();
         mp_spi->unlock();
-        
+
         if (m_target == READ || m_target == READ_WRITE)
         {
           irs_u8 byte = mp_read_buf[0];
           mp_read_buf[0] = mp_read_buf[1];
           mp_read_buf[1] = byte;
         }
-        
+
         m_target = NOTHING;
         m_ready = true;
         m_mode = FREE;
@@ -517,7 +546,10 @@ u309m::supply_comm_t::supply_comm_t(
   m_mode(mode_reset_start),
   m_plis_reset(false),
   m_timer(m_reset_interval),
-  m_transaction_cnt(0)
+  m_transaction_cnt(0),
+  m_operate(false),
+  m_need_on(false),
+  m_need_off(false)
 {
 //  while (m_mode != mode_command_check) tick();
 //  m_command = (PLIS|SUPPLY_17A|SUPPLY_1A|SUPPLY_2V|SUPPLY_20V|
@@ -541,6 +573,18 @@ void u309m::supply_comm_t::make_command()
   );
 }
 
+void u309m::supply_comm_t::reset_command()
+{
+  m_command = 0;
+  mp_supply_comm_data->on = 0;
+  mp_supply_comm_data->polarity_calibrated = 0;
+  mp_supply_comm_data->polarity_etalon = 0;
+  mp_supply_comm_data->calibrated_cell = 0;
+  mp_supply_comm_data->etalon_cell = 0;
+  mp_supply_comm_data->supply_index = 0;
+  mp_supply_comm_data->apply = 1;
+}
+
 void u309m::supply_comm_t::init_default()
 {
   mp_supply_comm_data->supply_index = 0;
@@ -552,14 +596,13 @@ void u309m::supply_comm_t::init_default()
   mp_supply_comm_data->on = 0;
   mp_supply_comm_data->error = 0;
   mp_supply_comm_data->reset = 0;
-  
+
   m_error = false;
   m_busy = false;
   m_ready = false;
-  
+
   m_transaction_cnt = 0;
 }
-
 
 void u309m::supply_comm_t::tick()
 {
@@ -614,14 +657,33 @@ void u309m::supply_comm_t::tick()
     }
     case mode_command_check:
     {
-      bool meas_comm_apply_bit_change =
-        (m_command_apply != mp_supply_comm_data->apply);
-      if (meas_comm_apply_bit_change) 
+      if (m_need_on)
       {
-        m_command_apply = mp_supply_comm_data->apply;
-        if (m_command_apply) 
+        m_operate = true;
+        m_need_on = false;
+      }
+      if (m_need_off)
+      {
+        m_operate = false;
+        m_need_off = false;
+        m_command_apply = false;
+        reset_command();
+        m_mode = mode_send_command;
+      }
+      else
+      {
+        if (m_command_apply != mp_supply_comm_data->apply)
         {
-          m_mode = mode_send_command;
+          if (m_operate)
+          {
+            m_command_apply = mp_supply_comm_data->apply;
+            if (m_command_apply)
+            {
+              make_command();
+              m_mode = mode_send_command;
+            }
+          }
+          else mp_supply_comm_data->apply = 0;
         }
       }
       break;
@@ -631,11 +693,10 @@ void u309m::supply_comm_t::tick()
       if (m_plis.ready())
       {
         m_plis.tact_on();
-        make_command();
         m_plis.write();
         m_mode = mode_send_request;
       }
-      break;  
+      break;
     }
     case mode_send_request:
     {

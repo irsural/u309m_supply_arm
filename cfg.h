@@ -71,20 +71,138 @@ struct rele_ext_eth_data_t {
   }
 }; // rele_ext_eth_data_t
 
+struct control_data_t
+{
+  irs::conn_data_t<irs_u32> alarm;
+  irs::bit_data_t alarm_internal_th;
+  irs::bit_data_t alarm_ptc_a;
+  irs::bit_data_t alarm_ptc_lc;
+  irs::bit_data_t alarm_ptc_pwr;
+  irs::bit_data_t alarm_ptc_17A;
+  irs::bit_data_t alarm_tr_24V;
+  irs::bit_data_t alarm_24V;
+  irs::bit_data_t alarm_5V;
+  irs::bit_data_t alarm_izm_6V;
+  irs::bit_data_t alarm_izm_3_3V;
+  irs::bit_data_t alarm_izm_1_2V;
+  irs::bit_data_t alarm_izm_th1;
+  irs::bit_data_t alarm_izm_th2;
+  irs::bit_data_t alarm_izm_th3;
+  irs::bit_data_t alarm_izm_th4;
+  irs::bit_data_t alarm_izm_th5;
+  irs::bit_data_t alarm_200V_th_base;
+  irs::bit_data_t alarm_200V_th_aux;
+  irs::bit_data_t alarm_20V_th_base;
+  irs::bit_data_t alarm_20V_th_aux;
+  irs::bit_data_t alarm_2V_th_base;
+  irs::bit_data_t alarm_2V_th_aux;
+  irs::bit_data_t alarm_1A_th_base;
+  irs::bit_data_t alarm_1A_th_aux;
+  irs::bit_data_t alarm_17A_th_base;
+  irs::bit_data_t alarm_17A_th_aux;
+
+  irs::bit_data_t on;
+
+  irs::conn_data_t<irs_u8> unlock;
+
+  irs::bit_data_t ready_200V_prev;
+  irs::bit_data_t ready_200V_final;
+  irs::bit_data_t ready_20V_prev;
+  irs::bit_data_t ready_20V_final;
+  irs::bit_data_t ready_2V_prev;
+  irs::bit_data_t ready_2V_final;
+  irs::bit_data_t ready_1A_prev;
+  irs::bit_data_t ready_1A_final;
+  irs::bit_data_t ready_17A_prev;
+  irs::bit_data_t ready_17A_final;
+
+  control_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
+    irs_uarc* ap_size = IRS_NULL)
+  {
+    irs_uarc size = connect(ap_data, a_index);
+    if (ap_size != IRS_NULL) {
+      *ap_size = size;
+    }
+  }
+
+  irs_uarc connect(irs::mxdata_t *ap_data, irs_uarc a_index)
+  {
+    irs_uarc index = a_index;
+
+    alarm_internal_th.connect(ap_data, index, 0);
+    alarm_ptc_a.connect(ap_data, index, 1);
+    alarm_ptc_lc.connect(ap_data, index, 2);
+    alarm_ptc_pwr.connect(ap_data, index, 3);
+    alarm_ptc_17A.connect(ap_data, index, 4);
+    alarm_tr_24V.connect(ap_data, index, 5);
+    alarm_24V.connect(ap_data, index, 6);
+    alarm_5V.connect(ap_data, index, 7);
+
+    alarm_izm_6V.connect(ap_data, index, 0);
+    alarm_izm_3_3V.connect(ap_data, index, 1);
+    alarm_izm_1_2V.connect(ap_data, index, 2);
+    alarm_izm_th1.connect(ap_data, index, 3);
+    alarm_izm_th2.connect(ap_data, index, 4);
+    alarm_izm_th3.connect(ap_data, index, 5);
+    alarm_izm_th4.connect(ap_data, index, 6);
+    alarm_izm_th5.connect(ap_data, index, 7);
+
+    alarm_200V_th_base.connect(ap_data, index, 0);
+    alarm_200V_th_aux.connect(ap_data, index, 1);
+    alarm_20V_th_base.connect(ap_data, index, 2);
+    alarm_20V_th_aux.connect(ap_data, index, 3);
+    alarm_2V_th_base.connect(ap_data, index, 4);
+    alarm_2V_th_aux.connect(ap_data, index, 5);
+    alarm_1A_th_base.connect(ap_data, index, 6);
+    alarm_1A_th_aux.connect(ap_data, index, 7);
+
+    alarm_17A_th_base.connect(ap_data, index, 0);
+    alarm_17A_th_aux.connect(ap_data, index, 1);
+
+    on.connect(ap_data, index, 7);
+
+    index = alarm.connect(ap_data, index);
+
+    index = unlock.connect(ap_data, index);
+
+    ready_200V_prev.connect(ap_data, index, 0);
+    ready_200V_final.connect(ap_data, index, 1);
+    ready_20V_prev.connect(ap_data, index, 2);
+    ready_20V_final.connect(ap_data, index, 3);
+    ready_2V_prev.connect(ap_data, index, 4);
+    ready_2V_final.connect(ap_data, index, 5);
+    ready_1A_prev.connect(ap_data, index, 6);
+    ready_1A_final.connect(ap_data, index, 7);
+
+    index++;
+
+    ready_17A_prev.connect(ap_data, index, 0);
+    ready_17A_final.connect(ap_data, index, 1);
+
+    index++;
+    index++;
+
+    return index;
+  }
+}; // control_data_t
+
 struct eth_data_t {
-  irs::conn_data_t<irs_u8> ip_0;
-  irs::conn_data_t<irs_u8> ip_1;
-  irs::conn_data_t<irs_u8> ip_2;
-  irs::conn_data_t<irs_u8> ip_3;
-  rele_ext_eth_data_t rele_ext; // 2
-  supply_comm_data_t supply_comm; // 4
-  meas_comm_data_t meas_comm; // 4
-  arm_adc_data_t arm_adc; // 44
-  supply_eth_data_t supply_200V; // 114
-  supply_eth_data_t supply_20V;
-  supply_eth_data_t supply_2V;
-  supply_eth_data_t supply_1A;
-  supply_eth_data_t supply_17A;
+  irs::conn_data_t<irs_u8> ip_0;  //  1 byte
+  irs::conn_data_t<irs_u8> ip_1;  //  1 byte
+  irs::conn_data_t<irs_u8> ip_2;  //  1 byte
+  irs::conn_data_t<irs_u8> ip_3;  //  1 byte
+  rele_ext_eth_data_t rele_ext;   //  2 bytes
+  supply_comm_data_t supply_comm; //  4 bytes
+  meas_comm_data_t meas_comm;     //  4 bytes
+  arm_adc_data_t arm_adc;         //  44 bytes
+  supply_eth_data_t supply_200V;  //  114 bytes
+  supply_eth_data_t supply_20V;   //  114 bytes
+  supply_eth_data_t supply_2V;    //  114 bytes
+  supply_eth_data_t supply_1A;    //  114 bytes
+  supply_eth_data_t supply_17A;   //  114 bytes
+  control_data_t control;         //  8 bytes
+  //---------------------------------------------
+  //                          Итого:  636 байт
 
   eth_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
     irs_uarc* ap_size = IRS_NULL)
@@ -111,6 +229,7 @@ struct eth_data_t {
     index = supply_2V.connect(ap_data, index);
     index = supply_1A.connect(ap_data, index);
     index = supply_17A.connect(ap_data, index);
+    index = control.connect(ap_data, index);
 
     return index;
   }
@@ -352,14 +471,7 @@ private:
   private:
     irs::timer_t m_timer;
   }; // plis_ready_t
-  
-  /*class value_check_t
-  {
-  public:
-    value_check_t(float a_min);
-    check(float a_value);
-  };*/
-  
+
   enum {
     CS_TR_3 = 0,
     CS_TR_4 = 1,
