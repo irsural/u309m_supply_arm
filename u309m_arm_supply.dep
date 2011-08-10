@@ -852,6 +852,10 @@
       <name>$PROJ_DIR$\..\mxsrclib\mxnet.cpp</name>
       <outputs>
         <tool>
+          <name>ICCARM</name>
+          <file> 120</file>
+        </tool>
+        <tool>
           <name>BICOMP</name>
           <file> 94</file>
         </tool>
@@ -874,6 +878,10 @@
     <file>
       <name>$PROJ_DIR$\..\mxsrclib\irsnetwork.cpp</name>
       <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 151</file>
+        </tool>
         <tool>
           <name>BICOMP</name>
           <file> 238</file>
@@ -916,6 +924,10 @@
     <file>
       <name>$PROJ_DIR$\..\mxsrclib\irsdbgutil.cpp</name>
       <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 304</file>
+        </tool>
         <tool>
           <name>BICOMP</name>
           <file> 81</file>
