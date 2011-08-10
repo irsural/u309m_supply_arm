@@ -30,7 +30,7 @@ private:
   };
   enum
   {
-    m_alarm_mask = 0x7FFFFFFF,
+    m_alarm_mask = 0x3FFFFFF,
     m_unlock_command = 116
   };
   class check_value_t
@@ -42,7 +42,14 @@ private:
       m_min(a_min),
       m_max(a_max)
     {}
-    bool valid() { return (m_value >= m_min) && (m_value <= m_max); }
+    bool valid() 
+    { 
+      float value = m_value;
+      bool min = value >= m_min;
+      bool max = value <= m_max;
+      
+      return min && max; 
+    }
   private:
     const irs::conn_data_t<float> &m_value;
     const float m_min;
@@ -70,6 +77,7 @@ private:
   bool m_SYM_20V;
   bool m_SYM_200V;
   bool m_KZ_2V;
+  bool m_SYM_OFF;
   //
   irs::timer_t m_rel_220V_timer;
   //

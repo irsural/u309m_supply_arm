@@ -43,6 +43,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_SYM_20V(mp_cfg->eth_data()->rele_ext.SYM_20V),
   m_SYM_200V(mp_cfg->eth_data()->rele_ext.SYM_200V),
   m_KZ_2V(mp_cfg->eth_data()->rele_ext.KZ_2V),
+  m_SYM_OFF(mp_cfg->eth_data()->rele_ext.SYM_OFF),
   //
   m_rel_220V_timer(irs::make_cnt_s(1)),
   //  check
@@ -72,7 +73,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
     18.f, 70.f),
   m_2V_th_base_value(mp_cfg->eth_data()->supply_2V.base_temp_data.value,
     18.f, 70.f),
-  m_2V_th_aux_value(mp_cfg->eth_data()->supply_200V.aux_temp_data.value,
+  m_2V_th_aux_value(mp_cfg->eth_data()->supply_2V.aux_temp_data.value,
     18.f, 70.f),
   m_1A_th_base_value(mp_cfg->eth_data()->supply_1A.base_temp_data.value,
     18.f, 70.f),
@@ -81,12 +82,13 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_17A_th_base_value(mp_cfg->eth_data()->supply_17A.base_temp_data.value,
     18.f, 90.f),
   m_17A_th_aux_value(mp_cfg->eth_data()->supply_17A.aux_temp_data.value,
-    18.f, 90.f),
+    18.f, 120.f),
   m_alarm_timer(irs::make_cnt_ms(100)),
   m_status(OFF)
 {
   m_rel_220V_timer.start();
   m_alarm_timer.start();
+  mp_cfg->rele_ext_pins()->SYM_OFF->set();
 }
 
 void u309m::app_t::tick()
@@ -118,48 +120,84 @@ void u309m::app_t::tick()
   {
     case rele_check_mode:
     {
-      if (m_SYM_2V != mp_cfg->eth_data()->rele_ext.SYM_2V) {
-        m_bistable_rele_change = true;
-        m_SYM_2V = mp_cfg->eth_data()->rele_ext.SYM_2V;
-        if (m_SYM_2V) {
-          mp_cfg->rele_ext_pins()->SYM_2V_on->set();
-          mp_cfg->rele_ext_pins()->SYM_2V_off->clear();
-        } else {
-          mp_cfg->rele_ext_pins()->SYM_2V_on->clear();
-          mp_cfg->rele_ext_pins()->SYM_2V_off->set();
+      if (m_SYM_2V != mp_cfg->eth_data()->rele_ext.SYM_2V) 
+      {
+        if (m_SYM_OFF)
+        {
+          m_SYM_2V = false;
+          mp_cfg->eth_data()->rele_ext.SYM_2V = 0;
+        }
+        else
+        {
+          m_bistable_rele_change = true;
+          m_SYM_2V = mp_cfg->eth_data()->rele_ext.SYM_2V;
+          if (m_SYM_2V) {
+            mp_cfg->rele_ext_pins()->SYM_2V_on->set();
+            mp_cfg->rele_ext_pins()->SYM_2V_off->clear();
+          } else {
+            mp_cfg->rele_ext_pins()->SYM_2V_on->clear();
+            mp_cfg->rele_ext_pins()->SYM_2V_off->set();
+          }
         }
       }
-      if (m_SYM_20V != mp_cfg->eth_data()->rele_ext.SYM_20V) {
-        m_bistable_rele_change = true;
-        m_SYM_20V = mp_cfg->eth_data()->rele_ext.SYM_20V;
-        if (m_SYM_20V) {
-          mp_cfg->rele_ext_pins()->SYM_20V_on->set();
-          mp_cfg->rele_ext_pins()->SYM_20V_off->clear();
-        } else {
-          mp_cfg->rele_ext_pins()->SYM_20V_on->clear();
-          mp_cfg->rele_ext_pins()->SYM_20V_off->set();
+      if (m_SYM_20V != mp_cfg->eth_data()->rele_ext.SYM_20V) 
+      {
+        if (m_SYM_OFF)
+        {
+          m_SYM_20V = false;
+          mp_cfg->eth_data()->rele_ext.SYM_20V = 0;
+        }
+        else
+        {
+          m_bistable_rele_change = true;
+          m_SYM_20V = mp_cfg->eth_data()->rele_ext.SYM_20V;
+          if (m_SYM_20V) {
+            mp_cfg->rele_ext_pins()->SYM_20V_on->set();
+            mp_cfg->rele_ext_pins()->SYM_20V_off->clear();
+          } else {
+            mp_cfg->rele_ext_pins()->SYM_20V_on->clear();
+            mp_cfg->rele_ext_pins()->SYM_20V_off->set();
+          }
         }
       }
-      if (m_SYM_200V != mp_cfg->eth_data()->rele_ext.SYM_200V) {
-        m_bistable_rele_change = true;
-        m_SYM_200V = mp_cfg->eth_data()->rele_ext.SYM_200V;
-        if (m_SYM_200V) {
-          mp_cfg->rele_ext_pins()->SYM_200V_on->set();
-          mp_cfg->rele_ext_pins()->SYM_200V_off->clear();
-        } else {
-          mp_cfg->rele_ext_pins()->SYM_200V_on->clear();
-          mp_cfg->rele_ext_pins()->SYM_200V_off->set();
+      if (m_SYM_200V != mp_cfg->eth_data()->rele_ext.SYM_200V) 
+      {
+        if (m_SYM_OFF)
+        {
+          m_SYM_200V = false;
+          mp_cfg->eth_data()->rele_ext.SYM_200V = 0;
+        }
+        else
+        {
+          m_bistable_rele_change = true;
+          m_SYM_200V = mp_cfg->eth_data()->rele_ext.SYM_200V;
+          if (m_SYM_200V) {
+            mp_cfg->rele_ext_pins()->SYM_200V_on->set();
+            mp_cfg->rele_ext_pins()->SYM_200V_off->clear();
+          } else {
+            mp_cfg->rele_ext_pins()->SYM_200V_on->clear();
+            mp_cfg->rele_ext_pins()->SYM_200V_off->set();
+          }
         }
       }
-      if (m_KZ_2V != mp_cfg->eth_data()->rele_ext.KZ_2V) {
-        m_bistable_rele_change = true;
-        m_KZ_2V = mp_cfg->eth_data()->rele_ext.KZ_2V;
-        if (m_KZ_2V) {
-          mp_cfg->rele_ext_pins()->KZ_2V_on->set();
-          mp_cfg->rele_ext_pins()->KZ_2V_off->clear();
-        } else {
-          mp_cfg->rele_ext_pins()->KZ_2V_on->clear();
-          mp_cfg->rele_ext_pins()->KZ_2V_off->set();
+      if (m_KZ_2V != mp_cfg->eth_data()->rele_ext.KZ_2V) 
+      {
+        if (m_SYM_OFF)
+        {
+          m_KZ_2V = false;
+          mp_cfg->eth_data()->rele_ext.KZ_2V = 0;
+        }
+        else
+        {
+          m_bistable_rele_change = true;
+          m_KZ_2V = mp_cfg->eth_data()->rele_ext.KZ_2V;
+          if (m_KZ_2V) {
+            mp_cfg->rele_ext_pins()->KZ_2V_on->set();
+            mp_cfg->rele_ext_pins()->KZ_2V_off->clear();
+          } else {
+            mp_cfg->rele_ext_pins()->KZ_2V_on->clear();
+            mp_cfg->rele_ext_pins()->KZ_2V_off->set();
+          }
         }
       }
       if (mp_cfg->eth_data()->rele_ext.KZ_1A) {
@@ -177,11 +215,46 @@ void u309m::app_t::tick()
       } else {
         mp_cfg->rele_ext_pins()->REL_220V->clear();
       }
-      if (mp_cfg->eth_data()->rele_ext.SYM_OFF) {
-        mp_cfg->rele_ext_pins()->SYM_OFF->set();
-      } else {
-        mp_cfg->rele_ext_pins()->SYM_OFF->clear();
+      
+      if (mp_cfg->eth_data()->rele_ext.SYM_OFF != m_SYM_OFF) 
+      {
+        m_SYM_OFF = mp_cfg->eth_data()->rele_ext.SYM_OFF;
+        if (m_SYM_OFF)
+        {
+          mp_cfg->rele_ext_pins()->SYM_OFF->clear();
+          mp_cfg->rele_ext_pins()->SYM_2V_on->clear();
+          mp_cfg->rele_ext_pins()->SYM_2V_off->clear();
+          mp_cfg->rele_ext_pins()->SYM_20V_on->clear();
+          mp_cfg->rele_ext_pins()->SYM_20V_off->clear();
+          mp_cfg->rele_ext_pins()->SYM_200V_on->clear();
+          mp_cfg->rele_ext_pins()->SYM_200V_off->clear();
+          mp_cfg->rele_ext_pins()->KZ_2V_on->clear();
+          mp_cfg->rele_ext_pins()->KZ_2V_off->clear();
+          m_KZ_2V = false;
+          mp_cfg->eth_data()->rele_ext.KZ_2V = 0;
+          m_SYM_2V = false;
+          mp_cfg->eth_data()->rele_ext.SYM_2V = 0;
+          m_SYM_20V = false;
+          mp_cfg->eth_data()->rele_ext.SYM_20V = 0;
+          m_SYM_200V = false;
+          mp_cfg->eth_data()->rele_ext.SYM_200V = 0;
+          mp_cfg->rele_ext_pins()->KZ_2V_on->clear();
+          mp_cfg->rele_ext_pins()->KZ_2V_off->clear();
+          mp_cfg->rele_ext_pins()->SYM_2V_on->clear();
+          mp_cfg->rele_ext_pins()->SYM_2V_off->clear();
+          mp_cfg->rele_ext_pins()->SYM_20V_on->clear();
+          mp_cfg->rele_ext_pins()->SYM_20V_off->clear();
+          mp_cfg->rele_ext_pins()->SYM_200V_on->clear();
+          mp_cfg->rele_ext_pins()->SYM_200V_off->clear();
+          m_bistable_rele_change = false;
+          m_mode = rele_check_mode;
+        }
+        else
+        {
+          mp_cfg->rele_ext_pins()->SYM_OFF->set();
+        }
       }
+      
       if (m_bistable_rele_change) {
         m_rele_timer.start();
         m_mode = rele_voltage_off_mode;
@@ -208,44 +281,95 @@ void u309m::app_t::tick()
 
   if (m_alarm_timer.check())
   {
-    mp_cfg->eth_data()->control.alarm_internal_th
-      = m_internal_th_value.valid();
-    mp_cfg->eth_data()->control.alarm_ptc_a = m_ptc_a_value.valid();
-    mp_cfg->eth_data()->control.alarm_ptc_lc = m_ptc_lc_value.valid();
-    mp_cfg->eth_data()->control.alarm_ptc_pwr = m_ptc_pwr_value.valid();
-    mp_cfg->eth_data()->control.alarm_ptc_17A = m_ptc_17A_value.valid();
-    mp_cfg->eth_data()->control.alarm_tr_24V = m_tr_24V_value.valid();
-    mp_cfg->eth_data()->control.alarm_24V = m_24V_value.valid();
-    mp_cfg->eth_data()->control.alarm_5V = m_5V_value.valid();
-    mp_cfg->eth_data()->control.alarm_izm_6V = m_izm_6V_value.valid();
-    mp_cfg->eth_data()->control.alarm_izm_3_3V = m_izm_3_3V_value.valid();
-    mp_cfg->eth_data()->control.alarm_izm_1_2V = m_izm_1_2V_value.valid();
-    mp_cfg->eth_data()->control.alarm_izm_th1 = m_izm_th1_value.valid();
-    mp_cfg->eth_data()->control.alarm_izm_th2 = m_izm_th2_value.valid();
-    mp_cfg->eth_data()->control.alarm_izm_th3 = m_izm_th3_value.valid();
-    mp_cfg->eth_data()->control.alarm_izm_th4 = m_izm_th4_value.valid();
-    mp_cfg->eth_data()->control.alarm_izm_th5 = m_izm_th5_value.valid();
+    bool internal_th_valid = m_internal_th_value.valid();
+    mp_cfg->eth_data()->control.alarm_internal_th = !internal_th_valid;
+    
+    bool ptc_a_valid = m_ptc_a_value.valid();
+    mp_cfg->eth_data()->control.alarm_ptc_a = !ptc_a_valid;
+    
+    bool ptc_lc_valid = m_ptc_lc_value.valid();
+    mp_cfg->eth_data()->control.alarm_ptc_lc = !ptc_lc_valid;
+    
+    bool ptc_pwr_valid = m_ptc_pwr_value.valid();
+    mp_cfg->eth_data()->control.alarm_ptc_pwr = !ptc_pwr_valid;
+    
+    bool ptc_17A_valid = m_ptc_17A_value.valid();
+    mp_cfg->eth_data()->control.alarm_ptc_17A = !ptc_17A_valid;
+    
+    bool tr_24V_valid = m_tr_24V_value.valid();
+    mp_cfg->eth_data()->control.alarm_tr_24V = !tr_24V_valid;
+    
+    bool v_24V_valid = m_24V_value.valid();
+    mp_cfg->eth_data()->control.alarm_24V = !v_24V_valid;
+    
+    bool v_5V_valid = m_5V_value.valid();
+    mp_cfg->eth_data()->control.alarm_5V = !v_5V_valid;
+    
+    bool izm_6V_valid = m_izm_6V_value.valid();
+    mp_cfg->eth_data()->control.alarm_izm_6V = !izm_6V_valid;
+    
+    bool izm_3_3V_valid = m_izm_3_3V_value.valid();
+    mp_cfg->eth_data()->control.alarm_izm_3_3V = !izm_3_3V_valid;
+    
+    bool izm_1_2V_valid = m_izm_1_2V_value.valid();
+    mp_cfg->eth_data()->control.alarm_izm_1_2V = !izm_1_2V_valid;
+    
+    bool izm_th1_valid = m_izm_th1_value.valid();
+    mp_cfg->eth_data()->control.alarm_izm_th1 = !izm_th1_valid;
+    
+    bool izm_th2_valid = m_izm_th2_value.valid();
+    mp_cfg->eth_data()->control.alarm_izm_th2 = !izm_th2_valid;
+    
+    bool izm_th3_valid = m_izm_th3_value.valid();
+    mp_cfg->eth_data()->control.alarm_izm_th3 = !izm_th3_valid;
+    
+    bool izm_th4_valid = m_izm_th4_value.valid();
+    mp_cfg->eth_data()->control.alarm_izm_th4 = !izm_th4_valid;
+    
+    bool izm_th5_valid = m_izm_th5_value.valid();
+    mp_cfg->eth_data()->control.alarm_izm_th5 = !izm_th5_valid;
+    
+    bool t_200V_th_base_valid = m_200V_th_base_value.valid();
     mp_cfg->eth_data()->control.alarm_200V_th_base
-      = m_200V_th_base_value.valid();
+      = !t_200V_th_base_valid;
+    
+    bool t_200V_th_aux_valid = m_200V_th_aux_value.valid();
     mp_cfg->eth_data()->control.alarm_200V_th_aux
-      = m_200V_th_aux_value.valid();
+      = !t_200V_th_aux_valid;
+    
+    bool t_20V_th_base_valid = m_20V_th_base_value.valid();
     mp_cfg->eth_data()->control.alarm_20V_th_base
-      = m_20V_th_base_value.valid();
+      = !t_20V_th_base_valid;
+    
+    bool t_20V_th_aux_valid = m_20V_th_aux_value.valid();
     mp_cfg->eth_data()->control.alarm_20V_th_aux
-      = m_20V_th_aux_value.valid();
+      = !t_20V_th_aux_valid;
+    
+    bool t_2V_th_base_valid = m_2V_th_base_value.valid();
     mp_cfg->eth_data()->control.alarm_2V_th_base
-      = m_2V_th_base_value.valid();
+      = !t_2V_th_base_valid;
+    
+    bool t_2V_th_aux_valid = m_2V_th_aux_value.valid();
     mp_cfg->eth_data()->control.alarm_2V_th_aux
-      = m_2V_th_aux_value.valid();
+      = !t_2V_th_aux_valid;
+    
+    bool t_1A_th_base_valid = m_1A_th_base_value.valid();
     mp_cfg->eth_data()->control.alarm_1A_th_base
-      = m_1A_th_base_value.valid();
+      = !t_1A_th_base_valid;
+    
+    bool t_1A_th_aux_valid = m_1A_th_aux_value.valid();
     mp_cfg->eth_data()->control.alarm_1A_th_aux
-      = m_1A_th_aux_value.valid();
+      = !t_1A_th_aux_valid;
+    
+    bool t_17A_th_base_valid = m_17A_th_base_value.valid();
     mp_cfg->eth_data()->control.alarm_17A_th_base
-      = m_17A_th_base_value.valid();
+      = !t_17A_th_base_valid;
+    
+    bool t_17A_th_aux_valid = m_17A_th_aux_value.valid();
     mp_cfg->eth_data()->control.alarm_17A_th_aux
-      = m_17A_th_aux_value.valid();
+      = !t_17A_th_aux_valid;
 
+    volatile irs_u32 alarm = mp_cfg->eth_data()->control.alarm;
     switch (m_status)
     {
       case OFF:

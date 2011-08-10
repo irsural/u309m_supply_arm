@@ -141,8 +141,8 @@ u309m::supply_t::supply_t(
 
   #ifdef EEPROM_TEST
   m_temp_aux_pid_data.k = mp_eeprom_data->temp_aux_k;
-  m_temp_aux_pid_data.ki = mp_eeprom_data->temp_aux_ki;
-  m_temp_aux_pid_data.kd = mp_eeprom_data->temp_aux_kd;
+  m_temp_aux_pid_data.ki = mp_eeprom_data->temp_aux_ki * m_dt;
+  m_temp_aux_pid_data.kd = mp_eeprom_data->temp_aux_kd / m_dt;
   #else
   m_temp_aux_pid_data.k = 15000;
   m_temp_aux_pid_data.ki = 0.00075;
@@ -159,8 +159,8 @@ u309m::supply_t::supply_t(
   m_temp_aux_pid_data.k_d_pid = 0.1;
 
   mp_eth_data->aux_tr_data.temp_k = m_temp_aux_pid_data.k;
-  mp_eth_data->aux_tr_data.temp_ki = m_temp_aux_pid_data.ki/m_dt;
-  mp_eth_data->aux_tr_data.temp_kd = m_temp_aux_pid_data.kd*m_dt;
+  mp_eth_data->aux_tr_data.temp_ki = m_temp_aux_pid_data.ki / m_dt;
+  mp_eth_data->aux_tr_data.temp_kd = m_temp_aux_pid_data.kd * m_dt;
 
   #ifdef EEPROM_TEST
   m_temp_aux_time_const = mp_eeprom_data->temp_aux_time_const;
@@ -217,13 +217,33 @@ void u309m::supply_t::tick()
   }
 
   //  Уставки источника
+  const float m_dac_code_max = 65535.f;
   if (m_prev_dac_reg_write != mp_eth_data->prev_dac_data.voltage_code)
   {
     if (m_operate)
     {
-      m_prev_dac_reg_write = mp_eth_data->prev_dac_data.voltage_code;
-      m_volt_reg_data.voltage_code_A =
-        static_cast<irs_u16>(m_prev_dac_reg_write*m_prev_dac_koef);
+      if (mp_eth_data->prev_dac_data.voltage_code < 0.f)
+      {
+        mp_eth_data->prev_dac_data.voltage_code = m_prev_dac_reg_write;
+      }
+      else
+      {
+        float dac_code = 
+          mp_eth_data->prev_dac_data.voltage_code * m_prev_dac_koef;
+        if (dac_code <= m_dac_code_max)
+        {
+          m_volt_reg_data.voltage_code_A = static_cast<irs_u16>(dac_code);
+        }
+        else
+        {
+          mp_eth_data->prev_dac_data.voltage_code = 
+            m_dac_code_max / m_prev_dac_koef;
+          m_volt_reg_data.voltage_code_A 
+            = static_cast<irs_u16>(m_dac_code_max);
+          
+        }
+        m_prev_dac_reg_write = mp_eth_data->prev_dac_data.voltage_code;
+      }
     }
     else
     {
@@ -234,15 +254,47 @@ void u309m::supply_t::tick()
   {
     if (m_operate)
     {
-      m_fin_dac_reg_write = mp_eth_data->fin_dac_data.voltage_code;
-      m_volt_reg_data.voltage_code_B =
-        static_cast<irs_u16>(m_fin_dac_reg_write*m_fin_dac_koef);
+      if (mp_eth_data->fin_dac_data.voltage_code < 0.f)
+      {
+        mp_eth_data->fin_dac_data.voltage_code = m_fin_dac_reg_write;
+      }
+      else
+      {
+        float dac_code = 
+          mp_eth_data->fin_dac_data.voltage_code * m_fin_dac_koef;
+        if (dac_code <= m_dac_code_max)
+        {
+          m_volt_reg_data.voltage_code_B = static_cast<irs_u16>(dac_code);
+        }
+        else
+        {
+          mp_eth_data->fin_dac_data.voltage_code = 
+            m_dac_code_max / m_fin_dac_koef;
+          m_volt_reg_data.voltage_code_B 
+            = static_cast<irs_u16>(m_dac_code_max);
+          
+        }
+        m_fin_dac_reg_write = mp_eth_data->fin_dac_data.voltage_code;
+      }
     }
     else
     {
       mp_eth_data->fin_dac_data.voltage_code = m_fin_dac_reg_write;
     }
   }
+//  if (m_fin_dac_reg_write != mp_eth_data->fin_dac_data.voltage_code)
+//  {
+//    if (m_operate)
+//    {
+//      m_fin_dac_reg_write = mp_eth_data->fin_dac_data.voltage_code;
+//      m_volt_reg_data.voltage_code_B =
+//        static_cast<irs_u16>(m_fin_dac_reg_write*m_fin_dac_koef);
+//    }
+//    else
+//    {
+//      mp_eth_data->fin_dac_data.voltage_code = m_fin_dac_reg_write;
+//    }
+//  }
 
   //  Коэффициенты уставок источников
   if (m_prev_dac_koef != mp_eth_data->prev_dac_data.koef)

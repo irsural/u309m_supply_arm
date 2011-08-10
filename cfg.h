@@ -138,28 +138,28 @@ struct control_data_t
     alarm_24V.connect(ap_data, index, 6);
     alarm_5V.connect(ap_data, index, 7);
 
-    alarm_izm_6V.connect(ap_data, index, 0);
-    alarm_izm_3_3V.connect(ap_data, index, 1);
-    alarm_izm_1_2V.connect(ap_data, index, 2);
-    alarm_izm_th1.connect(ap_data, index, 3);
-    alarm_izm_th2.connect(ap_data, index, 4);
-    alarm_izm_th3.connect(ap_data, index, 5);
-    alarm_izm_th4.connect(ap_data, index, 6);
-    alarm_izm_th5.connect(ap_data, index, 7);
+    alarm_izm_6V.connect(ap_data, index + 1, 0);
+    alarm_izm_3_3V.connect(ap_data, index + 1, 1);
+    alarm_izm_1_2V.connect(ap_data, index + 1, 2);
+    alarm_izm_th1.connect(ap_data, index + 1, 3);
+    alarm_izm_th2.connect(ap_data, index + 1, 4);
+    alarm_izm_th3.connect(ap_data, index + 1, 5);
+    alarm_izm_th4.connect(ap_data, index + 1, 6);
+    alarm_izm_th5.connect(ap_data, index + 1, 7);
 
-    alarm_200V_th_base.connect(ap_data, index, 0);
-    alarm_200V_th_aux.connect(ap_data, index, 1);
-    alarm_20V_th_base.connect(ap_data, index, 2);
-    alarm_20V_th_aux.connect(ap_data, index, 3);
-    alarm_2V_th_base.connect(ap_data, index, 4);
-    alarm_2V_th_aux.connect(ap_data, index, 5);
-    alarm_1A_th_base.connect(ap_data, index, 6);
-    alarm_1A_th_aux.connect(ap_data, index, 7);
+    alarm_200V_th_base.connect(ap_data, index + 2, 0);
+    alarm_200V_th_aux.connect(ap_data, index + 2, 1);
+    alarm_20V_th_base.connect(ap_data, index + 2, 2);
+    alarm_20V_th_aux.connect(ap_data, index + 2, 3);
+    alarm_2V_th_base.connect(ap_data, index + 2, 4);
+    alarm_2V_th_aux.connect(ap_data, index + 2, 5);
+    alarm_1A_th_base.connect(ap_data, index + 2, 6);
+    alarm_1A_th_aux.connect(ap_data, index + 2, 7);
 
-    alarm_17A_th_base.connect(ap_data, index, 0);
-    alarm_17A_th_aux.connect(ap_data, index, 1);
+    alarm_17A_th_base.connect(ap_data, index + 3, 0);
+    alarm_17A_th_aux.connect(ap_data, index + 3, 1);
 
-    on.connect(ap_data, index, 7);
+    on.connect(ap_data, index + 3, 7);
 
     index = alarm.connect(ap_data, index);
 

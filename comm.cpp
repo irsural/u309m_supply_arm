@@ -551,13 +551,7 @@ u309m::supply_comm_t::supply_comm_t(
   m_need_on(false),
   m_need_off(false)
 {
-//  while (m_mode != mode_command_check) tick();
-//  m_command = (PLIS|SUPPLY_17A|SUPPLY_1A|SUPPLY_2V|SUPPLY_20V|
-//    SUPPLY_200V|IZM_TH|EEPROM|MISO_MASK_EN);
-  m_plis.tact_on();
-//  m_plis.write();
   while(m_mode != mode_command_check) tick();
-  //m_plis.tact_off();
 }
 
 void u309m::supply_comm_t::make_command()
@@ -646,9 +640,9 @@ void u309m::supply_comm_t::tick()
     }
     case mode_reset:
     {
-      if (m_plis.ready())
+      if (m_plis.ready() && m_timer.check())
       {
-        //m_plis.tact_off();
+        m_plis.tact_off();
         m_plis_reset = false;
         mp_supply_comm_data->reset = m_plis_reset;
         m_mode = mode_command_check;
@@ -731,7 +725,7 @@ void u309m::supply_comm_t::tick()
         }
         else
         {
-          //m_plis.tact_off();
+          m_plis.tact_off();
           m_transaction_cnt = 0;
           m_command_apply = 0;
           mp_supply_comm_data->apply = 0;
