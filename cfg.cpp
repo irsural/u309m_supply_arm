@@ -133,7 +133,7 @@ u309m::cfg_t::cfg_t():
     &m_SYM_200V_on, &m_SYM_200V_off, &m_KZ_2V_on, &m_KZ_2V_off,
     &m_KZ_1A, &m_KZ_17A, &m_REL_220V, &m_SYM_OFF, &m_SYM_OFF_TEST),
   #ifdef EEPROM_TEST
-  m_eeprom_size(334),
+  m_eeprom_size(338),
   #ifdef USE_FLASH
     m_eeprom(m_eeprom_size),
   #else

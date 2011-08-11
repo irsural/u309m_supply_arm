@@ -184,6 +184,8 @@ struct control_data_t
 
     ready_17A_prev.connect(ap_data, index, 0);
     ready_17A_final.connect(ap_data, index, 1);
+    
+    upper_level_check.connect(ap_data, index, 2);
 
     index++;
     index++;
