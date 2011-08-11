@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=797360235
+Checksum=-1959328069
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -19,19 +19,6 @@ UseTrigger=1
 TriggerName=main
 LimitSize=0
 ByteLimit=50
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
-[CallStackLog]
-Enabled=0
-[DriverProfiling]
-Enabled=0
-Mode=65420208
-Graph=0
 [Disassemble mode]
 mode=0
 [Breakpoints]
@@ -42,6 +29,19 @@ Bp3=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\irsmem.cpp}.954.1@1" 0 0
 Bp4=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\irsmem.cpp}.829.1@1" 0 0 0 0 "" 0 "" 0
 Bp5=_ "EMUL_TRACE_STOP" "m_error" 0 0 0 196 0 "" 0 "" 0 0 0 4294967295 0 0
 Count=6
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
 [Aliases]
 Count=0
 SuppressDialog=0
+[CallStackLog]
+Enabled=0
+[DriverProfiling]
+Enabled=0
+Mode=65294304
+Graph=0

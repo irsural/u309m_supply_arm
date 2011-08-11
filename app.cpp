@@ -381,6 +381,14 @@ void u309m::app_t::tick()
         {
           clear_all_alarms();
           m_status = ON;
+          mp_cfg->eth_data()->control.on = 1;
+          mp_meas_comm->on();
+          mp_supply_comm->on();
+          m_supply_200V.on();
+          m_supply_20V.on();
+          m_supply_2V.on();
+          m_supply_1A.on();
+          m_supply_17A.on();
         }
         break;
       }
