@@ -62,7 +62,7 @@ u309m::cfg_t::cfg_t():
   m_simple_hardflow(&m_tcpip, m_local_ip, m_local_port,
     m_dest_ip, m_dest_port, 10),
   //m_modbus_server(&m_simple_hardflow, 0, 14, 317, 0, irs::make_cnt_ms(200)),
-  m_modbus_server(&m_simple_hardflow, 0, 14, 321, 0, irs::make_cnt_ms(200)),
+  m_modbus_server(&m_simple_hardflow, 0, 14, 323, 0, irs::make_cnt_ms(200)),
   m_eth_data(&m_modbus_server),
 
   m_izm_th_enable(GPIO_PORTG, 1, irs::gpio_pin_t::dir_out),

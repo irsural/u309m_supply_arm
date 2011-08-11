@@ -100,6 +100,7 @@ struct control_data_t
   irs::bit_data_t alarm_1A_th_aux;
   irs::bit_data_t alarm_17A_th_base;
   irs::bit_data_t alarm_17A_th_aux;
+  irs::bit_data_t alarm_upper_level;
 
   irs::bit_data_t on;
 
@@ -115,6 +116,10 @@ struct control_data_t
   irs::bit_data_t ready_1A_final;
   irs::bit_data_t ready_17A_prev;
   irs::bit_data_t ready_17A_final;
+  
+  irs::bit_data_t upper_level_check;
+  
+  irs::conn_data_t<irs_u32> connect_counter;
 
   control_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
     irs_uarc* ap_size = IRS_NULL)
@@ -158,6 +163,7 @@ struct control_data_t
 
     alarm_17A_th_base.connect(ap_data, index + 3, 0);
     alarm_17A_th_aux.connect(ap_data, index + 3, 1);
+    alarm_upper_level.connect(ap_data, index + 3, 2);
 
     on.connect(ap_data, index + 3, 7);
 
@@ -181,6 +187,8 @@ struct control_data_t
 
     index++;
     index++;
+    
+    index = connect_counter.connect(ap_data, index);
 
     return index;
   }
@@ -200,9 +208,9 @@ struct eth_data_t {
   supply_eth_data_t supply_2V;    //  114 bytes
   supply_eth_data_t supply_1A;    //  114 bytes
   supply_eth_data_t supply_17A;   //  114 bytes
-  control_data_t control;         //  8 bytes
+  control_data_t control;         //  12 bytes
   //---------------------------------------------
-  //                          Итого:  636 байт
+  //                          Итого:  640 байт
 
   eth_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
     irs_uarc* ap_size = IRS_NULL)

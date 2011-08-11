@@ -84,14 +84,18 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_17A_th_aux_value(mp_cfg->eth_data()->supply_17A.aux_temp_data.value,
     18.f, 120.f),
   m_alarm_timer(irs::make_cnt_ms(100)),
-  m_start_alarm_timer(irs::make_cnt_s(5)),
-  m_status(START)
+  m_once_alarm_timer(irs::make_cnt_s(5)),
+  m_status(START),
+  m_connect_counter(0),
+  m_upper_level_unconnected(false)
 {
   m_rel_220V_timer.start();
   mp_cfg->rele_ext_pins()->SYM_OFF->set();
   mp_cfg->eth_data()->control.on = 0;
   m_alarm_timer.start();
-  m_start_alarm_timer.start();
+  m_once_alarm_timer.start();
+  mp_cfg->eth_data()->control.upper_level_check =
+    mp_cfg->eeprom_data()->upper_level_check;
 }
 
 void u309m::app_t::tick()
@@ -372,12 +376,14 @@ void u309m::app_t::tick()
     mp_cfg->eth_data()->control.alarm_17A_th_aux
       = t_17A_th_aux_alarm;
 
+    mp_cfg->eth_data()->control.alarm_upper_level = m_upper_level_unconnected;
+
     volatile irs_u32 alarm = mp_cfg->eth_data()->control.alarm;
     switch (m_status)
     {
       case START:
       {
-        if (m_start_alarm_timer.check())
+        if (m_once_alarm_timer.check())
         {
           clear_all_alarms();
           m_status = ON;
@@ -389,6 +395,7 @@ void u309m::app_t::tick()
           m_supply_2V.on();
           m_supply_1A.on();
           m_supply_17A.on();
+          m_once_alarm_timer.start();
         }
         break;
       }
@@ -440,6 +447,31 @@ void u309m::app_t::tick()
       mp_cfg->eth_data()->control.unlock = 0;
       clear_all_alarms();
     }
+
+    if (mp_cfg->eth_data()->control.upper_level_check !=
+      mp_cfg->eeprom_data()->upper_level_check)
+    {
+      mp_cfg->eeprom_data()->upper_level_check =
+        mp_cfg->eth_data()->control.upper_level_check;
+      if (mp_cfg->eth_data()->control.upper_level_check)
+      {
+        m_connect_counter = mp_cfg->eth_data()->control.connect_counter;
+        m_upper_level_unconnected = false;
+        m_once_alarm_timer.start();
+      }
+    }
+    if (mp_cfg->eeprom_data()->upper_level_check)
+    {
+      if (m_connect_counter != mp_cfg->eth_data()->control.connect_counter)
+      {
+        m_connect_counter = mp_cfg->eth_data()->control.connect_counter;
+        m_once_alarm_timer.start();
+      }
+      if (m_once_alarm_timer.check())
+      {
+        m_upper_level_unconnected = true;
+      }
+    }
   }
 }
 
@@ -471,4 +503,5 @@ void u309m::app_t::clear_all_alarms()
   m_1A_th_aux_value.clear_alarm();
   m_17A_th_base_value.clear_alarm();
   m_17A_th_aux_value.clear_alarm();
+  m_upper_level_unconnected = false;
 }

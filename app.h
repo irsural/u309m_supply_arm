@@ -31,7 +31,7 @@ private:
   };
   enum
   {
-    m_alarm_mask = 0x3FFFFFF,
+    m_alarm_mask = 0x7FFFFFF,
     m_unlock_command = 116,
     m_clear_alarm_command = 207
   };
@@ -114,8 +114,10 @@ private:
   check_value_t m_17A_th_base_value;
   check_value_t m_17A_th_aux_value;
   irs::loop_timer_t m_alarm_timer;
-  irs::timer_t m_start_alarm_timer;
+  irs::timer_t m_once_alarm_timer;
   status_t m_status;
+  irs_u32 m_connect_counter;
+  bool m_upper_level_unconnected;
 }; // app_t
 
 } // namespace u309m

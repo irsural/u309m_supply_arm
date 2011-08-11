@@ -24,7 +24,7 @@ struct supply_comm_data_t
   irs::bit_data_t on;
   irs::bit_data_t error;
   irs::bit_data_t reset;
-  
+
   supply_comm_data_t(irs::mxdata_t *ap_data = IRS_NULL,
     irs_uarc a_index = 0, irs_uarc* ap_size = IRS_NULL)
   {
@@ -33,11 +33,11 @@ struct supply_comm_data_t
       *ap_size = size;
     }
   }
-  
+
   irs_uarc connect(irs::mxdata_t* ap_data = 0, irs_uarc a_start_index = 0)
   {
     irs_uarc index = a_start_index;
-    
+
     index = supply_index.connect(ap_data, index);
     index = etalon_cell.connect(ap_data, index);
     index = calibrated_cell.connect(ap_data, index);
@@ -48,7 +48,7 @@ struct supply_comm_data_t
     error.connect(ap_data, index, 4);
     reset.connect(ap_data, index, 5);
     index++;
-    
+
     return index;
   }
 }; // supply_comm_data_t
@@ -63,7 +63,7 @@ struct meas_comm_data_t
   irs::bit_data_t on;
   irs::bit_data_t error;
   irs::bit_data_t reset;
-  
+
   /*irs::conn_data_t<float> meas_rele_power_voltage;
   irs::conn_data_t<float> power_voltage;
   irs::conn_data_t<float> meas_comm_plis_voltage;
@@ -73,7 +73,7 @@ struct meas_comm_data_t
   irs::conn_data_t<float> th3_value;
   irs::conn_data_t<float> th4_value;
   irs::conn_data_t<float> th5_value;
-  
+
   meas_comm_data_t(irs::mxdata_t *ap_data = IRS_NULL,
     irs_uarc a_index = 0, irs_uarc* ap_size = IRS_NULL)
   {
@@ -82,11 +82,11 @@ struct meas_comm_data_t
       *ap_size = size;
     }
   }
-  
+
   irs_uarc connect(irs::mxdata_t* ap_data = 0, irs_uarc a_index = 0)
   {
     irs_uarc index = a_index;
-    
+
     index = mode.connect(ap_data, index);
     index = etalon_cell.connect(ap_data, index);
     index = calibrated_cell.connect(ap_data, index);
@@ -96,7 +96,7 @@ struct meas_comm_data_t
     error.connect(ap_data, index, 3);
     reset.connect(ap_data, index, 4);
     index++;
-    
+
     /*index = meas_rele_power_voltage.connect(ap_data, index);
     index = power_voltage.connect(ap_data, index);
     index = meas_comm_plis_voltage.connect(ap_data, index);
@@ -106,7 +106,7 @@ struct meas_comm_data_t
     index = th3_value.connect(ap_data, index);
     index = th4_value.connect(ap_data, index);
     index = th5_value.connect(ap_data, index);
-    
+
     return index;
   }
 }; // meas_comm_data_t
@@ -123,7 +123,7 @@ struct arm_adc_data_t {
   irs::conn_data_t<float> PTC_PWR;
   irs::conn_data_t<float> PTC_17A;
   irs::conn_data_t<float> internal_temp;
-  
+
   arm_adc_data_t(irs::mxdata_t *ap_data = IRS_NULL,
     irs_uarc a_index = 0, irs_uarc* ap_size = IRS_NULL)
   {
@@ -132,11 +132,11 @@ struct arm_adc_data_t {
       *ap_size = size;
     }
   }
-  
+
   irs_uarc connect(irs::mxdata_t* ap_data = 0, irs_uarc a_index = 0)
   {
     irs_uarc index = a_index;
-    
+
     index = PTC_A.connect(ap_data, index);
     index = PTC_LC.connect(ap_data, index);
     index = TR_24V_TEST.connect(ap_data, index);
@@ -148,7 +148,7 @@ struct arm_adc_data_t {
     index = PTC_PWR.connect(ap_data, index);
     index = PTC_17A.connect(ap_data, index);
     index = internal_temp.connect(ap_data, index);
-    
+
     return index;
   }
 }; // arm_adc_data_t
@@ -156,7 +156,7 @@ struct arm_adc_data_t {
 struct temp_data_t {
   irs::conn_data_t<float> value;
   irs::conn_data_t<float> filtered_value;
-  
+
   temp_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
     irs_uarc* ap_size = IRS_NULL)
   {
@@ -165,14 +165,14 @@ struct temp_data_t {
       *ap_size = size;
     }
   }
-  
+
   irs_uarc connect(irs::mxdata_t *ap_data, irs_uarc a_index)
   {
     irs_uarc index = a_index;
-    
+
     index = value.connect(ap_data, index);
     index = filtered_value.connect(ap_data, index);
-    
+
     return index;
   }
 };
@@ -180,7 +180,7 @@ struct temp_data_t {
 struct dac_data_t {
   irs::conn_data_t<float> voltage_code;
   irs::conn_data_t<float> koef;
-  
+
   dac_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
     irs_uarc* ap_size = IRS_NULL)
   {
@@ -189,14 +189,14 @@ struct dac_data_t {
       *ap_size = size;
     }
   }
-  
+
   irs_uarc connect(irs::mxdata_t *ap_data, irs_uarc a_index)
   {
     irs_uarc index = a_index;
-    
+
     index = voltage_code.connect(ap_data, index);
     index = koef.connect(ap_data, index);
-    
+
     return index;
   }
 };
@@ -204,7 +204,7 @@ struct dac_data_t {
 struct adc_data_t {
   irs::conn_data_t<float> voltage_code;
   irs::conn_data_t<float> koef;
-  
+
   adc_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
     irs_uarc* ap_size = IRS_NULL)
   {
@@ -213,14 +213,14 @@ struct adc_data_t {
       *ap_size = size;
     }
   }
-  
+
   irs_uarc connect(irs::mxdata_t *ap_data, irs_uarc a_index)
   {
     irs_uarc index = a_index;
-    
+
     index = voltage_code.connect(ap_data, index);
     index = koef.connect(ap_data, index);
-    
+
     return index;
   }
 };
@@ -234,7 +234,7 @@ struct tr_data_t {
   irs::conn_data_t<float> temp_prop_koef;
   irs::conn_data_t<float> temp_time_const;
   irs::conn_data_t<irs_i32> int_val;
-  
+
   tr_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
     irs_uarc* ap_size = IRS_NULL)
   {
@@ -243,11 +243,11 @@ struct tr_data_t {
       *ap_size = size;
     }
   }
-  
+
   irs_uarc connect(irs::mxdata_t *ap_data, irs_uarc a_index)
   {
     irs_uarc index = a_index;
-    
+
     index = temperature_ref.connect(ap_data, index);
     index = temp_k.connect(ap_data, index);
     index = temp_ki.connect(ap_data, index);
@@ -256,7 +256,7 @@ struct tr_data_t {
     index = temp_prop_koef.connect(ap_data, index);
     index = temp_time_const.connect(ap_data, index);
     index = int_val.connect(ap_data, index);
-    
+
     return index;
   }
 };
@@ -280,24 +280,24 @@ struct supply_eth_data_t {
       *ap_size = size;
     }
   }
-  
+
   irs_uarc connect(irs::mxdata_t *ap_data, irs_uarc a_index)
   {
     irs_uarc index = a_index;
-    
+
     index = resistance_code.connect(ap_data, index);
-    
+
     index = prev_dac_data.connect(ap_data, index);
     index = prev_adc_data.connect(ap_data, index);
     index = fin_dac_data.connect(ap_data, index);
     index = fin_adc_data.connect(ap_data, index);
-    
+
     index = base_tr_data.connect(ap_data, index);
     index = base_temp_data.connect(ap_data, index);
-    
+
     index = aux_tr_data.connect(ap_data, index);
     index = aux_temp_data.connect(ap_data, index);
-    
+
     return index;
   }
 }; // supply_eth_data_t
@@ -312,7 +312,7 @@ struct meas_comm_pins_t {
   irs::gpio_pin_t* termo_sense_3;
   irs::gpio_pin_t* termo_sense_4;
   irs::gpio_pin_t* termo_sense_5;
-  
+
   meas_comm_pins_t(
     irs::gpio_pin_t* ap_cs,
     irs::gpio_pin_t* ap_reset,
@@ -340,7 +340,7 @@ struct meas_comm_pins_t {
 struct supply_comm_pins_t {
   irs::gpio_pin_t* cs;
   irs::gpio_pin_t* reset;
-  
+
   supply_comm_pins_t(
     irs::gpio_pin_t* ap_cs,
     irs::gpio_pin_t* ap_reset
@@ -358,7 +358,7 @@ struct supply_pins_t {
   irs::gpio_pin_t* tc_cs;
   irs::gpio_pin_t* volt_reg_cs;
   irs::gpio_pin_t* temp_reg_cs;
-  
+
   supply_pins_t(
     irs::gpio_pin_t* ap_termo_sense_base_cs,
     irs::gpio_pin_t* ap_termo_sense_aux_cs,
@@ -396,7 +396,7 @@ struct eeprom_supply_data_t
   irs::conn_data_t<float> temp_aux_kd;
   irs::conn_data_t<float> temp_aux_prop_koef;
   irs::conn_data_t<float> temp_aux_time_const;
-  
+
   eeprom_supply_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
     irs_uarc* ap_size = IRS_NULL)
   {
@@ -408,7 +408,7 @@ struct eeprom_supply_data_t
   irs_uarc connect(irs::mxdata_t* ap_data = 0, irs_uarc a_index = 0)
   {
     irs_uarc index = a_index;
-    
+
     index = resistance_code.connect(ap_data, index);
     index = koef_reg_prev.connect(ap_data, index);
     index = koef_adc_volt_prev.connect(ap_data, index);
@@ -426,7 +426,7 @@ struct eeprom_supply_data_t
     index = temp_aux_kd.connect(ap_data, index);
     index = temp_aux_prop_koef.connect(ap_data, index);
     index = temp_aux_time_const.connect(ap_data, index);
-    
+
     return index;
   }
 }; // supply_eeprom_data
@@ -442,6 +442,8 @@ struct eeprom_data_t
   eeprom_supply_data_t supply_2V;
   eeprom_supply_data_t supply_1A;
   eeprom_supply_data_t supply_17A;
+  irs::conn_data_t<irs_u32> options;
+  irs::bit_data_t upper_level_check;
 
   eeprom_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
     irs_uarc* ap_size = IRS_NULL)
@@ -454,7 +456,7 @@ struct eeprom_data_t
   irs_uarc connect(irs::mxdata_t *ap_data, irs_uarc a_index)
   {
     irs_uarc index = a_index;
-    
+
     index = ip_0.connect(ap_data, index);
     index = ip_1.connect(ap_data, index);
     index = ip_2.connect(ap_data, index);
@@ -464,10 +466,12 @@ struct eeprom_data_t
     index = supply_2V.connect(ap_data, index);
     index = supply_1A.connect(ap_data, index);
     index = supply_17A.connect(ap_data, index);
-    
+    index = options.connect(ap_data, index);
+    upper_level_check.connect(ap_data, index, 0);
+
     return index;
   }
-    
+
   void reset_to_default(supply_type_t a_supply_type)
   {
     ip_0 = 192;
@@ -483,14 +487,14 @@ struct eeprom_data_t
         supply_200V.koef_adc_volt_fin = 0.297;
         supply_200V.koef_reg_prev = 297.572;
         supply_200V.koef_reg_fin = 258.32;
-        
+
         supply_200V.temp_base_ref = 60.;
         supply_200V.temp_base_k = 7500.;
         supply_200V.temp_base_ki = 0.0015;
         supply_200V.temp_base_kd = 5.;
         supply_200V.temp_base_prop_koef = 0.3;
         supply_200V.temp_base_time_const = 5.;
-        
+
         supply_200V.temp_aux_ref = 60.;
         supply_200V.temp_aux_k = 15000.;
         supply_200V.temp_aux_ki = 0.0015;
@@ -506,14 +510,14 @@ struct eeprom_data_t
         supply_20V.koef_adc_volt_fin = 0.025330844;
         supply_20V.koef_reg_prev = 2610.304968;
         supply_20V.koef_reg_fin = 3043.865432;
-        
+
         supply_20V.temp_base_ref = 60.;
         supply_20V.temp_base_k = 7500.;
         supply_20V.temp_base_ki = 0.0015;
         supply_20V.temp_base_kd = 5.;
         supply_20V.temp_base_prop_koef = 0.3;
         supply_20V.temp_base_time_const = 5.;
-        
+
         supply_20V.temp_aux_ref = 60.;
         supply_20V.temp_aux_k = 15000.;
         supply_20V.temp_aux_ki = 0.0015;
@@ -529,14 +533,14 @@ struct eeprom_data_t
         supply_2V.koef_adc_volt_fin = 0.006859275;
         supply_2V.koef_reg_prev = 15999.2186;
         supply_2V.koef_reg_fin = 22446.6649;
-        
+
         supply_2V.temp_base_ref = 60.;
         supply_2V.temp_base_k = 7500.;
         supply_2V.temp_base_ki = 0.0015;
         supply_2V.temp_base_kd = 5.;
         supply_2V.temp_base_prop_koef = 0.3;
         supply_2V.temp_base_time_const = 5.;
-        
+
         supply_2V.temp_aux_ref = 60.;
         supply_2V.temp_aux_k = 15000.;
         supply_2V.temp_aux_ki = 0.0015;
@@ -552,14 +556,14 @@ struct eeprom_data_t
         supply_1A.koef_adc_volt_fin = 0.001420473;
         supply_1A.koef_reg_prev = 15998.82792;
         supply_1A.koef_reg_fin = 54289.35609;
-        
+
         supply_1A.temp_base_ref = 60.;
         supply_1A.temp_base_k = 7500.;
         supply_1A.temp_base_ki = 0.0015;
         supply_1A.temp_base_kd = 5.;
         supply_1A.temp_base_prop_koef = 0.3;
         supply_1A.temp_base_time_const = 5.;
-        
+
         supply_1A.temp_aux_ref = 60.;
         supply_1A.temp_aux_k = 15000.;
         supply_1A.temp_aux_ki = 0.0015;
@@ -575,14 +579,14 @@ struct eeprom_data_t
         supply_17A.koef_adc_volt_fin = 0.020719409;
         supply_17A.koef_reg_prev = 15996.48429;
         supply_17A.koef_reg_fin = 3704.873815;
-        
+
         supply_17A.temp_base_ref = 60.;
         supply_17A.temp_base_k = 7500.;
         supply_17A.temp_base_ki = 0.0015;
         supply_17A.temp_base_kd = 5.;
         supply_17A.temp_base_prop_koef = 0.3;
         supply_17A.temp_base_time_const = 5.;
-        
+
         supply_17A.temp_aux_ref = 60.;
         supply_17A.temp_aux_k = 15000.;
         supply_17A.temp_aux_ki = 0.0015;
@@ -596,6 +600,7 @@ struct eeprom_data_t
         IRS_LIB_ASSERT_MSG("неверно указан тип источника");
       }
     }
+    upper_level_check = 1;
   }
 }; // eeprom_data_t
 
