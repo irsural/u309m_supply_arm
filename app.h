@@ -26,12 +26,14 @@ private:
   enum status_t
   {
     OFF = 0,
-    ON = 1
+    ON = 1,
+    START = 2
   };
   enum
   {
     m_alarm_mask = 0x3FFFFFF,
-    m_unlock_command = 116
+    m_unlock_command = 116,
+    m_clear_alarm_command = 207
   };
   class check_value_t
   {
@@ -40,21 +42,25 @@ private:
       const float a_min, const float a_max):
       m_value(a_value),
       m_min(a_min),
-      m_max(a_max)
+      m_max(a_max),
+      m_alarm(false)
     {}
-    bool valid() 
-    { 
+    bool alarm()
+    {
       float value = m_value;
-      bool min = value >= m_min;
-      bool max = value <= m_max;
-      
-      return min && max; 
+      bool min = value < m_min;
+      bool max = value > m_max;
+      m_alarm |= (min || max);
+      return m_alarm;
     }
+    void clear_alarm() { m_alarm = false; }
   private:
     const irs::conn_data_t<float> &m_value;
     const float m_min;
     const float m_max;
+    bool m_alarm;
   };
+  void clear_all_alarms();
 
   cfg_t* mp_cfg;
   #ifdef MEAS_COMM_TEST
@@ -108,6 +114,7 @@ private:
   check_value_t m_17A_th_base_value;
   check_value_t m_17A_th_aux_value;
   irs::loop_timer_t m_alarm_timer;
+  irs::timer_t m_start_alarm_timer;
   status_t m_status;
 }; // app_t
 
