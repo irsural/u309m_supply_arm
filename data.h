@@ -466,8 +466,9 @@ struct eeprom_data_t
     index = supply_2V.connect(ap_data, index);
     index = supply_1A.connect(ap_data, index);
     index = supply_17A.connect(ap_data, index);
-    index = options.connect(ap_data, index);
+    
     upper_level_check.connect(ap_data, index, 0);
+    index = options.connect(ap_data, index);
 
     return index;
   }
