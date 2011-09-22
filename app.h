@@ -4,6 +4,7 @@
 #include <irsdefs.h>
 
 #include <irsadc.h>
+#include <irsdev.h>
 
 #include "supply.h"
 #include "cfg.h"
@@ -114,10 +115,15 @@ private:
   check_value_t m_17A_th_base_value;
   check_value_t m_17A_th_aux_value;
   irs::loop_timer_t m_alarm_timer;
-  irs::timer_t m_once_alarm_timer;
+  irs::timer_t m_start_alarm_timer;
+  irs::timer_t m_upper_level_connect_timer;
   status_t m_status;
   irs_u32 m_connect_counter;
   bool m_upper_level_unconnected;
+  bool m_refresh_timeout;
+  irs::timer_t m_refresh_timer;
+  
+  irs::arm::watchdog_timer_t m_watchdog;
 }; // app_t
 
 } // namespace u309m

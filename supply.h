@@ -26,6 +26,9 @@ public:
   void on();
   void off();
   inline bool operated() { return m_operate; };
+  void dac_log_enable();
+  void refresh_dac_values();
+  void disable_saving_aux_th_ref();
   void tick();
 private:
   supply_pins_t* mp_supply_pins;
@@ -66,6 +69,7 @@ private:
   irs::isodr_data_t m_temp_aux_isodr;
   float m_temp_aux_time_const;
   bool m_operate;
+  bool m_enable_saving_aux_th_ref;
 }; // supply_t
 
 } // namespace u309m

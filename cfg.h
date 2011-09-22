@@ -118,6 +118,9 @@ struct control_data_t
   irs::bit_data_t ready_17A_final;
   
   irs::bit_data_t upper_level_check;
+  irs::bit_data_t refresh_all_sources;
+  irs::bit_data_t watchdog_reset_cause;
+  irs::bit_data_t watchdog_test;
   
   irs::conn_data_t<irs_u32> connect_counter;
 
@@ -186,6 +189,9 @@ struct control_data_t
     ready_17A_final.connect(ap_data, index, 1);
     
     upper_level_check.connect(ap_data, index, 2);
+    refresh_all_sources.connect(ap_data, index, 3);
+    watchdog_reset_cause.connect(ap_data, index, 4);
+    watchdog_test.connect(ap_data, index, 5);
 
     index++;
     index++;

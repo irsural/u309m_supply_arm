@@ -50,7 +50,8 @@ u309m::supply_t::supply_t(
   m_temp_base_time_const(0),
   m_temp_aux_isodr(),
   m_temp_aux_time_const(0),
-  m_operate(false)
+  m_operate(false),
+  m_enable_saving_aux_th_ref(true)
 {
   #ifdef EEPROM_TEST
   mp_eth_data->resistance_code = mp_eeprom_data->resistance_code;
@@ -366,7 +367,7 @@ void u309m::supply_t::tick()
   {
     m_temp_base_kd = mp_eth_data->base_tr_data.temp_kd;
     m_temp_base_pid_data.kd = m_temp_base_kd / m_dt;
-    pid_reg_sync(&m_temp_base_pid_data);
+    //pid_reg_sync(&m_temp_base_pid_data);
     #ifdef EEPROM_TEST
     mp_eeprom_data->temp_base_kd = m_temp_base_kd;
     #endif // EEPROM_TEST
@@ -395,7 +396,7 @@ void u309m::supply_t::tick()
   {
     m_temp_aux_kd = mp_eth_data->aux_tr_data.temp_kd;
     m_temp_aux_pid_data.kd = m_temp_aux_kd / m_dt;
-    pid_reg_sync(&m_temp_aux_pid_data);
+    //pid_reg_sync(&m_temp_aux_pid_data);
     #ifdef EEPROM_TEST
     mp_eeprom_data->temp_aux_kd = m_temp_aux_kd;
     #endif // EEPROM_TEST
@@ -465,8 +466,8 @@ void u309m::supply_t::tick()
       mp_eth_data->base_tr_data.temperature_ref;
   }
 
-  if (mp_eeprom_data->temp_aux_ref !=
-    mp_eth_data->aux_tr_data.temperature_ref)
+  if ((mp_eeprom_data->temp_aux_ref !=
+    mp_eth_data->aux_tr_data.temperature_ref) && m_enable_saving_aux_th_ref)
   {
     mp_eeprom_data->temp_aux_ref =
       mp_eth_data->aux_tr_data.temperature_ref;
@@ -531,4 +532,29 @@ void u309m::supply_t::off()
   m_temp_reg_data.voltage_code_B = 0;
   mp_eth_data->aux_tr_data.dac_value = m_temp_reg_data.voltage_code_B;
   m_operate = false;
+}
+
+void u309m::supply_t::dac_log_enable() 
+{ 
+  m_volt_reg_data.log_enable = 1; 
+  irs::mlog() << "Источник по адресу 0x" << this << " лог ЦАП включен" << endl;
+}
+
+void u309m::supply_t::refresh_dac_values()
+{
+  m_volt_reg_data.voltage_code_A =
+        static_cast<irs_u16>(m_prev_dac_reg_write * m_prev_dac_koef);
+  mp_eth_data->prev_dac_data.voltage_code = m_prev_dac_reg_write;
+  m_volt_reg_data.voltage_code_B =
+        static_cast<irs_u16>(m_fin_dac_reg_write * m_fin_dac_koef);
+  mp_eth_data->fin_dac_data.voltage_code = m_fin_dac_reg_write;
+  m_tc_write = mp_eeprom_data->resistance_code;
+  m_ad5293_data.resistance_code = m_tc_write;
+  mp_eth_data->resistance_code = m_tc_write;
+}
+
+void u309m::supply_t::disable_saving_aux_th_ref()
+{
+  m_enable_saving_aux_th_ref = false;
+  mp_eth_data->aux_tr_data.temperature_ref = 0;
 }

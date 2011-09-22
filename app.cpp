@@ -58,44 +58,56 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_izm_6V_value(mp_cfg->eth_data()->arm_adc.IZM_6V_TEST, 4.5f, 6.5f),
   m_izm_3_3V_value(mp_cfg->eth_data()->arm_adc.IZM_3_3V_TEST, 3.15f, 3.45f),
   m_izm_1_2V_value(mp_cfg->eth_data()->arm_adc.IZM_1_2V_TEST, 1.1f, 1.3f),
-  m_izm_th1_value(mp_cfg->eth_data()->meas_comm.th1_value, 18.f, 35.f),
-  m_izm_th2_value(mp_cfg->eth_data()->meas_comm.th2_value, 18.f, 35.f),
-  m_izm_th3_value(mp_cfg->eth_data()->meas_comm.th3_value, 18.f, 35.f),
-  m_izm_th4_value(mp_cfg->eth_data()->meas_comm.th4_value, 18.f, 35.f),
-  m_izm_th5_value(mp_cfg->eth_data()->meas_comm.th5_value, 18.f, 35.f),
+  m_izm_th1_value(mp_cfg->eth_data()->meas_comm.th1_value, 18.f, 45.f),
+  m_izm_th2_value(mp_cfg->eth_data()->meas_comm.th2_value, 18.f, 45.f),
+  m_izm_th3_value(mp_cfg->eth_data()->meas_comm.th3_value, 18.f, 45.f),
+  m_izm_th4_value(mp_cfg->eth_data()->meas_comm.th4_value, 18.f, 45.f),
+  m_izm_th5_value(mp_cfg->eth_data()->meas_comm.th5_value, 18.f, 45.f),
   m_200V_th_base_value(mp_cfg->eth_data()->supply_200V.base_temp_data.value,
-    18.f, 70.f),
+    18.f, 85.f),
   m_200V_th_aux_value(mp_cfg->eth_data()->supply_200V.aux_temp_data.value,
-    18.f, 70.f),
+    18.f, 85.f),
   m_20V_th_base_value(mp_cfg->eth_data()->supply_20V.base_temp_data.value,
-    18.f, 70.f),
+    18.f, 85.f),
   m_20V_th_aux_value(mp_cfg->eth_data()->supply_20V.aux_temp_data.value,
-    18.f, 70.f),
+    18.f, 85.f),
   m_2V_th_base_value(mp_cfg->eth_data()->supply_2V.base_temp_data.value,
-    18.f, 70.f),
+    18.f, 85.f),
   m_2V_th_aux_value(mp_cfg->eth_data()->supply_2V.aux_temp_data.value,
-    18.f, 70.f),
+    18.f, 85.f),
   m_1A_th_base_value(mp_cfg->eth_data()->supply_1A.base_temp_data.value,
-    18.f, 70.f),
+    18.f, 85.f),
   m_1A_th_aux_value(mp_cfg->eth_data()->supply_1A.aux_temp_data.value,
-    18.f, 70.f),
+    18.f, 85.f),
   m_17A_th_base_value(mp_cfg->eth_data()->supply_17A.base_temp_data.value,
     18.f, 90.f),
   m_17A_th_aux_value(mp_cfg->eth_data()->supply_17A.aux_temp_data.value,
     18.f, 120.f),
   m_alarm_timer(irs::make_cnt_ms(100)),
-  m_once_alarm_timer(irs::make_cnt_s(5)),
+  m_start_alarm_timer(irs::make_cnt_s(5)),
+  m_upper_level_connect_timer(irs::make_cnt_s(5)),
   m_status(START),
   m_connect_counter(0),
-  m_upper_level_unconnected(false)
+  m_upper_level_unconnected(false),
+  m_refresh_timeout(false),
+  m_refresh_timer(irs::make_cnt_s(1)),
+  m_watchdog(5)
 {
   m_rel_220V_timer.start();
   mp_cfg->rele_ext_pins()->SYM_OFF->set();
   mp_cfg->eth_data()->control.on = 0;
   m_alarm_timer.start();
-  m_once_alarm_timer.start();
-  mp_cfg->eth_data()->control.upper_level_check =
+  m_start_alarm_timer.start();
+  mp_cfg->eth_data()->control.upper_level_check = 
     mp_cfg->eeprom_data()->upper_level_check;
+  
+  m_supply_200V.dac_log_enable();
+  
+  m_supply_17A.disable_saving_aux_th_ref();
+  
+  mp_cfg->eth_data()->control.watchdog_reset_cause = 
+    m_watchdog.watchdog_reset_cause();
+  //m_watchdog.start();
 }
 
 void u309m::app_t::tick()
@@ -288,6 +300,31 @@ void u309m::app_t::tick()
 
   if (m_alarm_timer.check())
   {
+    if (!m_refresh_timeout)
+    {
+      if (mp_cfg->eth_data()->control.refresh_all_sources == 1)
+      {
+        irs::mlog() << "ќбновление уставок всех источников начато" << endl;
+        m_supply_200V.refresh_dac_values();
+        m_supply_20V.refresh_dac_values();
+        m_supply_2V.refresh_dac_values();
+        m_supply_1A.refresh_dac_values();
+        m_supply_17A.refresh_dac_values();
+        
+        m_refresh_timeout = true;
+        m_refresh_timer.start();
+      }
+    }
+    else
+    {
+      if (m_refresh_timer.check())
+      {
+        mp_cfg->eth_data()->control.refresh_all_sources = 0;
+        m_refresh_timeout = false;
+        irs::mlog() << "ќбновление уставок всех источников закончено" << endl;
+      }
+    }
+    
     bool internal_th_alarm = m_internal_th_value.alarm();
     mp_cfg->eth_data()->control.alarm_internal_th = internal_th_alarm;
 
@@ -383,7 +420,7 @@ void u309m::app_t::tick()
     {
       case START:
       {
-        if (m_once_alarm_timer.check())
+        if (m_start_alarm_timer.check())
         {
           clear_all_alarms();
           m_status = ON;
@@ -395,7 +432,6 @@ void u309m::app_t::tick()
           m_supply_2V.on();
           m_supply_1A.on();
           m_supply_17A.on();
-          m_once_alarm_timer.start();
         }
         break;
       }
@@ -434,6 +470,7 @@ void u309m::app_t::tick()
           m_supply_2V.off();
           m_supply_1A.off();
           m_supply_17A.off();
+          mp_cfg->eth_data()->supply_17A.aux_tr_data.temperature_ref = 0;
         }
         if (!mp_cfg->eth_data()->control.on)
         {
@@ -442,22 +479,31 @@ void u309m::app_t::tick()
         break;
       }
     }
+
     if (mp_cfg->eth_data()->control.unlock == m_clear_alarm_command)
     {
       mp_cfg->eth_data()->control.unlock = 0;
       clear_all_alarms();
     }
 
+    /*static volatile int i = 0;
+    if (mp_cfg->eth_data()->control.upper_level_check != i)
+    {
+      i = mp_cfg->eth_data()->control.upper_level_check;
+      irs::mlog() << "i = " << i << endl;
+    }*/
     if (mp_cfg->eth_data()->control.upper_level_check !=
       mp_cfg->eeprom_data()->upper_level_check)
     {
       mp_cfg->eeprom_data()->upper_level_check =
         mp_cfg->eth_data()->control.upper_level_check;
+      irs::mlog() << "eeprom = " 
+        << mp_cfg->eeprom_data()->upper_level_check << endl;
       if (mp_cfg->eth_data()->control.upper_level_check)
       {
         m_connect_counter = mp_cfg->eth_data()->control.connect_counter;
         m_upper_level_unconnected = false;
-        m_once_alarm_timer.start();
+        m_upper_level_connect_timer.start();
       }
     }
     if (mp_cfg->eeprom_data()->upper_level_check)
@@ -465,12 +511,16 @@ void u309m::app_t::tick()
       if (m_connect_counter != mp_cfg->eth_data()->control.connect_counter)
       {
         m_connect_counter = mp_cfg->eth_data()->control.connect_counter;
-        m_once_alarm_timer.start();
+        m_upper_level_connect_timer.start();
       }
-      if (m_once_alarm_timer.check())
+      if (m_upper_level_connect_timer.check())
       {
         m_upper_level_unconnected = true;
       }
+    }
+    if (!mp_cfg->eth_data()->control.watchdog_test)
+    {
+      m_watchdog.restart();
     }
   }
 }

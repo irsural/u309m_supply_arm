@@ -10,6 +10,8 @@
 
 #include <irsfinal.h>
 
+void app_start(u309m::cfg_t* ap_cfg);
+
 int main()
 {
   pll_on();
@@ -24,21 +26,26 @@ int main()
   
   static irs::arm::com_buf log_buf(1, 10, 1000000);
   irs::mlog().rdbuf(&log_buf);
+  //irs::mlog().rdbuf(cout.rdbuf());
   //static irs::mc_error_handler_t error_handler(GPIO_PORTC, 7, &irs::mlog());
     
-  static irs::blink_t F0_blink(GPIO_PORTF, 0, irs::make_cnt_ms(100));
-  
   irs::mlog() << endl;
   irs::mlog() << endl;
   irs::mlog() << irsm("--------- INITIALIZATION --------") << endl;
   
   static u309m::cfg_t cfg;
-  static u309m::app_t app(&cfg);
+  app_start(&cfg);
+}
+
+void app_start(u309m::cfg_t* ap_cfg)
+{
+  static u309m::app_t app(ap_cfg);
   
   irs::mlog() << irsm("------------- START -------------") << endl;
   
   while(true) {
     app.tick();
+    static irs::blink_t F0_blink(GPIO_PORTF, 0, irs::make_cnt_ms(100));
     F0_blink(); // Мигание светодиодом на плате arm
     //A3_blink(); // Мигание светодиодом на плате измерительного коммутатора
     //irs::mlog() << "divide by zero: " << result_test << endl;

@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-1889818889
+Checksum=975713145
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -19,30 +19,32 @@ UseTrigger=1
 TriggerName=main
 LimitSize=0
 ByteLimit=50
-[Disassemble mode]
-mode=0
-[Breakpoints]
-Bp0=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\irsmem.cpp}.822.3@1" 0 0 0 0 "" 0 "" 0
-Bp1=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\irsmem.cpp}.790.5@1" 0 0 0 0 "" 0 "" 0
-Bp2=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\arch\arm\armadc.cpp}.990.26@1" 1 0 0 0 "" 0 "" 0
-Bp3=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\irsmem.cpp}.954.1@1" 0 0 0 0 "" 0 "" 0
-Bp4=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\irsmem.cpp}.829.1@1" 0 0 0 0 "" 0 "" 0
-Bp5=_ "EMUL_TRACE_STOP" "m_error" 0 0 0 196 0 "" 0 "" 0 0 0 4294967295 0 0
-Bp6=_ "STD_CODE" "{$PROJ_DIR$\app.cpp}.454.7@1" 1 0 0 0 "" 0 "" 0
-Count=7
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
 Category=_ 0
 [TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
-[Aliases]
-Count=0
-SuppressDialog=0
+LoggingEnabled=_ 1
+LogFile=_ "$PROJ_DIR$\TermIO.log"
 [CallStackLog]
 Enabled=0
 [DriverProfiling]
 Enabled=0
-Mode=65294304
+Mode=67760216
 Graph=0
+[Disassemble mode]
+mode=0
+[Breakpoints]
+Bp0=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\irsmem.cpp}.822.3@1" 0 0 0 0 "" 0 "" 0
+Bp1=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\irsmem.cpp}.790.5@1" 0 0 0 0 "" 0 "" 0
+Bp2=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\arch\arm\armadc.cpp}.992.26@1" 0 0 0 0 "" 0 "" 0
+Bp3=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\irsmem.cpp}.954.1@1" 0 0 0 0 "" 0 "" 0
+Bp4=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\irsmem.cpp}.829.1@1" 0 0 0 0 "" 0 "" 0
+Bp5=_ "EMUL_DATA" "0x20000B77" 0 0 0 148 0 "" 0 "" 0 0 0 4294967295
+Bp6=_ "EMUL_DATA" "0x20017FFE@4" 1 0 0 116 0 "" 0 "" 0 0 0 4294967295
+Bp7=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\arch\arm\armcfg.h}.72.20@1" 1 0 0 0 "" 0 "" 0
+Bp8=_ "STD_CODE" "{D:\Projects\У309М\Программы\mxsrclib\arch\arm\armeth.cpp}.336.9@1" 1 0 0 0 "" 0 "" 0
+Count=9
+[Aliases]
+Count=0
+SuppressDialog=0

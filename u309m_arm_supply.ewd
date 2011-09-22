@@ -49,11 +49,11 @@
         </option>
         <option>
           <name>RunToEnable</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>RunToName</name>
-          <state>main</state>
+          <state>app_start</state>
         </option>
         <option>
           <name>CExtraOptionsCheck</name>
