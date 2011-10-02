@@ -98,14 +98,14 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   mp_cfg->eth_data()->control.on = 0;
   m_alarm_timer.start();
   m_start_alarm_timer.start();
-  mp_cfg->eth_data()->control.upper_level_check = 
+  mp_cfg->eth_data()->control.upper_level_check =
     mp_cfg->eeprom_data()->upper_level_check;
-  
+
   m_supply_200V.dac_log_enable();
-  
+
   m_supply_17A.disable_saving_aux_th_ref();
-  
-  mp_cfg->eth_data()->control.watchdog_reset_cause = 
+
+  mp_cfg->eth_data()->control.watchdog_reset_cause =
     m_watchdog.watchdog_reset_cause();
   //m_watchdog.start();
 }
@@ -304,13 +304,13 @@ void u309m::app_t::tick()
     {
       if (mp_cfg->eth_data()->control.refresh_all_sources == 1)
       {
-        irs::mlog() << "ќбновление уставок всех источников начато" << endl;
+        //irs::mlog() << "ќбновление уставок всех источников начато" << endl;
         m_supply_200V.refresh_dac_values();
         m_supply_20V.refresh_dac_values();
         m_supply_2V.refresh_dac_values();
         m_supply_1A.refresh_dac_values();
         m_supply_17A.refresh_dac_values();
-        
+
         m_refresh_timeout = true;
         m_refresh_timer.start();
       }
@@ -321,10 +321,10 @@ void u309m::app_t::tick()
       {
         mp_cfg->eth_data()->control.refresh_all_sources = 0;
         m_refresh_timeout = false;
-        irs::mlog() << "ќбновление уставок всех источников закончено" << endl;
+        //irs::mlog() << "ќбновление уставок всех источников закончено" << endl;
       }
     }
-    
+
     bool internal_th_alarm = m_internal_th_value.alarm();
     mp_cfg->eth_data()->control.alarm_internal_th = internal_th_alarm;
 
@@ -497,7 +497,7 @@ void u309m::app_t::tick()
     {
       mp_cfg->eeprom_data()->upper_level_check =
         mp_cfg->eth_data()->control.upper_level_check;
-      irs::mlog() << "eeprom = " 
+      irs::mlog() << "eeprom = "
         << mp_cfg->eeprom_data()->upper_level_check << endl;
       if (mp_cfg->eth_data()->control.upper_level_check)
       {
