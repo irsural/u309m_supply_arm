@@ -22,12 +22,12 @@
 @REM but they are listed at the end of this file for reference.
 
 
-"D:\Program Files\IAR Systems\Embedded Workbench 5.4 ARM\common\bin\cspybat" "D:\Program Files\IAR Systems\Embedded Workbench 5.4 ARM\arm\bin\armproc.dll" "D:\Program Files\IAR Systems\Embedded Workbench 5.4 ARM\arm\bin\armjlink.dll"  %1 --plugin "D:\Program Files\IAR Systems\Embedded Workbench 5.4 ARM\arm\bin\<libsupport_plugin>" --flash_loader "D:\Program Files\IAR Systems\Embedded Workbench 5.4 ARM\arm\config\flashloader\TexasInstruments\FlashLM3Sx8xx.board" --backend -B "--endian=little" "--cpu=Cortex-M3" "--fpu=None" "-p" "D:\Program Files\IAR Systems\Embedded Workbench 5.4 ARM\arm\CONFIG\debugger\TexasInstruments\iolm3sxxxx.ddf" "--drv_verify_download" "--semihosting" "--device=LM3SxBxx" "--drv_communication=USB0" "--jlink_speed=auto" "--jlink_initial_speed=32" "--jlink_reset_strategy=0,0" "--drv_catch_exceptions=0x510" 
+"D:\soft\IAR Systems\Embedded Workbench 5.4\common\bin\cspybat" "D:\soft\IAR Systems\Embedded Workbench 5.4\arm\bin\armproc.dll" "D:\soft\IAR Systems\Embedded Workbench 5.4\arm\bin\armjlink.dll"  %1 --plugin "D:\soft\IAR Systems\Embedded Workbench 5.4\arm\bin\<libsupport_plugin>" --flash_loader "D:\soft\IAR Systems\Embedded Workbench 5.4\arm\config\flashloader\TexasInstruments\FlashLM3Sx8xx.board" --backend -B "--endian=little" "--cpu=Cortex-M3" "--fpu=None" "-p" "D:\soft\IAR Systems\Embedded Workbench 5.4\arm\CONFIG\debugger\TexasInstruments\iolm3sxxxx.ddf" "--drv_verify_download" "--semihosting" "--device=LM3SxBxx" "--drv_communication=USB0" "--jlink_speed=auto" "--jlink_initial_speed=32" "--jlink_reset_strategy=0,0" "--drv_catch_exceptions=0x510" 
 
 
 @REM Loaded plugins:
-@REM    D:\Program Files\IAR Systems\Embedded Workbench 5.4 ARM\arm\bin\armlibsupport.dll
-@REM    D:\Program Files\IAR Systems\Embedded Workbench 5.4 ARM\common\plugins\CodeCoverage\CodeCoverage.dll
-@REM    D:\Program Files\IAR Systems\Embedded Workbench 5.4 ARM\common\plugins\Profiling\Profiling.dll
-@REM    D:\Program Files\IAR Systems\Embedded Workbench 5.4 ARM\common\plugins\stack\stack.dll
-@REM    D:\Program Files\IAR Systems\Embedded Workbench 5.4 ARM\common\plugins\SymList\SymList.dll
+@REM    D:\soft\IAR Systems\Embedded Workbench 5.4\arm\bin\armlibsupport.dll
+@REM    D:\soft\IAR Systems\Embedded Workbench 5.4\common\plugins\CodeCoverage\CodeCoverage.dll
+@REM    D:\soft\IAR Systems\Embedded Workbench 5.4\common\plugins\Profiling\Profiling.dll
+@REM    D:\soft\IAR Systems\Embedded Workbench 5.4\common\plugins\stack\stack.dll
+@REM    D:\soft\IAR Systems\Embedded Workbench 5.4\common\plugins\SymList\SymList.dll

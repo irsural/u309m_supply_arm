@@ -46,8 +46,8 @@ void app_start(u309m::cfg_t* ap_cfg)
   while(true) {
     app.tick();
     static irs::blink_t F0_blink(GPIO_PORTF, 0, irs::make_cnt_ms(100));
-    F0_blink(); // РњРёРіР°РЅРёРµ СЃРІРµС‚РѕРґРёРѕРґРѕРј РЅР° РїР»Р°С‚Рµ arm
-    //A3_blink(); // РњРёРіР°РЅРёРµ СЃРІРµС‚РѕРґРёРѕРґРѕРј РЅР° РїР»Р°С‚Рµ РёР·РјРµСЂРёС‚РµР»СЊРЅРѕРіРѕ РєРѕРјРјСѓС‚Р°С‚РѕСЂР°
+    F0_blink(); // Мигание светодиодом на плате arm
+    //A3_blink(); // Мигание светодиодом на плате измерительного коммутатора
     //irs::mlog() << "divide by zero: " << result_test << endl;
   }
 }

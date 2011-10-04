@@ -12,7 +12,7 @@
           
           
           
-        <Column0>167</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+        <Column0>197</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
       </Workspace>
       <Build>
         
@@ -24,7 +24,7 @@
     <Windows>
       
       
-    <Wnd2>
+    <Wnd0>
         <Tabs>
           <Tab>
             <Identity>TabID-25588-31213</Identity>
@@ -36,7 +36,7 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd2><Wnd3>
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
         <Tabs>
           <Tab>
             <Identity>TabID-25840-78</Identity>
@@ -44,22 +44,22 @@
             <Factory>Build</Factory>
             <Session/>
           </Tab>
-        <Tab><Identity>TabID-11496-10786</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab></Tabs>
+        <Tab><Identity>TabID-11496-10786</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab><Tab><Identity>TabID-23296-31050</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory></Tab></Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd3></Windows>
+      <SelectedTab>2</SelectedTab></Wnd1></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\arch\arm\armgpio.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>307</SelStart><SelEnd>307</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\cfg.cpp</Filename><XPos>0</XPos><YPos>265</YPos><SelStart>10155</SelStart><SelEnd>10155</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\irsmbus.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>364</SelStart><SelEnd>382</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\mxdata.h</Filename><XPos>0</XPos><YPos>199</YPos><SelStart>6370</SelStart><SelEnd>6380</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\timer.cpp</Filename><XPos>0</XPos><YPos>56</YPos><SelStart>1161</SelStart><SelEnd>1161</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\arch\arm\counter.cpp</Filename><XPos>0</XPos><YPos>43</YPos><SelStart>1301</SelStart><SelEnd>1301</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\mxdata.cpp</Filename><XPos>0</XPos><YPos>490</YPos><SelStart>14814</SelStart><SelEnd>14814</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\mxdatastd.h</Filename><XPos>0</XPos><YPos>379</YPos><SelStart>11758</SelStart><SelEnd>11758</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\comm.cpp</Filename><XPos>0</XPos><YPos>192</YPos><SelStart>5111</SelStart><SelEnd>5111</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\irsadc.h</Filename><XPos>0</XPos><YPos>720</YPos><SelStart>27688</SelStart><SelEnd>27688</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\cfg.h</Filename><XPos>0</XPos><YPos>164</YPos><SelStart>3087</SelStart><SelEnd>3087</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\meassup.h</Filename><XPos>0</XPos><YPos>314</YPos><SelStart>9925</SelStart><SelEnd>9925</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\irsdev.h</Filename><XPos>0</XPos><YPos>121</YPos><SelStart>3387</SelStart><SelEnd>3387</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\data.h</Filename><XPos>0</XPos><YPos>393</YPos><SelStart>12221</SelStart><SelEnd>12221</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\arch\arm\armioregs.h</Filename><XPos>0</XPos><YPos>3012</YPos><SelStart>85162</SelStart><SelEnd>85162</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\app.h</Filename><XPos>0</XPos><YPos>95</YPos><SelStart>2797</SelStart><SelEnd>2797</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main.cpp</Filename><XPos>0</XPos><YPos>9</YPos><SelStart>937</SelStart><SelEnd>937</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\irsmbus.cpp</Filename><XPos>0</XPos><YPos>814</YPos><SelStart>32304</SelStart><SelEnd>32304</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\arch\arm\armcfg.h</Filename><XPos>0</XPos><YPos>34</YPos><SelStart>1351</SelStart><SelEnd>1351</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\arch\arm\irsarchint.cpp</Filename><XPos>0</XPos><YPos>12</YPos><SelStart>932</SelStart><SelEnd>932</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\arch\arm\armeth.cpp</Filename><XPos>0</XPos><YPos>297</YPos><SelStart>7984</SelStart><SelEnd>7984</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\arch\arm\armeth.h</Filename><XPos>0</XPos><YPos>34</YPos><SelStart>187</SelStart><SelEnd>187</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\irsstring.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>341</SelStart><SelEnd>341</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\irsconfig.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>809</SelStart><SelEnd>809</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\irserror.h</Filename><XPos>0</XPos><YPos>461</YPos><SelStart>14182</SelStart><SelEnd>14182</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\irsadc.cpp</Filename><XPos>0</XPos><YPos>1244</YPos><SelStart>35395</SelStart><SelEnd>35395</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\app.cpp</Filename><XPos>0</XPos><YPos>78</YPos><SelStart>4396</SelStart><SelEnd>4396</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\timer.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>128</SelStart><SelEnd>128</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\supply.cpp</Filename><XPos>0</XPos><YPos>511</YPos><SelStart>17383</SelStart><SelEnd>17397</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\arch\arm\armgpio.h</Filename><XPos>0</XPos><YPos>6</YPos><SelStart>188</SelStart><SelEnd>188</SelEnd></Tab><ActiveTab>29</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\irsstd.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>94</SelStart><SelEnd>94</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\irsdefs.h</Filename><XPos>0</XPos><YPos>388</YPos><SelStart>11921</SelStart><SelEnd>11921</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\arch\arm\armeth.cpp</Filename><XPos>0</XPos><YPos>241</YPos><SelStart>7447</SelStart><SelEnd>7447</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\arch\arm\armeth.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>393</SelStart><SelEnd>393</SelEnd></Tab><ActiveTab>1</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-00c1b6c0><key>iaridepm.enu1</key></Toolbar-00c1b6c0></Sizes></Row0></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>874</Bottom><Right>241</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>256</yscreen><sizeHorzCX>156250</sizeHorzCX><sizeHorzCY>278867</sizeHorzCY><sizeVertCX>189844</sizeVertCX><sizeVertCY>954248</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>874</Bottom><Right>426</Right><x>-2</x><y>-2</y><xscreen>1284</xscreen><yscreen>256</yscreen><sizeHorzCX>1003125</sizeHorzCX><sizeHorzCY>278867</sizeHorzCY><sizeVertCX>334375</sizeVertCX><sizeVertCY>954248</sizeVertCY></Rect></Wnd3></Sizes></Row0></Right><Bottom><Row0><Sizes/></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-012802a0><key>iaridepm.enu1</key></Toolbar-012802a0></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>773</Bottom><Right>271</Right><x>-2</x><y>-2</y><xscreen>225</xscreen><yscreen>228</yscreen><sizeHorzCX>156250</sizeHorzCX><sizeHorzCY>278729</sizeHorzCY><sizeVertCX>189583</sizeVertCX><sizeVertCY>947433</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>773</Bottom><Right>479</Right><x>-2</x><y>-2</y><xscreen>1445</xscreen><yscreen>228</yscreen><sizeHorzCX>1003472</sizeHorzCX><sizeHorzCY>278729</sizeHorzCY><sizeVertCX>334028</sizeVertCX><sizeVertCY>947433</sizeVertCY></Rect></Wnd1></Sizes></Row0></Right><Bottom><Row0><Sizes/></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 
