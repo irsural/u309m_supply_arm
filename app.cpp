@@ -130,7 +130,6 @@ void u309m::app_t::tick()
 
   if (m_rel_220V_timer.check())
   {
-    m_rel_220V_timer.stop();
     mp_cfg->rele_ext_pins()->REL_220V->set();
     mp_cfg->eth_data()->rele_ext.REL_220V = 1;
   }

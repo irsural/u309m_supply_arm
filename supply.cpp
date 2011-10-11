@@ -442,12 +442,12 @@ void u309m::supply_t::tick()
   if (m_timer.check())
   {
     mp_eth_data->base_temp_data.value =
-     m_th_base_data.temperature_code * m_th_base.get_conv_koef();
+      m_th_base_data.temperature_code * m_th_base.get_conv_koef();
     mp_eth_data->base_temp_data.filtered_value =
       fade(&m_temp_base_isodr.fd,
       static_cast<float>(mp_eth_data->base_temp_data.value));
-    mp_eth_data->aux_temp_data.value =
-     m_th_aux_data.temperature_code * m_th_aux.get_conv_koef();
+    mp_eth_data->aux_temp_data.value = 
+      m_th_aux_data.temperature_code*m_th_aux.get_conv_koef();
     mp_eth_data->aux_temp_data.filtered_value =
       fade(&m_temp_aux_isodr.fd,
       static_cast<float>(mp_eth_data->aux_temp_data.value));
@@ -537,7 +537,7 @@ void u309m::supply_t::off()
 void u309m::supply_t::dac_log_enable() 
 { 
   m_volt_reg_data.log_enable = 1; 
-  irs::mlog() << "Источник по адресу 0x" << this << " лог ЦАП включен" << endl;
+  //irs::mlog() << "Источник по адресу 0x" << this << " лог ЦАП включен" << endl;
 }
 
 void u309m::supply_t::refresh_dac_values()

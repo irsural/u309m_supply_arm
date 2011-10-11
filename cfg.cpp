@@ -13,7 +13,6 @@ u309m::cfg_t::cfg_t():
   m_ipt_plis_ready(&m_supply_comm_cfg_done, irs::make_cnt_ms(200)),
   m_meas_comm_cfg_done(GPIO_PORTJ, 1, irs::gpio_pin_t::dir_in),
   m_meas_plis_ready(&m_meas_comm_cfg_done, irs::make_cnt_ms(200)),
-  m_spi_buf_size(3),
   m_f_osc(80000000),
   #ifdef ARM_ADC_TEST
   m_adc(((1 << PTC_A_channel) | (1 << PTC_LC_channel) |
@@ -23,10 +22,14 @@ u309m::cfg_t::cfg_t():
         (1 << PTC_PWR_channel) | (1 << PTC_17A_channel)),
         irs::arm::adc_stellaris_t::EXT_REF),
   #endif // ARM_ADC_TEST
-  m_spi_meas_comm_plis(m_spi_buf_size, m_f_osc, irs::arm::arm_spi_t::SPI,
-    irs::arm::arm_spi_t::SSI1, GPIO_PORTE, GPIO_PORTE, GPIO_PORTE),
-  m_spi_general_purpose(m_spi_buf_size, m_f_osc, irs::arm::arm_spi_t::SPI,
-    irs::arm::arm_spi_t::SSI0),
+  
+  m_spi_bitrate(500000),
+  m_spi_buf_size(3),
+  m_spi_meas_comm_plis(m_spi_bitrate, m_spi_buf_size, 
+    irs::arm::arm_spi_t::SPI, irs::arm::arm_spi_t::SSI1, GPIO_PORTE,
+    GPIO_PORTE, GPIO_PORTE),
+  m_spi_general_purpose(m_spi_bitrate, m_spi_buf_size,
+    irs::arm::arm_spi_t::SPI, irs::arm::arm_spi_t::SSI0),
 
   m_spi_cs_code_0(GPIO_PORTH, 0, irs::gpio_pin_t::dir_out),
   m_spi_cs_code_1(GPIO_PORTH, 1, irs::gpio_pin_t::dir_out),
@@ -45,13 +48,13 @@ u309m::cfg_t::cfg_t():
   m_dac_demux(&m_dac_demux_cs_data),
 
   #ifndef EEPROM_TEST
-  m_local_mac(irs::make_mxmac(0, 0, 192, 168, 0, 211)),
+  m_local_mac(irs::make_mxmac(0, 0, 192, 168, 0, 215)),
   #else // EEPROM_TEST
   m_local_mac(mxmac_t::zero_mac()),
   #endif // EEPROM_TEST
   m_arm_eth(irs::simple_ethernet_t::double_buf, 300, m_local_mac),
   #ifndef EEPROM_TEST
-  m_local_ip(irs::make_mxip(192, 168, 0, 211)),
+  m_local_ip(irs::make_mxip(192, 168, 0, 215)),
   #else // EEPROM_TEST
   m_local_ip(mxip_t::zero_ip()),
   #endif // EEPROM_TEST
@@ -173,11 +176,12 @@ u309m::cfg_t::cfg_t():
 //  irs::string ip_str = irst(ip_0_str + "." + ip_1_str + "." +
 //    ip_2_str + "." + ip_3_str);
 //  m_simple_hardflow.set_param("local_addr", ip_str);
-  m_simple_hardflow.set_param("local_addr", "192.168.0.211");
+  m_simple_hardflow.set_param("local_addr", "192.168.0.215");
   #endif // EEPROM_TEST
   m_izm_th_enable.set();
   m_meas_comm_reset.clear();
   m_supply_comm_reset.clear();
+  m_REL_220V.set();
 }
 
 u309m::command_pins_t* u309m::cfg_t::command_pins()

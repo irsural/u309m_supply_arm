@@ -557,9 +557,10 @@ private:
   plis_ready_t m_ipt_plis_ready;
   irs::arm::io_pin_t m_meas_comm_cfg_done;
   plis_ready_t m_meas_plis_ready;
-  irs_u8 m_spi_buf_size;
   irs_u32 m_f_osc;
   irs::arm::adc_stellaris_t m_adc;
+  irs_u32 m_spi_bitrate;
+  irs_u8 m_spi_buf_size;
   irs::arm::arm_spi_t m_spi_meas_comm_plis;
   irs::arm::arm_spi_t m_spi_general_purpose;
 
