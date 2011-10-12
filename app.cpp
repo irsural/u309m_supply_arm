@@ -8,13 +8,8 @@
 
 u309m::app_t::app_t(cfg_t* ap_cfg):
   mp_cfg(ap_cfg),
-  #ifdef MEAS_COMM_TEST
   mp_meas_comm(ap_cfg->meas_comm()),
-  #endif // MEAS_COMM_TEST
-  #ifdef SUPPLY_COMM_TEST
   mp_supply_comm(ap_cfg->supply_comm()),
-  #endif // SUPPLY_COMM_TEST
-  #ifdef SUPPLY_TEST
   m_supply_200V(ap_cfg->spi_general_purpose(),
     ap_cfg->command_pins()->supply_200V,
     &ap_cfg->eth_data()->supply_200V,
@@ -35,7 +30,6 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
     ap_cfg->command_pins()->supply_17A,
     &ap_cfg->eth_data()->supply_17A,
     &ap_cfg->eeprom_data()->supply_17A),
-  #endif // SUPPLY_TEST
   m_bistable_rele_change(false),
   m_mode(rele_check_mode),
   m_rele_timer(irs::make_cnt_ms(10)),
@@ -117,20 +111,13 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
 void u309m::app_t::tick()
 {
   mp_cfg->tick();
-  #ifdef MEAS_COMM_TEST
   mp_meas_comm->tick();
-  #endif // MEAS_COMM_TEST
-  #ifdef SUPPLY_COMM_TEST
   mp_supply_comm->tick();
-  #endif // SUPPLY_COMM_TEST
-
-  #ifdef SUPPLY_TEST
   m_supply_200V.tick();
   m_supply_20V.tick();
   m_supply_2V.tick();
   m_supply_1A.tick();
   m_supply_17A.tick();
-  #endif // SUPPLY_TEST
   
   bool change_ip_0 = m_ip_0 != mp_cfg->eth_data()->ip_0;
   bool change_ip_1 = m_ip_1 != mp_cfg->eth_data()->ip_1;

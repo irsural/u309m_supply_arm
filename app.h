@@ -64,19 +64,13 @@ private:
   void clear_all_alarms();
 
   cfg_t* mp_cfg;
-  #ifdef MEAS_COMM_TEST
   meas_comm_t* mp_meas_comm;
-  #endif // MEAS_COMM_TEST
-  #ifdef SUPPLY_COMM_TEST
   supply_comm_t* mp_supply_comm;
-  #endif // SUPPLY_COMM_TEST
-  #ifdef SUPPLY_TEST
   supply_t m_supply_20V;
   supply_t m_supply_200V;
   supply_t m_supply_2V;
   supply_t m_supply_1A;
   supply_t m_supply_17A;
-  #endif // SUPPLY_TEST
   bool m_bistable_rele_change;
   mode_t m_mode;
   irs::timer_t m_rele_timer;

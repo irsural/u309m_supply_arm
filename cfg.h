@@ -22,13 +22,6 @@
 
 #include <irsfinal.h>
 
-#define MEAS_COMM_TEST
-#define SUPPLY_COMM_TEST
-#define SUPPLY_TEST
-#define EEPROM_TEST
-#define ARM_ADC_TEST // work
-#define USE_FLASH
-
 namespace u309m {
 
 struct rele_ext_eth_data_t {
@@ -607,12 +600,8 @@ private:
   supply_pins_t m_supply_17A_pins;
   command_pins_t m_command_pins;
 
-  #ifdef MEAS_COMM_TEST
   meas_comm_t m_meas_comm;
-  #endif // MEAS_COMM_TEST
-  #ifdef SUPPLY_COMM_TEST
   supply_comm_t m_supply_comm;
-  #endif // SUPPLY_COMM_TEST
 
   irs::arm::io_pin_t m_SYM_2V_on;
   irs::arm::io_pin_t m_SYM_2V_off;
@@ -628,18 +617,9 @@ private:
   irs::arm::io_pin_t m_SYM_OFF;
   irs::arm::io_pin_t m_SYM_OFF_TEST;
   rele_ext_pins_t m_rele_ext_pins;
-
-  #ifdef EEPROM_TEST
   irs::eeprom_command_t::size_type m_eeprom_size;
-  #ifdef USE_FLASH
-    irs::arm::flash_t m_eeprom;
-  #else
-    irs::eeprom_command_t m_eeprom_command;
-    irs::eeprom_spi_t m_eeprom;
-  #endif  //  USE_FLASH
+  irs::arm::flash_t m_eeprom;
   eeprom_data_t m_eeprom_data;
-  #endif // EEPROM_TEST
-
   irs::loop_timer_t m_timer;
 };
 

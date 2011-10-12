@@ -53,34 +53,18 @@ u309m::supply_t::supply_t(
   m_operate(false),
   m_enable_saving_aux_th_ref(true)
 {
-  #ifdef EEPROM_TEST
   mp_eth_data->resistance_code = mp_eeprom_data->resistance_code;
   m_ad5293_data.resistance_code = mp_eeprom_data->resistance_code;
   m_tc_write = mp_eeprom_data->resistance_code;
-  #else
-  mp_eth_data->resistance_code = m_ad5293_data.resistance_code;
-  m_tc_write = mp_eeprom_data->resistance_code;
-  #endif // EEPROM_TEST
-  #ifdef EEPROM_TEST
   m_prev_adc_koef = mp_eeprom_data->koef_adc_volt_prev;
   m_fin_adc_koef = mp_eeprom_data->koef_adc_volt_fin;
-  #else
-  m_prev_adc_koef = (4.096/1024)*(23.9/3.9)*1.2;
-  m_fin_adc_koef = (4.096/1024)*(23.9/3.9)*1.2;
-  #endif // EEPROM_TEST
   mp_eth_data->prev_adc_data.koef = m_prev_adc_koef;
   mp_eth_data->fin_adc_data.koef = m_fin_adc_koef;
-  #ifdef EEPROM_TEST
   m_prev_dac_koef = mp_eeprom_data->koef_reg_prev;
   m_fin_dac_koef = mp_eeprom_data->koef_reg_fin;
-  #else
-  m_prev_dac_koef = 2633;
-  m_fin_dac_koef = 2702;
-  #endif // EEPROM_TEST
   mp_eth_data->prev_dac_data.koef = m_prev_dac_koef;
   mp_eth_data->fin_dac_data.koef = m_fin_dac_koef;
 
-  #ifdef EEPROM_TEST
   m_temp_base_pid_data.k = mp_eeprom_data->temp_base_k;
   mp_eth_data->base_tr_data.temp_k = m_temp_base_pid_data.k;
 
@@ -91,21 +75,7 @@ u309m::supply_t::supply_t(
   m_temp_base_kd = mp_eeprom_data->temp_base_kd;
   m_temp_base_pid_data.kd = m_temp_base_kd / m_dt;
   mp_eth_data->base_tr_data.temp_kd = m_temp_base_kd;
-  #else
-  m_temp_base_pid_data.k = 15000;
-  mp_eth_data->base_tr_data.temp_k = m_temp_base_pid_data.k;
 
-  m_temp_base_ki = 0.0015;
-  m_temp_base_pid_data.ki = m_temp_base_ki * m_dt;
-  mp_eth_data->base_tr_data.temp_ki = m_temp_base_ki;
-
-  m_temp_base_kd = 100;
-  m_temp_base_pid_data.kd = m_temp_base_kd / m_dt;
-  mp_eth_data->base_tr_data.temp_kd = m_temp_base_kd;
-  /*mp_eth_data->base_tr_data.temp_k = m_temp_base_pid_data.k;
-  mp_eth_data->base_tr_data.temp_ki = m_temp_base_pid_data.ki/m_dt;
-  mp_eth_data->base_tr_data.temp_kd = m_temp_base_pid_data.kd*m_dt;*/
-  #endif // EEPROM_TEST
   m_temp_base_pid_data.min = 0;
   m_temp_base_pid_data.max = 65535;
   m_temp_base_pid_data.prev_e = 0.;
@@ -116,39 +86,25 @@ u309m::supply_t::supply_t(
   m_temp_base_pid_data.int_val = 0.;
   m_temp_base_pid_data.k_d_pid = 0.1;
 
-  #ifdef EEPROM_TEST
   m_temp_base_time_const = mp_eeprom_data->temp_base_time_const;
-  #else
-  m_temp_base_time_const = 20;
-  #endif // EEPROM_TEST
+
   mp_eth_data->base_tr_data.temp_time_const = m_temp_base_time_const;
-  #ifdef EEPROM_TEST
+
   mp_eth_data->base_tr_data.temp_prop_koef =
     mp_eeprom_data->temp_base_prop_koef;
-  #else
-  mp_eth_data->base_tr_data.temp_prop_koef = 0;
-  #endif // EEPROM_TEST
+
   m_temp_base_isodr.k = mp_eth_data->base_tr_data.temp_prop_koef;
   m_temp_base_isodr.fd.x1 = m_th_base_data.temperature_code*
     m_th_base.get_conv_koef();
   m_temp_base_isodr.fd.y1 = m_temp_base_isodr.fd.x1;
   m_temp_base_isodr.fd.t = mp_eth_data->base_tr_data.temp_time_const;
 
-  #ifdef EEPROM_TEST
   mp_eth_data->base_tr_data.temperature_ref = mp_eeprom_data->temp_base_ref;
-  #else
-  mp_eth_data->base_tr_data.temperature_ref = 60;
-  #endif // EEPROM_TEST
 
-  #ifdef EEPROM_TEST
   m_temp_aux_pid_data.k = mp_eeprom_data->temp_aux_k;
   m_temp_aux_pid_data.ki = mp_eeprom_data->temp_aux_ki * m_dt;
   m_temp_aux_pid_data.kd = mp_eeprom_data->temp_aux_kd / m_dt;
-  #else
-  m_temp_aux_pid_data.k = 15000;
-  m_temp_aux_pid_data.ki = 0.00075;
-  m_temp_aux_pid_data.kd = 200;
-  #endif // EEPROM_TEST
+
   m_temp_aux_pid_data.min = 0;
   m_temp_aux_pid_data.max = 65535;
   m_temp_aux_pid_data.prev_e = 0.;
@@ -163,29 +119,20 @@ u309m::supply_t::supply_t(
   mp_eth_data->aux_tr_data.temp_ki = m_temp_aux_pid_data.ki / m_dt;
   mp_eth_data->aux_tr_data.temp_kd = m_temp_aux_pid_data.kd * m_dt;
 
-  #ifdef EEPROM_TEST
   m_temp_aux_time_const = mp_eeprom_data->temp_aux_time_const;
-  #else
-  m_temp_aux_time_const = 20;
-  #endif // EEPROM_TEST
+
   mp_eth_data->aux_tr_data.temp_time_const = m_temp_aux_time_const;
-  #ifdef EEPROM_TEST
+
   mp_eth_data->aux_tr_data.temp_prop_koef =
     mp_eeprom_data->temp_aux_prop_koef;
-  #else
-  mp_eth_data->aux_tr_data.temp_prop_koef = 0;
-  #endif // EEPROM_TEST
+
   m_temp_aux_isodr.k = mp_eth_data->aux_tr_data.temp_prop_koef;
   m_temp_aux_isodr.fd.x1 = m_th_base_data.temperature_code*
     m_th_aux.get_conv_koef();
   m_temp_aux_isodr.fd.y1 = m_temp_base_isodr.fd.x1;
   m_temp_aux_isodr.fd.t = mp_eth_data->aux_tr_data.temp_time_const;
 
-  #ifdef EEPROM_TEST
   mp_eth_data->aux_tr_data.temperature_ref = mp_eeprom_data->temp_aux_ref;
-  #else
-  mp_eth_data->aux_tr_data.temperature_ref = 60;
-  #endif // EEPROM_TEST
 }
 
 void u309m::supply_t::tick()
@@ -206,14 +153,10 @@ void u309m::supply_t::tick()
       m_tc_write = 1023;
       m_ad5293_data.resistance_code = m_tc_write;
       mp_eth_data->resistance_code = m_tc_write;
-      #ifdef EEPROM_TEST
       mp_eeprom_data->resistance_code = m_tc_write;
-      #endif  //  EEPROM_TEST
-    } else {
+     } else {
       m_ad5293_data.resistance_code = m_tc_write;
-      #ifdef EEPROM_TEST
       mp_eeprom_data->resistance_code = m_tc_write;
-      #endif  //  EEPROM_TEST
     }
   }
 
@@ -301,9 +244,7 @@ void u309m::supply_t::tick()
   if (m_prev_dac_koef != mp_eth_data->prev_dac_data.koef)
   {
     m_prev_dac_koef = mp_eth_data->prev_dac_data.koef;
-    #ifdef EEPROM_TEST
     mp_eeprom_data->koef_reg_prev = m_prev_dac_koef;
-    #endif // EEPROM_TEST
     if (m_operate)
     {
       m_volt_reg_data.voltage_code_A =
@@ -313,9 +254,7 @@ void u309m::supply_t::tick()
   if (m_fin_dac_koef != mp_eth_data->fin_dac_data.koef)
   {
     m_fin_dac_koef = mp_eth_data->fin_dac_data.koef;
-    #ifdef EEPROM_TEST
     mp_eeprom_data->koef_reg_fin = m_fin_dac_koef;
-    #endif // EEPROM_TEST
     if (m_operate)
     {
       m_volt_reg_data.voltage_code_B =
@@ -327,18 +266,14 @@ void u309m::supply_t::tick()
   if (m_prev_adc_koef != mp_eth_data->prev_adc_data.koef)
   {
     m_prev_adc_koef = mp_eth_data->prev_adc_data.koef;
-    #ifdef EEPROM_TEST
     mp_eeprom_data->koef_adc_volt_prev = m_prev_adc_koef;
-    #endif // EEPROM_TEST
     mp_eth_data->prev_adc_data.voltage_code =
       m_prev_adc_koef*m_adc102_data.voltage_code_A;
   }
   if (m_fin_adc_koef != mp_eth_data->fin_adc_data.koef)
   {
     m_fin_adc_koef = mp_eth_data->fin_adc_data.koef;
-    #ifdef EEPROM_TEST
     mp_eeprom_data->koef_adc_volt_fin = m_fin_adc_koef;
-    #endif // EEPROM_TEST
     mp_eth_data->fin_adc_data.voltage_code =
       m_fin_adc_koef*m_adc102_data.voltage_code_B;
   }
@@ -348,9 +283,7 @@ void u309m::supply_t::tick()
   {
     m_temp_base_pid_data.k = mp_eth_data->base_tr_data.temp_k;
     pid_reg_sync(&m_temp_base_pid_data);
-    #ifdef EEPROM_TEST
     mp_eeprom_data->temp_base_k = mp_eth_data->base_tr_data.temp_k;
-    #endif // EEPROM_TEST
   }
 
   if (m_temp_base_ki != mp_eth_data->base_tr_data.temp_ki)
@@ -358,28 +291,21 @@ void u309m::supply_t::tick()
     m_temp_base_ki = mp_eth_data->base_tr_data.temp_ki;
     m_temp_base_pid_data.ki = m_temp_base_ki * m_dt;
     pid_reg_sync(&m_temp_base_pid_data);
-    #ifdef EEPROM_TEST
     mp_eeprom_data->temp_base_ki = m_temp_base_ki;
-    #endif // EEPROM_TEST
   }
 
   if (m_temp_base_kd != mp_eth_data->base_tr_data.temp_kd)
   {
     m_temp_base_kd = mp_eth_data->base_tr_data.temp_kd;
     m_temp_base_pid_data.kd = m_temp_base_kd / m_dt;
-    //pid_reg_sync(&m_temp_base_pid_data);
-    #ifdef EEPROM_TEST
     mp_eeprom_data->temp_base_kd = m_temp_base_kd;
-    #endif // EEPROM_TEST
   }
 
   if (m_temp_aux_pid_data.k != mp_eth_data->aux_tr_data.temp_k)
   {
     m_temp_aux_pid_data.k = mp_eth_data->aux_tr_data.temp_k;
     pid_reg_sync(&m_temp_aux_pid_data);
-    #ifdef EEPROM_TEST
     mp_eeprom_data->temp_aux_k = mp_eth_data->aux_tr_data.temp_k;
-    #endif // EEPROM_TEST
   }
 
   if (m_temp_aux_ki != mp_eth_data->aux_tr_data.temp_ki)
@@ -387,55 +313,42 @@ void u309m::supply_t::tick()
     m_temp_aux_ki = mp_eth_data->aux_tr_data.temp_ki;
     m_temp_aux_pid_data.ki = m_temp_aux_ki * m_dt;
     pid_reg_sync(&m_temp_aux_pid_data);
-    #ifdef EEPROM_TEST
     mp_eeprom_data->temp_aux_ki = m_temp_aux_ki;
-    #endif // EEPROM_TEST
   }
 
   if (m_temp_aux_kd != mp_eth_data->aux_tr_data.temp_kd)
   {
     m_temp_aux_kd = mp_eth_data->aux_tr_data.temp_kd;
     m_temp_aux_pid_data.kd = m_temp_aux_kd / m_dt;
-    //pid_reg_sync(&m_temp_aux_pid_data);
-    #ifdef EEPROM_TEST
     mp_eeprom_data->temp_aux_kd = m_temp_aux_kd;
-    #endif // EEPROM_TEST
   }
 
   if (m_temp_base_time_const != mp_eth_data->base_tr_data.temp_time_const)
   {
     m_temp_base_time_const =
       static_cast<float>(mp_eth_data->base_tr_data.temp_time_const);
-    #ifdef EEPROM_TEST
     mp_eeprom_data->temp_base_time_const = m_temp_base_time_const;
-    #endif // EEPROM_TEST
     m_temp_base_isodr.fd.t = m_temp_base_time_const;
   }
 
   if (m_temp_base_isodr.k != mp_eth_data->base_tr_data.temp_prop_koef)
   {
     m_temp_base_isodr.k = mp_eth_data->base_tr_data.temp_prop_koef;
-    #ifdef EEPROM_TEST
     mp_eeprom_data->temp_base_prop_koef = m_temp_base_isodr.k;
-    #endif // EEPROM_TEST
   }
 
   if (m_temp_aux_time_const != mp_eth_data->aux_tr_data.temp_time_const)
   {
     m_temp_aux_time_const =
       static_cast<float>(mp_eth_data->aux_tr_data.temp_time_const);
-    #ifdef EEPROM_TEST
     mp_eeprom_data->temp_aux_time_const = m_temp_aux_time_const;
-    #endif // EEPROM_TEST
     m_temp_aux_isodr.fd.t = m_temp_aux_time_const;
   }
 
   if (m_temp_aux_isodr.k != mp_eth_data->aux_tr_data.temp_prop_koef)
   {
     m_temp_aux_isodr.k = mp_eth_data->aux_tr_data.temp_prop_koef;
-    #ifdef EEPROM_TEST
     mp_eeprom_data->temp_aux_prop_koef = m_temp_aux_isodr.k;
-    #endif // EEPROM_TEST
   }
 
   //  Вывод температуры и показаний АЦП
@@ -458,7 +371,6 @@ void u309m::supply_t::tick()
       m_fin_adc_koef * m_adc102_data.voltage_code_B;
   }
 
-  #ifdef EEPROM_TEST
   if (mp_eeprom_data->temp_base_ref !=
     mp_eth_data->base_tr_data.temperature_ref)
   {
@@ -472,7 +384,7 @@ void u309m::supply_t::tick()
     mp_eeprom_data->temp_aux_ref =
       mp_eth_data->aux_tr_data.temperature_ref;
   }
-  #endif // EEPROM_TEST
+
   if (m_operate)
   {
     if (m_timer_reg.check())

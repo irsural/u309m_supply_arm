@@ -18,15 +18,12 @@ u309m::cfg_t::cfg_t():
   m_meas_comm_cfg_done(GPIO_PORTJ, 1, irs::gpio_pin_t::dir_in),
   m_meas_plis_ready(&m_meas_comm_cfg_done, irs::make_cnt_ms(200)),
   m_f_osc(80000000),
-  #ifdef ARM_ADC_TEST
   m_adc(((1 << PTC_A_channel) | (1 << PTC_LC_channel) |
         (1 << TR_24V_TEST_channel) | (1 << IZM_3_3V_TEST_channel) |
         (1 << IZM_6V_TEST_channel) | (1 << IZM_1_2V_TEST_channel) |
         (1 << TEST_24V_channel) | (1 << TEST_5V_channel) |
         (1 << PTC_PWR_channel) | (1 << PTC_17A_channel)),
         irs::arm::adc_stellaris_t::EXT_REF),
-  #endif // ARM_ADC_TEST
-  
   m_spi_bitrate(500000),
   m_spi_buf_size(3),
   m_spi_meas_comm_plis(m_spi_bitrate, m_spi_buf_size, 
@@ -50,18 +47,9 @@ u309m::cfg_t::cfg_t():
   m_dac_cs_code_2(GPIO_PORTB, 2, irs::gpio_pin_t::dir_out),
   m_dac_demux_cs_data(&m_dac_cs_code_0, &m_dac_cs_code_1, &m_dac_cs_code_2),
   m_dac_demux(&m_dac_demux_cs_data),
-
-  #ifndef EEPROM_TEST
-  m_local_mac(irs::make_mxmac(0, 0, IP_0, IP_1, IP_2, IP_3)),
-  #else // EEPROM_TEST
   m_local_mac(mxmac_t::zero_mac()),
-  #endif // EEPROM_TEST
   m_arm_eth(irs::simple_ethernet_t::double_buf, 300, m_local_mac),
-  #ifndef EEPROM_TEST
-  m_local_ip(irs::make_mxip(IP_0, IP_1, IP_2, IP_3)),
-  #else // EEPROM_TEST
   m_local_ip(mxip_t::zero_ip()),
-  #endif // EEPROM_TEST
   m_local_port(5006),
   m_dest_ip(irs::make_mxip(192, 168, 0, 28)),
   m_dest_port(5006),
@@ -108,14 +96,12 @@ u309m::cfg_t::cfg_t():
   m_command_pins(&m_meas_comm_pins, &m_supply_comm_pins, &m_supply_200V_pins,
     &m_supply_20V_pins, &m_supply_2V_pins, &m_supply_1A_pins,
     &m_supply_17A_pins),
-  #ifdef MEAS_COMM_TEST
   m_meas_comm(
     &m_spi_general_purpose,
     &m_spi_meas_comm_plis,
     m_command_pins.meas_comm,
     &m_eth_data.meas_comm
   ),
-  #endif // MEAS_COMM_TEST
   #ifdef SUPPLY_COMM_TEST
   m_supply_comm(
     &m_spi_general_purpose,
@@ -139,20 +125,11 @@ u309m::cfg_t::cfg_t():
   m_rele_ext_pins(&m_SYM_2V_on, &m_SYM_2V_off, &m_SYM_20V_on, &m_SYM_20V_off,
     &m_SYM_200V_on, &m_SYM_200V_off, &m_KZ_2V_on, &m_KZ_2V_off,
     &m_KZ_1A, &m_KZ_17A, &m_REL_220V, &m_SYM_OFF, &m_SYM_OFF_TEST),
-  #ifdef EEPROM_TEST
   m_eeprom_size(338),
-  #ifdef USE_FLASH
-    m_eeprom(m_eeprom_size),
-  #else
-    m_eeprom_command(&m_spi_general_purpose, m_spi_demux.cs_code(CS_EE),
-      irs::eeprom_command_t::at25128a),
-    m_eeprom(&m_eeprom_command, m_eeprom_size),
-  #endif  //  USE_FLASH
+  m_eeprom(m_eeprom_size),
   m_eeprom_data(&m_eeprom),
-  #endif // EEPROM_TEST
   m_timer(irs::make_cnt_ms(200))
 {
-  #ifdef EEPROM_TEST
   if (m_eeprom.error()) {
     m_eeprom_data.reset_to_default(sup_200V);
     m_eeprom_data.reset_to_default(sup_20V);
@@ -178,7 +155,6 @@ u309m::cfg_t::cfg_t():
   char ip_str[IP_STR_LEN];
   mxip_to_cstr(ip_str, ip);
   m_simple_hardflow.set_param("local_addr", ip_str);
-  #endif // EEPROM_TEST
   m_izm_th_enable.set();
   m_meas_comm_reset.clear();
   m_supply_comm_reset.clear();
@@ -192,11 +168,7 @@ u309m::command_pins_t* u309m::cfg_t::command_pins()
 
 irs::adc_t* u309m::cfg_t::adc()
 {
-  #ifdef ARM_ADC_TEST
   return& m_adc;
-  #else
-  return IRS_NULL;
-  #endif // ARM_ADC_TEST
 }
 
 irs::arm::arm_spi_t* u309m::cfg_t::spi_meas_comm_plis()
@@ -221,11 +193,7 @@ u309m::eth_data_t* u309m::cfg_t::eth_data()
 
 u309m::eeprom_data_t* u309m::cfg_t::eeprom_data()
 {
-  #ifdef EEPROM_TEST
   return& m_eeprom_data;
-  #else
-  return IRS_NULL;
-  #endif // EEPROM_TEST
 }
 
 irs::hardflow::simple_udp_flow_t* u309m::cfg_t::hardflow()
@@ -240,36 +208,23 @@ u309m::rele_ext_pins_t* u309m::cfg_t::rele_ext_pins()
 
 u309m::meas_comm_t* u309m::cfg_t::meas_comm()
 {
-  #ifdef MEAS_COMM_TEST
   return& m_meas_comm;
-  #else
-  return IRS_NULL;
-  #endif // MEAS_COMM_TEST
 }
 
 u309m::supply_comm_t* u309m::cfg_t::supply_comm()
 {
-  #ifdef SUPPLY_COMM_TEST
   return& m_supply_comm;
-  #else
-  return IRS_NULL;
-  #endif // SUPPLY_COMM_TEST
 }
 
 void u309m::cfg_t::tick()
 {
-  #ifdef ARM_ADC_TEST
   m_adc.tick();
-  #endif // ARM_ADC_TEST
   m_spi_meas_comm_plis.tick();
   m_spi_general_purpose.tick();
   m_modbus_server.tick();
-  #ifdef EEPROM_TEST
   m_eeprom.tick();
-  #endif // EEPROM_TEST
 
   if (m_timer.check()) {
-    #ifdef ARM_ADC_TEST
     m_eth_data.arm_adc.PTC_A = m_adc.get_float_data(PTC_A_num);
     m_eth_data.arm_adc.PTC_LC = m_adc.get_float_data(PTC_LC_num);
     m_eth_data.arm_adc.TR_24V_TEST =
@@ -287,6 +242,5 @@ void u309m::cfg_t::tick()
     m_eth_data.arm_adc.PTC_PWR = m_adc.get_float_data(PTC_PWR_num);
     m_eth_data.arm_adc.PTC_17A = m_adc.get_float_data(PTC_17A_num);
     m_eth_data.arm_adc.internal_temp = m_adc.get_temperature();
-    #endif // ARM_ADC_TEST
   }
 }
