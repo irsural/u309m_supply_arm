@@ -102,13 +102,11 @@ u309m::cfg_t::cfg_t():
     m_command_pins.meas_comm,
     &m_eth_data.meas_comm
   ),
-  #ifdef SUPPLY_COMM_TEST
   m_supply_comm(
     &m_spi_general_purpose,
     m_command_pins.supply_comm,
     &m_eth_data.supply_comm
   ),
-  #endif // SUPPLY_COMM_TEST
   m_SYM_2V_on(GPIO_PORTA, 3, irs::gpio_pin_t::dir_out),
   m_SYM_2V_off(GPIO_PORTJ, 0, irs::gpio_pin_t::dir_out),
   m_SYM_20V_on(GPIO_PORTC, 4, irs::gpio_pin_t::dir_out),
