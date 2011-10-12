@@ -1,7 +1,13 @@
 #ifndef datah
 #define datah
 
+#include <irsdefs.h>
+
 #include <irsnetdefs.h>
+
+#include "privatecfg.h"
+
+#include <irsfinal.h>
 
 namespace u309m {
 
@@ -475,10 +481,10 @@ struct eeprom_data_t
 
   void reset_to_default(supply_type_t a_supply_type)
   {
-    ip_0 = 192;
-    ip_1 = 168;
-    ip_2 = 0;
-    ip_3 = 211;
+    ip_0 = IP_0;
+    ip_1 = IP_1;
+    ip_2 = IP_2;
+    ip_3 = IP_3;
     switch(a_supply_type)
     {
       case sup_200V:

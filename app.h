@@ -85,6 +85,11 @@ private:
   bool m_SYM_200V;
   bool m_KZ_2V;
   bool m_SYM_OFF;
+  
+  irs_u8 m_ip_0;
+  irs_u8 m_ip_1;
+  irs_u8 m_ip_2;
+  irs_u8 m_ip_3;
   //
   irs::timer_t m_rel_220V_timer;
   //

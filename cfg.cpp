@@ -1,12 +1,16 @@
 #include <irsdefs.h>
 
 #include <armioregs.h>
-
 #include <irssysutils.h>
 
 #include "cfg.h"
+#include "privatecfg.h"
 
 #include <irsfinal.h>
+
+// Если отсутствует, то необходимо создать файл "privatecfg.h"
+// Можно скопировать файл "privatecfg0.h"
+// IP заменить на необходимый
 
 u309m::cfg_t::cfg_t():
   m_supply_comm_cfg_done(GPIO_PORTC, 7, irs::gpio_pin_t::dir_in),
@@ -48,13 +52,13 @@ u309m::cfg_t::cfg_t():
   m_dac_demux(&m_dac_demux_cs_data),
 
   #ifndef EEPROM_TEST
-  m_local_mac(irs::make_mxmac(0, 0, 192, 168, 0, 215)),
+  m_local_mac(irs::make_mxmac(0, 0, IP_0, IP_1, IP_2, IP_3)),
   #else // EEPROM_TEST
   m_local_mac(mxmac_t::zero_mac()),
   #endif // EEPROM_TEST
   m_arm_eth(irs::simple_ethernet_t::double_buf, 300, m_local_mac),
   #ifndef EEPROM_TEST
-  m_local_ip(irs::make_mxip(192, 168, 0, 215)),
+  m_local_ip(irs::make_mxip(IP_0, IP_1, IP_2, IP_3)),
   #else // EEPROM_TEST
   m_local_ip(mxip_t::zero_ip()),
   #endif // EEPROM_TEST
@@ -165,18 +169,15 @@ u309m::cfg_t::cfg_t():
   m_eth_data.ip_1 = m_eeprom_data.ip_1;
   m_eth_data.ip_2 = m_eeprom_data.ip_2;
   m_eth_data.ip_3 = m_eeprom_data.ip_3;
-//  irs::string ip_0_str = irst("");
-//  irs::number_to_string(m_eeprom_data.ip_0, &ip_0_str);
-//  irs::string ip_1_str = irst("");
-//  irs::number_to_string(m_eeprom_data.ip_1, &ip_1_str);
-//  irs::string ip_2_str = irst("");
-//  irs::number_to_string(m_eeprom_data.ip_2, &ip_2_str);
-//  irs::string ip_3_str = irst("");
-//  irs::number_to_string(m_eeprom_data.ip_3, &ip_3_str);
-//  irs::string ip_str = irst(ip_0_str + "." + ip_1_str + "." +
-//    ip_2_str + "." + ip_3_str);
-//  m_simple_hardflow.set_param("local_addr", ip_str);
-  m_simple_hardflow.set_param("local_addr", "192.168.0.215");
+  
+  mxip_t ip = mxip_t::zero_ip();
+  ip.val[0] = m_eeprom_data.ip_0;
+  ip.val[1] = m_eeprom_data.ip_1;
+  ip.val[2] = m_eeprom_data.ip_2;
+  ip.val[3] = m_eeprom_data.ip_3;
+  char ip_str[IP_STR_LEN];
+  mxip_to_cstr(ip_str, ip);
+  m_simple_hardflow.set_param("local_addr", ip_str);
   #endif // EEPROM_TEST
   m_izm_th_enable.set();
   m_meas_comm_reset.clear();

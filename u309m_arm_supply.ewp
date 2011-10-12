@@ -1874,6 +1874,12 @@
     <name>$PROJ_DIR$\main.cpp</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\privatecfg.h</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\privatecfg0.h</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\supply.cpp</name>
   </file>
   <file>
