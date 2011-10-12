@@ -19,7 +19,7 @@
           
           
           
-        <Column0>557</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+        <Column0>583</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
       </Workspace>
       <Disassembly>
         
@@ -98,7 +98,7 @@
             <Factory>Workspace</Factory>
             <Session>
               
-            <NodeDict><ExpandedNode>u309m_arm_supply</ExpandedNode><ExpandedNode>u309m_arm_supply/Output</ExpandedNode></NodeDict></Session>
+            <NodeDict><ExpandedNode>u309m_arm_supply</ExpandedNode></NodeDict></Session>
           </Tab><Tab><Identity>TabID-22564-11636</Identity><TabName>Terminal I/O</TabName><Factory>TerminalIO</Factory><Session/></Tab></Tabs>
         
       <SelectedTab>6</SelectedTab></Wnd0></Windows>
@@ -107,14 +107,14 @@
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\supply.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>554</SelStart><SelEnd>554</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>400</SelStart><SelEnd>400</SelEnd></Tab><ActiveTab>1</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\supply.cpp</Filename><XPos>0</XPos><YPos>365</YPos><SelStart>13248</SelStart><SelEnd>13248</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main.cpp</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>790</SelStart><SelEnd>790</SelEnd></Tab><ActiveTab>1</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\irsmbus.cpp</Filename><XPos>0</XPos><YPos>905</YPos><SelStart>37291</SelStart><SelEnd>37291</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\mxsrclib\mxdatastd.h</Filename><XPos>0</XPos><YPos>173</YPos><SelStart>5888</SelStart><SelEnd>5888</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-011e1908><key>iaridepm.enu1</key></Toolbar-011e1908><Toolbar-0bbd0c38><key>debuggergui.enu1</key></Toolbar-0bbd0c38><Toolbar-087af448><key>armjlink.enu1</key></Toolbar-087af448></Sizes></Row0></Top><Left><Row0><Sizes/></Row0></Left><Right><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>641</Bottom><Right>631</Right><x>-2</x><y>-2</y><xscreen>138</xscreen><yscreen>132</yscreen><sizeHorzCX>101025</sizeHorzCX><sizeHorzCY>192420</sizeHorzCY><sizeVertCX>463397</sizeVertCX><sizeVertCY>937318</sizeVertCY></Rect></Wnd0></Sizes></Row0></Right><Bottom><Row0><Sizes/></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-013702a0><key>iaridepm.enu1</key></Toolbar-013702a0><Toolbar-06793e70><key>debuggergui.enu1</key></Toolbar-06793e70><Toolbar-06793da8><key>armjlink.enu1</key></Toolbar-06793da8></Sizes></Row0></Top><Left><Row0><Sizes/></Row0></Left><Right><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>773</Bottom><Right>657</Right><x>-2</x><y>-2</y><xscreen>144</xscreen><yscreen>154</yscreen><sizeHorzCX>100000</sizeHorzCX><sizeHorzCY>188264</sizeHorzCY><sizeVertCX>457639</sizeVertCX><sizeVertCY>947433</sizeVertCY></Rect></Wnd0></Sizes></Row0></Right><Bottom><Row0><Sizes/></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Project>
 

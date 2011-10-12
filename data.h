@@ -483,25 +483,25 @@ struct eeprom_data_t
     {
       case sup_200V:
       {
-        supply_200V.resistance_code = 512;
+        supply_200V.resistance_code = 976;
         supply_200V.koef_adc_volt_prev = 0.259343;
-        supply_200V.koef_adc_volt_fin = 0.297;
+        supply_200V.koef_adc_volt_fin = 0.292788;
         supply_200V.koef_reg_prev = 297.572;
-        supply_200V.koef_reg_fin = 258.32;
+        supply_200V.koef_reg_fin = 263.678;
 
-        supply_200V.temp_base_ref = 60.;
-        supply_200V.temp_base_k = 7500.;
-        supply_200V.temp_base_ki = 0.0015;
-        supply_200V.temp_base_kd = 5.;
-        supply_200V.temp_base_prop_koef = 0.3;
-        supply_200V.temp_base_time_const = 5.;
+        supply_200V.temp_base_ref = 70.;
+        supply_200V.temp_base_k = 1500.;
+        supply_200V.temp_base_ki = 0.005;
+        supply_200V.temp_base_kd = 50.;
+        supply_200V.temp_base_prop_koef = 0.;
+        supply_200V.temp_base_time_const = 20.;
 
-        supply_200V.temp_aux_ref = 60.;
+        supply_200V.temp_aux_ref = 70.;
         supply_200V.temp_aux_k = 15000.;
-        supply_200V.temp_aux_ki = 0.0015;
-        supply_200V.temp_aux_kd = 5.;
-        supply_200V.temp_aux_prop_koef = 0.3;
-        supply_200V.temp_aux_time_const = 5.;
+        supply_200V.temp_aux_ki = 0.005;
+        supply_200V.temp_aux_kd = 50.;
+        supply_200V.temp_aux_prop_koef = 0.;
+        supply_200V.temp_aux_time_const = 20.;
         irs::mlog() << irsm(" eeprom supply_200V") << endl;
       } break;
       case sup_20V:
