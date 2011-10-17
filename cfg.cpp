@@ -129,22 +129,16 @@ u309m::cfg_t::cfg_t():
   m_timer(irs::make_cnt_ms(200))
 {
   if (m_eeprom.error()) {
-    m_eeprom_data.reset_to_default(sup_200V);
-    m_eeprom_data.reset_to_default(sup_20V);
-    m_eeprom_data.reset_to_default(sup_2V);
-    m_eeprom_data.reset_to_default(sup_1A);
-    m_eeprom_data.reset_to_default(sup_17A);
-    m_eth_data.reset_to_default(sup_200V);
-    m_eth_data.reset_to_default(sup_20V);
-    m_eth_data.reset_to_default(sup_2V);
-    m_eth_data.reset_to_default(sup_1A);
-    m_eth_data.reset_to_default(sup_17A);
+    m_eeprom_data.reset_to_default();
   }
-  m_eth_data.ip_0 = m_eeprom_data.ip_0;
+  
+  m_izm_th_enable.set();
+  m_REL_220V.set();
+  /*m_eth_data.ip_0 = m_eeprom_data.ip_0;
   m_eth_data.ip_1 = m_eeprom_data.ip_1;
   m_eth_data.ip_2 = m_eeprom_data.ip_2;
   m_eth_data.ip_3 = m_eeprom_data.ip_3;
-  
+    
   mxip_t ip = mxip_t::zero_ip();
   ip.val[0] = m_eeprom_data.ip_0;
   ip.val[1] = m_eeprom_data.ip_1;
@@ -152,11 +146,10 @@ u309m::cfg_t::cfg_t():
   ip.val[3] = m_eeprom_data.ip_3;
   char ip_str[IP_STR_LEN];
   mxip_to_cstr(ip_str, ip);
-  m_simple_hardflow.set_param("local_addr", ip_str);
-  m_izm_th_enable.set();
+  m_simple_hardflow.set_param("local_addr", ip_str); 
   m_meas_comm_reset.clear();
-  m_supply_comm_reset.clear();
-  m_REL_220V.set();
+  m_supply_comm_reset.clear();*/
+
 }
 
 u309m::command_pins_t* u309m::cfg_t::command_pins()

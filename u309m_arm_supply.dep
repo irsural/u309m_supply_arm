@@ -421,6 +421,10 @@
       <name>$PROJ_DIR$\cfg.cpp</name>
       <outputs>
         <tool>
+          <name>ICCARM</name>
+          <file> 154</file>
+        </tool>
+        <tool>
           <name>BICOMP</name>
           <file> 145</file>
         </tool>

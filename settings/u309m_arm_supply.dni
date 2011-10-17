@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-1413602277
+Checksum=-130472372
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -22,14 +22,12 @@ ByteLimit=50
 [Disassemble mode]
 mode=0
 [Breakpoints]
-Count=0
+Bp0=_ "EMUL_DATA" "0x200008E3" 0 0 0 148 0 "" 0 "" 0 0 0 4294967295
+Count=1
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
 Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 1
-LogFile=_ "$PROJ_DIR$\TermIO.log"
 [Aliases]
 Count=0
 SuppressDialog=0
@@ -39,3 +37,6 @@ Enabled=0
 Enabled=0
 Mode=138699800
 Graph=0
+[TermIOLog]
+LoggingEnabled=_ 1
+LogFile=_ "$PROJ_DIR$\TermIO.log"

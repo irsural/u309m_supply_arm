@@ -38,10 +38,6 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_SYM_200V(mp_cfg->eth_data()->rele_ext.SYM_200V),
   m_KZ_2V(mp_cfg->eth_data()->rele_ext.KZ_2V),
   m_SYM_OFF(mp_cfg->eth_data()->rele_ext.SYM_OFF),
-  m_ip_0(mp_cfg->eth_data()->ip_0),
-  m_ip_1(mp_cfg->eth_data()->ip_1),
-  m_ip_2(mp_cfg->eth_data()->ip_2),
-  m_ip_3(mp_cfg->eth_data()->ip_3),
   //
   m_rel_220V_timer(irs::make_cnt_s(1)),
   //  check
@@ -93,6 +89,24 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
 {
   m_rel_220V_timer.start();
   mp_cfg->rele_ext_pins()->SYM_OFF->set();
+  
+  mp_cfg->eth_data()->ip_0 = mp_cfg->eeprom_data()->ip_0;
+  mp_cfg->eth_data()->ip_1 = mp_cfg->eeprom_data()->ip_1;
+  mp_cfg->eth_data()->ip_2 = mp_cfg->eeprom_data()->ip_2;
+  mp_cfg->eth_data()->ip_3 = mp_cfg->eeprom_data()->ip_3;
+  
+  mxip_t ip = mxip_t::zero_ip();
+  ip.val[0] = mp_cfg->eeprom_data()->ip_0;
+  ip.val[1] = mp_cfg->eeprom_data()->ip_1;
+  ip.val[2] = mp_cfg->eeprom_data()->ip_2;
+  ip.val[3] = mp_cfg->eeprom_data()->ip_3;
+  char ip_str[IP_STR_LEN];
+  mxip_to_cstr(ip_str, ip);
+  mp_cfg->hardflow()->set_param("local_addr", ip_str);
+  
+  mp_cfg->command_pins()->meas_comm->reset->clear();
+  mp_cfg->command_pins()->supply_comm->reset->clear();
+  
   mp_cfg->eth_data()->control.on = 0;
   m_alarm_timer.start();
   m_start_alarm_timer.start();
@@ -119,26 +133,34 @@ void u309m::app_t::tick()
   m_supply_1A.tick();
   m_supply_17A.tick();
   
-  bool change_ip_0 = m_ip_0 != mp_cfg->eth_data()->ip_0;
-  bool change_ip_1 = m_ip_1 != mp_cfg->eth_data()->ip_1;
-  bool change_ip_2 = m_ip_2 != mp_cfg->eth_data()->ip_2;
-  bool change_ip_3 = m_ip_3 != mp_cfg->eth_data()->ip_3;
+  #ifndef NOP
+  bool change_ip_0 = 
+    (mp_cfg->eeprom_data()->ip_0 != mp_cfg->eth_data()->ip_0);
+  bool change_ip_1 = 
+    (mp_cfg->eeprom_data()->ip_1 != mp_cfg->eth_data()->ip_1);
+  bool change_ip_2 = 
+    (mp_cfg->eeprom_data()->ip_2 != mp_cfg->eth_data()->ip_2);
+  bool change_ip_3 = 
+    (mp_cfg->eeprom_data()->ip_3 != mp_cfg->eth_data()->ip_3);
   
   if (change_ip_0 || change_ip_1 || change_ip_2 || change_ip_3) 
   {
     mxip_t ip = mxip_t::zero_ip();
-    m_ip_0 = mp_cfg->eth_data()->ip_0;
-    m_ip_1 = mp_cfg->eth_data()->ip_1;
-    m_ip_2 = mp_cfg->eth_data()->ip_2;
-    m_ip_3 = mp_cfg->eth_data()->ip_3;
-    ip.val[0] = m_ip_0;
-    ip.val[1] = m_ip_1;
-    ip.val[2] = m_ip_2;
-    ip.val[3] = m_ip_3;
+ 
+    mp_cfg->eeprom_data()->ip_0 = mp_cfg->eth_data()->ip_0;
+    mp_cfg->eeprom_data()->ip_1 = mp_cfg->eth_data()->ip_1;
+    mp_cfg->eeprom_data()->ip_2 = mp_cfg->eth_data()->ip_2;
+    mp_cfg->eeprom_data()->ip_3 = mp_cfg->eth_data()->ip_3;
+    
+    ip.val[0] = mp_cfg->eth_data()->ip_0;
+    ip.val[1] = mp_cfg->eth_data()->ip_1;
+    ip.val[2] = mp_cfg->eth_data()->ip_2;
+    ip.val[3] = mp_cfg->eth_data()->ip_3;
     char ip_str[IP_STR_LEN];
     mxip_to_cstr(ip_str, ip);
     mp_cfg->hardflow()->set_param("local_addr", ip_str);
   }
+  #endif //NOP
 
   if (m_rel_220V_timer.check())
   {

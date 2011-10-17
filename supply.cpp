@@ -449,7 +449,8 @@ void u309m::supply_t::off()
 void u309m::supply_t::dac_log_enable() 
 { 
   m_volt_reg_data.log_enable = 1; 
-  //irs::mlog() << "Источник по адресу 0x" << this << " лог ЦАП включен" << endl;
+  //irs::mlog() << "Источник по адресу 0x" << this << 
+    //" лог ЦАП включен" << endl;
 }
 
 void u309m::supply_t::refresh_dac_values()
