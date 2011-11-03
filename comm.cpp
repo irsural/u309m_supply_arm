@@ -5,6 +5,139 @@
 
 #include <irsfinal.h>
 
+u309m::plis_t::plis_t(plis_pins_t& a_pins, irs::pwm_gen_t& a_gen,
+  irs::spi_t& a_spi):
+  m_pins(a_pins),
+  m_gen(a_gen),
+  m_spi(a_spi),
+  m_status(RESET),
+  m_data(0),
+  m_attempts_counter(0),
+  m_ready(false),
+  m_need_transaction(false),
+  m_timer(irs::make_cnt_ms(m_cfg_done_wait_interval))
+{
+  memset(mp_write_buf, 0, m_size);
+  memset(mp_read_buf, 0, m_size);
+  m_gen.start();
+  m_timer.start();
+  while (!m_pins.cfg_done.pin()) {
+    if (m_timer.check()) {
+      IRS_LIB_ERROR(irs::ec_standard, "Сбой инициализации плис (cfg_done)");
+      break;
+    }
+  }
+  m_pins.cs.set();
+  m_pins.reset.set();
+  m_timer.set(irs::make_cnt_ms(m_reset_pulse_interval));
+  m_timer.start();
+}
+
+u309m::plis_t::~plis_t()
+{
+}
+
+bool u309m::plis_t::ready()
+{
+  return m_ready;
+}
+
+void u309m::plis_t::write(plis_data_t a_data)
+{
+  m_data = a_data;
+  m_need_transaction = true;
+  m_ready = false;
+}
+
+u309m::plis_data_t u309m::plis_t::read()
+{
+  return m_data;
+}
+
+void u309m::plis_t::tick()
+{
+  m_spi.tick();
+  switch (m_status)
+  {
+    case RESET: {
+      if (m_timer.check()) {
+        m_pins.reset.clear();
+        m_timer.set(irs::make_cnt_ms(m_reset_interval));
+        m_timer.start();
+        m_status = WAIT;
+      }
+      break;
+    }
+    case WAIT: {
+      if (m_timer.check() && m_spi.get_status() == irs::spi_t::FREE) {
+        if (!m_spi.get_lock()) {
+          spi_prepare();
+          m_pins.cs.clear();
+          command_prepare_check_ready(mp_write_buf);
+          m_spi.read_write(mp_read_buf, mp_write_buf, m_size);
+          m_status = CHECK_READY;
+        }
+      }
+      break;
+    }
+    case CHECK_READY: {
+      if (m_spi.get_status() == irs::spi_t::FREE) {
+        m_pins.cs.set();
+        m_spi.unlock();
+        if (command_check_ready(mp_read_buf)) {
+          m_gen.stop();
+          m_ready = true;
+          m_status = FREE;
+        } else if (m_attempts_counter < m_max_attempts_count) {
+          m_attempts_counter++;
+          m_timer.set(irs::make_cnt_ms(m_reset_interval));
+          m_timer.start();
+          m_status = WAIT;
+        } else {
+          m_status = ERROR;
+          IRS_LIB_ERROR(irs::ec_standard, "ПЛИС не отвечает");
+        }
+      }
+      break;
+    }
+    case ERROR: {
+      break;
+    }
+    case FREE: {
+      if (m_need_transaction) {
+        if (!m_spi.get_lock() && m_spi.get_status() == irs::spi_t::FREE) {
+          m_gen.start();
+          m_ready = false;
+          spi_prepare();
+          m_pins.cs.clear();
+          m_spi.read_write(mp_read_buf, mp_write_buf, m_size);
+          m_status = WAIT;
+        }
+      }
+      break;
+    }
+  }
+}
+
+void u309m::plis_t::spi_prepare()
+{
+  m_spi.set_order(irs::spi_t::MSB);
+  m_spi.set_polarity(irs::spi_t::RISING_EDGE);
+  m_spi.set_phase(irs::spi_t::LEAD_EDGE);
+  m_spi.lock();
+}
+
+void u309m::plis_t::command_prepare_check_ready(irs_u8* ap_buf)
+{
+  ap_buf[0] = 0;
+  ap_buf[1] = (1 << plis_read_only_bit);
+}
+
+bool u309m::plis_t::command_check_ready(irs_u8* ap_buf)
+{
+  return !static_cast<bool>(ap_buf[1] & (1 << plis_busy_bit));
+}
+
 //---------------------------- meas_comm ---------------------------------------
 
 u309m::meas_plis_t::meas_plis_t (
@@ -16,12 +149,13 @@ u309m::meas_plis_t::meas_plis_t (
   mp_spi(ap_spi),
   mp_cs_pin(ap_cs_pin),
   m_status(PLIS_SPI_FREE),
-  m_need_write(false)
+  m_need_write(false),
+  m_tact_gen(PE1, m_tact_freq)
 {
   memset((void*)mp_buf, 0, m_size);
 
   // Timer Initialization
-  RCGC1_bit.TIMER1 = 1;
+  /*RCGC1_bit.TIMER1 = 1;
   RCGC2_bit.PORTE = 1;
   for (irs_u8 i = 10; i; i--);
 
@@ -30,17 +164,17 @@ u309m::meas_plis_t::meas_plis_t (
   GPIOEPCTL_bit.PMC1 = CCP2;
 
   GPTM1CTL_bit.TBEN = 0;
+*/
+//  GPTM1CFG_bit.GPTMCFG = TIMER_16_BIT;
+//  GPTM1TAMR_bit.TAAMS = 1;
+//  GPTM1TAMR_bit.TACMR = 0;
+//  GPTM1TAMR_bit.TAMR = PERIODIC_MODE;
+//  GPTM1CTL_bit.TAPWML = 0;
+//  GPTM1TAILR = static_cast<irs_u16>(irs::cpu_traits_t::frequency()/a_tact_freq);
+//  GPTM1TAMATCHR = GPTM1TAILR/2;
 
-  GPTM1CFG_bit.GPTMCFG = TIMER_16_BIT;
-  GPTM1TAMR_bit.TAAMS = 1;
-  GPTM1TAMR_bit.TACMR = 0;
-  GPTM1TAMR_bit.TAMR = PERIODIC_MODE;
-  GPTM1CTL_bit.TAPWML = 0;
-  GPTM1TAILR = static_cast<irs_u16>(irs::cpu_traits_t::frequency()/a_tact_freq);
-  GPTM1TAMATCHR = GPTM1TAILR/2;
-
-  GPTM1ICR_bit.TAMCINT = 1;
-  GPTM1ICR_bit.TATOCINT = 1;
+  //GPTM1ICR_bit.TAMCINT = 1;
+  //GPTM1ICR_bit.TATOCINT = 1;
 
   for (; mp_spi->get_status() != irs::spi_t::FREE; )
     mp_spi->tick();
@@ -65,12 +199,14 @@ void u309m::meas_plis_t::write(const irs_u8* ap_command)
 
 void u309m::meas_plis_t::tact_on()
 {
-  GPTM1CTL_bit.TAEN = 1;
+  //GPTM1CTL_bit.TAEN = 1;
+  m_tact_gen.start();
 }
 
 void u309m::meas_plis_t::tact_off()
 {
-  GPTM1CTL_bit.TAEN = 0;
+  //GPTM1CTL_bit.TAEN = 0;
+  m_tact_gen.stop();
 }
 
 void u309m::meas_plis_t::tick()
@@ -103,8 +239,6 @@ void u309m::meas_plis_t::tick()
 }
 
 u309m::meas_comm_t::meas_comm_t(
-  //irs::arm::adc_t* ap_adc,
-  irs::arm::arm_spi_t* ap_spi_term,
   irs::arm::arm_spi_t* ap_spi_meas_comm_plis,
   meas_comm_pins_t* ap_meas_comm_pins,
   meas_comm_data_t* ap_meas_comm_data
@@ -112,22 +246,6 @@ u309m::meas_comm_t::meas_comm_t(
   //mp_adc(ap_adc),
   mp_meas_comm_pins(ap_meas_comm_pins),
   mp_meas_comm_data(ap_meas_comm_data),
-  m_th1(ap_spi_term, mp_meas_comm_pins->termo_sense_1,
-    irs::make_cnt_ms(300)),
-  m_th1_data(&m_th1),
-  m_th2(ap_spi_term, mp_meas_comm_pins->termo_sense_2,
-    irs::make_cnt_ms(300)),
-  m_th2_data(&m_th2),
-  m_th3(ap_spi_term, mp_meas_comm_pins->termo_sense_3,
-    irs::make_cnt_ms(300)),
-  m_th3_data(&m_th3),
-  m_th4(ap_spi_term, mp_meas_comm_pins->termo_sense_4,
-    irs::make_cnt_ms(300)),
-  m_th4_data(&m_th4),
-  m_th5(ap_spi_term, mp_meas_comm_pins->termo_sense_5,
-    irs::make_cnt_ms(300)),
-  m_th5_data(&m_th5),
-  m_timer(irs::make_cnt_ms(200)),
   m_plis(plis_tact_freq, ap_spi_meas_comm_plis,
     mp_meas_comm_pins->cs),
   m_command_apply(false),
@@ -182,32 +300,8 @@ void u309m::meas_comm_t::init_default()
   mp_meas_comm_data->load_resistor = 0;
 }
 
-void u309m::meas_comm_t::izm_th_stop()
-{
-  m_th1_data.stop_bit = 1;
-  m_th2_data.stop_bit = 1;
-  m_th3_data.stop_bit = 1;
-  m_th4_data.stop_bit = 1;
-  m_th5_data.stop_bit = 1;
-}
-
-void u309m::meas_comm_t::izm_th_start()
-{
-  m_th1_data.stop_bit = 0;
-  m_th2_data.stop_bit = 0;
-  m_th3_data.stop_bit = 0;
-  m_th4_data.stop_bit = 0;
-  m_th5_data.stop_bit = 0;
-}
-
 void u309m::meas_comm_t::tick()
 {
-  m_th1.tick();
-  m_th2.tick();
-  m_th3.tick();
-  m_th4.tick();
-  m_th5.tick();
-
   m_plis.tick();
 
   mp_meas_comm_data->error =
@@ -357,26 +451,6 @@ void u309m::meas_comm_t::tick()
     default:
     {
     } break;
-  }
-
-  if (m_timer.check()) {
-    /*mp_meas_comm_data->meas_rele_power_voltage =
-      (mp_adc->get_data(0)/0.73f);
-    mp_meas_comm_data->power_voltage = mp_adc->get_data(1);
-    mp_meas_comm_data->meas_comm_plis_voltage =
-      (mp_adc->get_data(0)/0.44f);
-    mp_meas_comm_data->internal_temp =
-      mp_adc->get_temperature();*/
-    mp_meas_comm_data->th1_value =
-      (m_th1_data.temperature_code*m_th1.get_conv_koef());
-    mp_meas_comm_data->th2_value =
-      (m_th2_data.temperature_code*m_th2.get_conv_koef());
-    mp_meas_comm_data->th3_value =
-      (m_th3_data.temperature_code*m_th3.get_conv_koef());
-    mp_meas_comm_data->th4_value =
-      (m_th4_data.temperature_code*m_th4.get_conv_koef());
-    mp_meas_comm_data->th5_value =
-      (m_th5_data.temperature_code*m_th5.get_conv_koef());
   }
 
   mp_meas_comm_data->apply =
@@ -650,8 +724,9 @@ void u309m::supply_comm_t::tick()
         m_timer.set(m_transaction_interval);
         m_timer.start();
         m_mode = mode_reset;
-        m_command = (PLIS|SUPPLY_17A|SUPPLY_1A|SUPPLY_2V|SUPPLY_20V|
-          SUPPLY_200V|IZM_TH|EEPROM|MISO_MASK_EN);
+//        m_command = (PLIS|SUPPLY_17A|SUPPLY_1A|SUPPLY_2V|SUPPLY_20V|
+//          SUPPLY_200V|IZM_TH|EEPROM|MISO_MASK_EN);
+        m_command = (PLIS|IZM_TH|MISO_MASK_EN);
         m_plis.write();
       }
       break;

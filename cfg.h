@@ -16,235 +16,89 @@
 #include <irsmem.h>
 #include <armflash.h>
 
-#include "comm.h"
-#include "data.h"
 #include "demux.h"
+#include "data.h"
 
 #include <irsfinal.h>
 
 namespace u309m {
 
-struct rele_ext_eth_data_t {
-  irs::bit_data_t SYM_2V;
-  irs::bit_data_t SYM_20V;
-  irs::bit_data_t SYM_200V;
-  irs::bit_data_t KZ_2V;
-  irs::bit_data_t KZ_1A;
-  irs::bit_data_t KZ_17A;
-  irs::bit_data_t REL_220V;
-  irs::bit_data_t SYM_OFF;
-  irs::bit_data_t SYM_OFF_TEST;
+struct plis_pins_t {
+  irs::gpio_pin_t& cfg_done;
+  irs::gpio_pin_t& cs;
+  irs::gpio_pin_t& reset;
 
-  rele_ext_eth_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
-    irs_uarc* ap_size = IRS_NULL)
+  plis_pins_t(
+    irs::gpio_pin_t& a_cfg_done,
+    irs::gpio_pin_t& a_cs,
+    irs::gpio_pin_t& a_reset
+  ):
+    cfg_done(a_cfg_done),
+    cs(a_cs),
+    reset(a_reset)
   {
-    irs_uarc size = connect(ap_data, a_index);
-    if (ap_size != IRS_NULL) {
-      *ap_size = size;
-    }
   }
+};  //  plis_pins_t
 
-  irs_uarc connect(irs::mxdata_t *ap_data, irs_uarc a_index)
+struct meas_comm_pins_t {
+  irs::gpio_pin_t* cs;
+  irs::gpio_pin_t* reset;
+  irs::gpio_pin_t* apply;
+  irs::gpio_pin_t* error;
+
+  meas_comm_pins_t(
+    irs::gpio_pin_t* ap_cs,
+    irs::gpio_pin_t* ap_reset,
+    irs::gpio_pin_t* ap_apply,
+    irs::gpio_pin_t* ap_error
+  ):
+    cs(ap_cs),
+    reset(ap_reset),
+    apply(ap_apply),
+    error(ap_error)
   {
-    irs_uarc index = a_index;
-
-    SYM_2V.connect(ap_data, index, 0);
-    SYM_20V.connect(ap_data, index, 1);
-    SYM_200V.connect(ap_data, index, 2);
-    KZ_2V.connect(ap_data, index, 3);
-    KZ_1A.connect(ap_data, index, 4);
-    KZ_17A.connect(ap_data, index, 5);
-    REL_220V.connect(ap_data, index, 6);
-    SYM_OFF.connect(ap_data, index, 7);
-    index++;
-    SYM_OFF_TEST.connect(ap_data, index, 0);
-    index++;
-
-    return index;
   }
-}; // rele_ext_eth_data_t
+}; // meas_comm_pins_t
 
-struct control_data_t
-{
-  irs::conn_data_t<irs_u32> alarm;
-  irs::bit_data_t alarm_internal_th;
-  irs::bit_data_t alarm_ptc_a;
-  irs::bit_data_t alarm_ptc_lc;
-  irs::bit_data_t alarm_ptc_pwr;
-  irs::bit_data_t alarm_ptc_17A;
-  irs::bit_data_t alarm_tr_24V;
-  irs::bit_data_t alarm_24V;
-  irs::bit_data_t alarm_5V;
-  irs::bit_data_t alarm_izm_6V;
-  irs::bit_data_t alarm_izm_3_3V;
-  irs::bit_data_t alarm_izm_1_2V;
-  irs::bit_data_t alarm_izm_th1;
-  irs::bit_data_t alarm_izm_th2;
-  irs::bit_data_t alarm_izm_th3;
-  irs::bit_data_t alarm_izm_th4;
-  irs::bit_data_t alarm_izm_th5;
-  irs::bit_data_t alarm_200V_th_base;
-  irs::bit_data_t alarm_200V_th_aux;
-  irs::bit_data_t alarm_20V_th_base;
-  irs::bit_data_t alarm_20V_th_aux;
-  irs::bit_data_t alarm_2V_th_base;
-  irs::bit_data_t alarm_2V_th_aux;
-  irs::bit_data_t alarm_1A_th_base;
-  irs::bit_data_t alarm_1A_th_aux;
-  irs::bit_data_t alarm_17A_th_base;
-  irs::bit_data_t alarm_17A_th_aux;
-  irs::bit_data_t alarm_upper_level;
+struct supply_comm_pins_t {
+  irs::gpio_pin_t* cs;
+  irs::gpio_pin_t* reset;
 
-  irs::bit_data_t on;
-
-  irs::conn_data_t<irs_u8> unlock;
-
-  irs::bit_data_t ready_200V_prev;
-  irs::bit_data_t ready_200V_final;
-  irs::bit_data_t ready_20V_prev;
-  irs::bit_data_t ready_20V_final;
-  irs::bit_data_t ready_2V_prev;
-  irs::bit_data_t ready_2V_final;
-  irs::bit_data_t ready_1A_prev;
-  irs::bit_data_t ready_1A_final;
-  irs::bit_data_t ready_17A_prev;
-  irs::bit_data_t ready_17A_final;
-  
-  irs::bit_data_t upper_level_check;
-  irs::bit_data_t refresh_all_sources;
-  irs::bit_data_t watchdog_reset_cause;
-  irs::bit_data_t watchdog_test;
-  irs::bit_data_t izm_th_spi_enable;
-  
-  irs::conn_data_t<irs_u32> connect_counter;
-
-  control_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
-    irs_uarc* ap_size = IRS_NULL)
+  supply_comm_pins_t(
+    irs::gpio_pin_t* ap_cs,
+    irs::gpio_pin_t* ap_reset
+  ):
+    cs(ap_cs),
+    reset(ap_reset)
   {
-    irs_uarc size = connect(ap_data, a_index);
-    if (ap_size != IRS_NULL) {
-      *ap_size = size;
-    }
   }
+}; // supply_comm_pins_t
 
-  irs_uarc connect(irs::mxdata_t *ap_data, irs_uarc a_index)
+struct supply_pins_t {
+  irs::gpio_pin_t* termo_sense_base_cs;
+  irs::gpio_pin_t* termo_sense_aux_cs;
+  irs::gpio_pin_t* adc_cs;
+  irs::gpio_pin_t* tc_cs;
+  irs::gpio_pin_t* volt_reg_cs;
+  irs::gpio_pin_t* temp_reg_cs;
+
+  supply_pins_t(
+    irs::gpio_pin_t* ap_termo_sense_base_cs,
+    irs::gpio_pin_t* ap_termo_sense_aux_cs,
+    irs::gpio_pin_t* ap_adc_cs,
+    irs::gpio_pin_t* ap_tc_cs,
+    irs::gpio_pin_t* ap_volt_reg_cs,
+    irs::gpio_pin_t* ap_temp_reg_cs
+  ):
+    termo_sense_base_cs(ap_termo_sense_base_cs),
+    termo_sense_aux_cs(ap_termo_sense_aux_cs),
+    adc_cs(ap_adc_cs),
+    tc_cs(ap_tc_cs),
+    volt_reg_cs(ap_volt_reg_cs),
+    temp_reg_cs(ap_temp_reg_cs)
   {
-    irs_uarc index = a_index;
-
-    alarm_internal_th.connect(ap_data, index, 0);
-    alarm_ptc_a.connect(ap_data, index, 1);
-    alarm_ptc_lc.connect(ap_data, index, 2);
-    alarm_ptc_pwr.connect(ap_data, index, 3);
-    alarm_ptc_17A.connect(ap_data, index, 4);
-    alarm_tr_24V.connect(ap_data, index, 5);
-    alarm_24V.connect(ap_data, index, 6);
-    alarm_5V.connect(ap_data, index, 7);
-
-    alarm_izm_6V.connect(ap_data, index + 1, 0);
-    alarm_izm_3_3V.connect(ap_data, index + 1, 1);
-    alarm_izm_1_2V.connect(ap_data, index + 1, 2);
-    alarm_izm_th1.connect(ap_data, index + 1, 3);
-    alarm_izm_th2.connect(ap_data, index + 1, 4);
-    alarm_izm_th3.connect(ap_data, index + 1, 5);
-    alarm_izm_th4.connect(ap_data, index + 1, 6);
-    alarm_izm_th5.connect(ap_data, index + 1, 7);
-
-    alarm_200V_th_base.connect(ap_data, index + 2, 0);
-    alarm_200V_th_aux.connect(ap_data, index + 2, 1);
-    alarm_20V_th_base.connect(ap_data, index + 2, 2);
-    alarm_20V_th_aux.connect(ap_data, index + 2, 3);
-    alarm_2V_th_base.connect(ap_data, index + 2, 4);
-    alarm_2V_th_aux.connect(ap_data, index + 2, 5);
-    alarm_1A_th_base.connect(ap_data, index + 2, 6);
-    alarm_1A_th_aux.connect(ap_data, index + 2, 7);
-
-    alarm_17A_th_base.connect(ap_data, index + 3, 0);
-    alarm_17A_th_aux.connect(ap_data, index + 3, 1);
-    alarm_upper_level.connect(ap_data, index + 3, 2);
-
-    on.connect(ap_data, index + 3, 7);
-
-    index = alarm.connect(ap_data, index);
-
-    index = unlock.connect(ap_data, index);
-
-    ready_200V_prev.connect(ap_data, index, 0);
-    ready_200V_final.connect(ap_data, index, 1);
-    ready_20V_prev.connect(ap_data, index, 2);
-    ready_20V_final.connect(ap_data, index, 3);
-    ready_2V_prev.connect(ap_data, index, 4);
-    ready_2V_final.connect(ap_data, index, 5);
-    ready_1A_prev.connect(ap_data, index, 6);
-    ready_1A_final.connect(ap_data, index, 7);
-
-    index++;
-
-    ready_17A_prev.connect(ap_data, index, 0);
-    ready_17A_final.connect(ap_data, index, 1);
-    
-    upper_level_check.connect(ap_data, index, 2);
-    refresh_all_sources.connect(ap_data, index, 3);
-    watchdog_reset_cause.connect(ap_data, index, 4);
-    watchdog_test.connect(ap_data, index, 5);
-    izm_th_spi_enable.connect(ap_data, index, 6);
-
-    index++;
-    index++;
-    
-    index = connect_counter.connect(ap_data, index);
-
-    return index;
   }
-}; // control_data_t
-
-struct eth_data_t {
-  irs::conn_data_t<irs_u8> ip_0;  //  1 byte
-  irs::conn_data_t<irs_u8> ip_1;  //  1 byte
-  irs::conn_data_t<irs_u8> ip_2;  //  1 byte
-  irs::conn_data_t<irs_u8> ip_3;  //  1 byte
-  rele_ext_eth_data_t rele_ext;   //  2 bytes
-  supply_comm_data_t supply_comm; //  4 bytes
-  meas_comm_data_t meas_comm;     //  4 bytes
-  arm_adc_data_t arm_adc;         //  44 bytes
-  supply_eth_data_t supply_200V;  //  114 bytes
-  supply_eth_data_t supply_20V;   //  114 bytes
-  supply_eth_data_t supply_2V;    //  114 bytes
-  supply_eth_data_t supply_1A;    //  114 bytes
-  supply_eth_data_t supply_17A;   //  114 bytes
-  control_data_t control;         //  12 bytes
-  //---------------------------------------------
-  //                          Итого:  640 байт
-
-  eth_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
-    irs_uarc* ap_size = IRS_NULL)
-  {
-    irs_uarc size = connect(ap_data, a_index);
-    if (ap_size != IRS_NULL) {
-      *ap_size = size;
-    }
-  }
-  irs_uarc connect(irs::mxdata_t *ap_data, irs_uarc a_index)
-  {
-    irs_uarc index = a_index;
-
-    index = ip_0.connect(ap_data, index);
-    index = ip_1.connect(ap_data, index);
-    index = ip_2.connect(ap_data, index);
-    index = ip_3.connect(ap_data, index);
-    index = rele_ext.connect(ap_data, index);
-    index = supply_comm.connect(ap_data, index);
-    index = meas_comm.connect(ap_data, index);
-    index = arm_adc.connect(ap_data, index);
-    index = supply_200V.connect(ap_data, index);
-    index = supply_20V.connect(ap_data, index);
-    index = supply_2V.connect(ap_data, index);
-    index = supply_1A.connect(ap_data, index);
-    index = supply_17A.connect(ap_data, index);
-    index = control.connect(ap_data, index);
-
-    return index;
-  }
-};
+}; // supply_pins_t
 
 struct command_pins_t {
   meas_comm_pins_t* meas_comm;
@@ -322,6 +176,33 @@ struct rele_ext_pins_t {
   }
 }; // rele_ext_pins_t
 
+struct meas_comm_th_pins_t
+{
+  irs::gpio_pin_t* termo_sense_1;
+  irs::gpio_pin_t* termo_sense_2;
+  irs::gpio_pin_t* termo_sense_3;
+  irs::gpio_pin_t* termo_sense_4;
+  irs::gpio_pin_t* termo_sense_5;
+  irs::gpio_pin_t* izm_th_enable;
+
+  meas_comm_th_pins_t(
+    irs::gpio_pin_t* ap_termo_sense_1,
+    irs::gpio_pin_t* ap_termo_sense_2,
+    irs::gpio_pin_t* ap_termo_sense_3,
+    irs::gpio_pin_t* ap_termo_sense_4,
+    irs::gpio_pin_t* ap_termo_sense_5,
+    irs::gpio_pin_t* ap_izm_th_enable
+  ):
+    termo_sense_1(ap_termo_sense_1),
+    termo_sense_2(ap_termo_sense_2),
+    termo_sense_3(ap_termo_sense_3),
+    termo_sense_4(ap_termo_sense_4),
+    termo_sense_5(ap_termo_sense_5),
+    izm_th_enable(ap_izm_th_enable)
+  {
+  }
+}; // meas_comm_th_pins_t
+
 class cfg_t
 {
 public:
@@ -335,8 +216,7 @@ public:
   eeprom_data_t* eeprom_data();
   irs::hardflow::simple_udp_flow_t* hardflow();
   rele_ext_pins_t* rele_ext_pins();
-  meas_comm_t* meas_comm();
-  supply_comm_t* supply_comm();
+  meas_comm_th_pins_t* meas_comm_th_pins();
   void izm_th_spi_enable_pin_set(bool a_value);
   void tick();
 
@@ -412,18 +292,6 @@ private:
     PTC_PWR_channel = 1,
     PTC_17A_channel = 0
   };
-  enum {
-    PTC_A_num = 9,
-    PTC_LC_num = 8,
-    TR_24V_TEST_num = 7,
-    IZM_3_3V_TEST_num = 6,
-    IZM_6V_TEST_num = 5,
-    IZM_1_2V_TEST_num = 4,
-    TEST_24V_num = 3,
-    TEST_5V_num = 2,
-    PTC_PWR_num = 1,
-    PTC_17A_num = 0
-  };
 
   irs::arm::io_pin_t m_supply_comm_cfg_done;
   plis_ready_t m_ipt_plis_ready;
@@ -468,6 +336,7 @@ private:
   irs::arm::io_pin_t m_meas_comm_apply;
   irs::arm::io_pin_t m_meas_comm_error;
   meas_comm_pins_t m_meas_comm_pins;
+  meas_comm_th_pins_t m_meas_comm_th_pins;
 
   irs::arm::io_pin_t m_supply_comm_reset;
   supply_comm_pins_t m_supply_comm_pins;
@@ -478,9 +347,6 @@ private:
   supply_pins_t m_supply_1A_pins;
   supply_pins_t m_supply_17A_pins;
   command_pins_t m_command_pins;
-
-  meas_comm_t m_meas_comm;
-  supply_comm_t m_supply_comm;
 
   irs::arm::io_pin_t m_SYM_2V_on;
   irs::arm::io_pin_t m_SYM_2V_off;
@@ -499,7 +365,6 @@ private:
   irs::eeprom_command_t::size_type m_eeprom_size;
   irs::arm::flash_t m_eeprom;
   eeprom_data_t m_eeprom_data;
-  irs::loop_timer_t m_timer;
 };
 
 } // namespace u309m

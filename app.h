@@ -8,11 +8,44 @@
 
 #include "supply.h"
 #include "cfg.h"
+#include "comm.h"
 
 #include <irsfinal.h>
 
 namespace u309m
 {
+
+class meas_comm_th_t
+{
+  public:
+    meas_comm_th_t(
+      irs::spi_t* ap_spi,
+      meas_comm_th_pins_t* ap_pins,
+      meas_comm_th_data_t& a_data,
+      irs::bit_data_t& a_ee_izm_th_spi_enable,
+      irs::bit_data_t& a_eth_izm_th_spi_enable);
+    void tick();
+    inline bool operated() { return m_izm_th_spi_enable & m_th_new_data; }
+  private:
+    const counter_t m_th_interval;
+    meas_comm_th_data_t& m_data;
+    irs::th_lm95071_t m_th1;
+    irs::th_lm95071_data_t m_th1_data;
+    irs::th_lm95071_t m_th2;
+    irs::th_lm95071_data_t m_th2_data;
+    irs::th_lm95071_t m_th3;
+    irs::th_lm95071_data_t m_th3_data;
+    irs::th_lm95071_t m_th4;
+    irs::th_lm95071_data_t m_th4_data;
+    irs::th_lm95071_t m_th5;
+    irs::th_lm95071_data_t m_th5_data;
+    irs::loop_timer_t m_timer;
+    irs::bit_data_t& m_ee_izm_th_spi_enable;
+    irs::bit_data_t& m_eth_izm_th_spi_enable;
+    bool m_izm_th_spi_enable;
+    bool m_th_new_data;
+    irs::gpio_pin_t& m_izm_th_enable_pin;
+};
 
 class app_t
 {
@@ -64,8 +97,6 @@ private:
   void clear_all_alarms();
 
   cfg_t* mp_cfg;
-  meas_comm_t* mp_meas_comm;
-  supply_comm_t* mp_supply_comm;
   supply_t m_supply_20V;
   supply_t m_supply_200V;
   supply_t m_supply_2V;
@@ -116,10 +147,15 @@ private:
   bool m_upper_level_unconnected;
   bool m_refresh_timeout;
   irs::timer_t m_refresh_timer;
-  
+
   irs::arm::watchdog_timer_t m_watchdog;
-  
-  bool m_izm_th_spi_enable;
+
+  irs::loop_timer_t m_eth_data_refresh_timer;
+
+  meas_comm_th_t m_meas_comm_th;
+
+  meas_comm_t m_meas_comm;
+  supply_comm_t m_supply_comm;
 }; // app_t
 
 } // namespace u309m

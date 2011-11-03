@@ -26,7 +26,7 @@ u309m::cfg_t::cfg_t():
         irs::arm::adc_stellaris_t::EXT_REF),
   m_spi_bitrate(500000),
   m_spi_buf_size(3),
-  m_spi_meas_comm_plis(m_spi_bitrate, m_spi_buf_size, 
+  m_spi_meas_comm_plis(m_spi_bitrate, m_spi_buf_size,
     irs::arm::arm_spi_t::SPI, irs::arm::arm_spi_t::SSI1, GPIO_PORTE,
     GPIO_PORTE, GPIO_PORTE),
   m_spi_general_purpose(m_spi_bitrate, m_spi_buf_size,
@@ -56,7 +56,6 @@ u309m::cfg_t::cfg_t():
   m_tcpip(&m_arm_eth, m_local_ip, m_dest_ip, 10),
   m_simple_hardflow(&m_tcpip, m_local_ip, m_local_port,
     m_dest_ip, m_dest_port, 10),
-  //m_modbus_server(&m_simple_hardflow, 0, 14, 317, 0, irs::make_cnt_ms(200)),
   m_modbus_server(&m_simple_hardflow, 0, 14, 323, 0, irs::make_cnt_ms(200)),
   m_eth_data(&m_modbus_server),
 
@@ -66,9 +65,15 @@ u309m::cfg_t::cfg_t():
   m_meas_comm_apply(GPIO_PORTF, 1, irs::gpio_pin_t::dir_in),
   m_meas_comm_error(GPIO_PORTJ, 7, irs::gpio_pin_t::dir_in),
   m_meas_comm_pins(&m_meas_comm_cs, &m_meas_comm_reset, &m_meas_comm_apply,
-    &m_meas_comm_error, m_spi_demux.cs_code(IZM_TH_CS_1),
-    m_spi_demux.cs_code(IZM_TH_CS_2), m_spi_demux.cs_code(IZM_TH_CS_3),
-    m_spi_demux.cs_code(IZM_TH_CS_4), m_spi_demux.cs_code(IZM_TH_CS_5)),
+    &m_meas_comm_error),
+
+  m_meas_comm_th_pins(
+    m_spi_demux.cs_code(IZM_TH_CS_1),
+    m_spi_demux.cs_code(IZM_TH_CS_2),
+    m_spi_demux.cs_code(IZM_TH_CS_3),
+    m_spi_demux.cs_code(IZM_TH_CS_4),
+    m_spi_demux.cs_code(IZM_TH_CS_5),
+    &m_izm_th_enable),
 
   m_supply_comm_reset(GPIO_PORTG, 0, irs::gpio_pin_t::dir_out),
   m_supply_comm_pins(m_spi_demux.cs_code(CS_PLIS), &m_supply_comm_reset),
@@ -96,17 +101,7 @@ u309m::cfg_t::cfg_t():
   m_command_pins(&m_meas_comm_pins, &m_supply_comm_pins, &m_supply_200V_pins,
     &m_supply_20V_pins, &m_supply_2V_pins, &m_supply_1A_pins,
     &m_supply_17A_pins),
-  m_meas_comm(
-    &m_spi_general_purpose,
-    &m_spi_meas_comm_plis,
-    m_command_pins.meas_comm,
-    &m_eth_data.meas_comm
-  ),
-  m_supply_comm(
-    &m_spi_general_purpose,
-    m_command_pins.supply_comm,
-    &m_eth_data.supply_comm
-  ),
+
   m_SYM_2V_on(GPIO_PORTA, 3, irs::gpio_pin_t::dir_out),
   m_SYM_2V_off(GPIO_PORTJ, 0, irs::gpio_pin_t::dir_out),
   m_SYM_20V_on(GPIO_PORTC, 4, irs::gpio_pin_t::dir_out),
@@ -125,20 +120,26 @@ u309m::cfg_t::cfg_t():
     &m_KZ_1A, &m_KZ_17A, &m_REL_220V, &m_SYM_OFF, &m_SYM_OFF_TEST),
   m_eeprom_size(338),
   m_eeprom(m_eeprom_size),
-  m_eeprom_data(&m_eeprom),
-  m_timer(irs::make_cnt_ms(200))
+  m_eeprom_data(&m_eeprom)
 {
   if (m_eeprom.error()) {
-    m_eeprom_data.reset_to_default();
+    m_eeprom_data.reset_to_default(sup_200V);
+    m_eeprom_data.reset_to_default(sup_20V);
+    m_eeprom_data.reset_to_default(sup_2V);
+    m_eeprom_data.reset_to_default(sup_1A);
+    m_eeprom_data.reset_to_default(sup_17A);
+    m_eth_data.reset_to_default(sup_200V);
+    m_eth_data.reset_to_default(sup_20V);
+    m_eth_data.reset_to_default(sup_2V);
+    m_eth_data.reset_to_default(sup_1A);
+    m_eth_data.reset_to_default(sup_17A);
   }
-  
-  //m_izm_th_enable.set();
+  m_eth_data.ip_0 = m_eeprom_data.ip_0;
   m_REL_220V.set();
-  /*m_eth_data.ip_0 = m_eeprom_data.ip_0;
   m_eth_data.ip_1 = m_eeprom_data.ip_1;
   m_eth_data.ip_2 = m_eeprom_data.ip_2;
   m_eth_data.ip_3 = m_eeprom_data.ip_3;
-    
+
   mxip_t ip = mxip_t::zero_ip();
   ip.val[0] = m_eeprom_data.ip_0;
   ip.val[1] = m_eeprom_data.ip_1;
@@ -146,10 +147,10 @@ u309m::cfg_t::cfg_t():
   ip.val[3] = m_eeprom_data.ip_3;
   char ip_str[IP_STR_LEN];
   mxip_to_cstr(ip_str, ip);
-  m_simple_hardflow.set_param("local_addr", ip_str); 
+  m_simple_hardflow.set_param("local_addr", ip_str);
   m_meas_comm_reset.clear();
-  m_supply_comm_reset.clear();*/
-
+  m_supply_comm_reset.clear();
+  m_REL_220V.set();
 }
 
 u309m::command_pins_t* u309m::cfg_t::command_pins()
@@ -197,14 +198,9 @@ u309m::rele_ext_pins_t* u309m::cfg_t::rele_ext_pins()
   return& m_rele_ext_pins;
 }
 
-u309m::meas_comm_t* u309m::cfg_t::meas_comm()
+u309m::meas_comm_th_pins_t* u309m::cfg_t::meas_comm_th_pins()
 {
-  return& m_meas_comm;
-}
-
-u309m::supply_comm_t* u309m::cfg_t::supply_comm()
-{
-  return& m_supply_comm;
+  return& m_meas_comm_th_pins;
 }
 
 void u309m::cfg_t::izm_th_spi_enable_pin_set(bool a_value)
@@ -217,29 +213,11 @@ void u309m::cfg_t::izm_th_spi_enable_pin_set(bool a_value)
 
 void u309m::cfg_t::tick()
 {
-  m_adc.tick();
+
   m_spi_meas_comm_plis.tick();
   m_spi_general_purpose.tick();
   m_modbus_server.tick();
   m_eeprom.tick();
 
-  if (m_timer.check()) {
-    m_eth_data.arm_adc.PTC_A = m_adc.get_float_data(PTC_A_num);
-    m_eth_data.arm_adc.PTC_LC = m_adc.get_float_data(PTC_LC_num);
-    m_eth_data.arm_adc.TR_24V_TEST =
-      m_adc.get_float_data(TR_24V_TEST_num) * 36.348f;
-    m_eth_data.arm_adc.IZM_3_3V_TEST =
-      m_adc.get_float_data(IZM_3_3V_TEST_num) * 9.446f;
-    m_eth_data.arm_adc.IZM_6V_TEST =
-      m_adc.get_float_data(IZM_6V_TEST_num) * 9.313f;
-    m_eth_data.arm_adc.IZM_1_2V_TEST =
-      m_adc.get_float_data(IZM_1_2V_TEST_num) * 10.028f;
-    m_eth_data.arm_adc.TEST_24V
-      = m_adc.get_float_data(TEST_24V_num) * 32.999f;
-    m_eth_data.arm_adc.TEST_5V
-      = m_adc.get_float_data(TEST_5V_num) * 35.163f;
-    m_eth_data.arm_adc.PTC_PWR = m_adc.get_float_data(PTC_PWR_num);
-    m_eth_data.arm_adc.PTC_17A = m_adc.get_float_data(PTC_17A_num);
-    m_eth_data.arm_adc.internal_temp = m_adc.get_temperature();
-  }
+
 }

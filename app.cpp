@@ -8,8 +8,6 @@
 
 u309m::app_t::app_t(cfg_t* ap_cfg):
   mp_cfg(ap_cfg),
-  mp_meas_comm(ap_cfg->meas_comm()),
-  mp_supply_comm(ap_cfg->supply_comm()),
   m_supply_200V(ap_cfg->spi_general_purpose(),
     ap_cfg->command_pins()->supply_200V,
     &ap_cfg->eth_data()->supply_200V,
@@ -52,11 +50,11 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_izm_6V_value(mp_cfg->eth_data()->arm_adc.IZM_6V_TEST, 4.5f, 6.5f),
   m_izm_3_3V_value(mp_cfg->eth_data()->arm_adc.IZM_3_3V_TEST, 3.15f, 3.45f),
   m_izm_1_2V_value(mp_cfg->eth_data()->arm_adc.IZM_1_2V_TEST, 1.1f, 1.3f),
-  m_izm_th1_value(mp_cfg->eth_data()->meas_comm.th1_value, 18.f, 45.f),
-  m_izm_th2_value(mp_cfg->eth_data()->meas_comm.th2_value, 18.f, 45.f),
-  m_izm_th3_value(mp_cfg->eth_data()->meas_comm.th3_value, 18.f, 45.f),
-  m_izm_th4_value(mp_cfg->eth_data()->meas_comm.th4_value, 18.f, 45.f),
-  m_izm_th5_value(mp_cfg->eth_data()->meas_comm.th5_value, 18.f, 45.f),
+  m_izm_th1_value(mp_cfg->eth_data()->meas_comm_th.th1_value, 18.f, 45.f),
+  m_izm_th2_value(mp_cfg->eth_data()->meas_comm_th.th2_value, 18.f, 45.f),
+  m_izm_th3_value(mp_cfg->eth_data()->meas_comm_th.th3_value, 18.f, 45.f),
+  m_izm_th4_value(mp_cfg->eth_data()->meas_comm_th.th4_value, 18.f, 45.f),
+  m_izm_th5_value(mp_cfg->eth_data()->meas_comm_th.th5_value, 18.f, 45.f),
   m_200V_th_base_value(mp_cfg->eth_data()->supply_200V.base_temp_data.value,
     18.f, 85.f),
   m_200V_th_aux_value(mp_cfg->eth_data()->supply_200V.aux_temp_data.value,
@@ -86,16 +84,33 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_refresh_timeout(false),
   m_refresh_timer(irs::make_cnt_s(1)),
   m_watchdog(5),
-  m_izm_th_spi_enable(false)
+  m_eth_data_refresh_timer(irs::make_cnt_ms(300)),
+  m_meas_comm_th(
+    mp_cfg->spi_general_purpose(),
+    mp_cfg->meas_comm_th_pins(),
+    mp_cfg->eth_data()->meas_comm_th,
+    mp_cfg->eeprom_data()->izm_th_spi_enable,
+    mp_cfg->eth_data()->control.izm_th_spi_enable),
+
+  m_meas_comm(
+    mp_cfg->spi_meas_comm_plis(),
+    mp_cfg->command_pins()->meas_comm,
+    &mp_cfg->eth_data()->meas_comm
+  ),
+  m_supply_comm(
+    mp_cfg->spi_general_purpose(),
+    mp_cfg->command_pins()->supply_comm,
+    &mp_cfg->eth_data()->supply_comm
+  )
 {
   m_rel_220V_timer.start();
   mp_cfg->rele_ext_pins()->SYM_OFF->set();
-  
+
   mp_cfg->eth_data()->ip_0 = mp_cfg->eeprom_data()->ip_0;
   mp_cfg->eth_data()->ip_1 = mp_cfg->eeprom_data()->ip_1;
   mp_cfg->eth_data()->ip_2 = mp_cfg->eeprom_data()->ip_2;
   mp_cfg->eth_data()->ip_3 = mp_cfg->eeprom_data()->ip_3;
-  
+
   mxip_t ip = mxip_t::zero_ip();
   ip.val[0] = mp_cfg->eeprom_data()->ip_0;
   ip.val[1] = mp_cfg->eeprom_data()->ip_1;
@@ -104,10 +119,10 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   char ip_str[IP_STR_LEN];
   mxip_to_cstr(ip_str, ip);
   mp_cfg->hardflow()->set_param("local_addr", ip_str);
-  
+
   mp_cfg->command_pins()->meas_comm->reset->clear();
   mp_cfg->command_pins()->supply_comm->reset->clear();
-  
+
   mp_cfg->eth_data()->control.on = 0;
   m_alarm_timer.start();
   m_start_alarm_timer.start();
@@ -121,42 +136,40 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   mp_cfg->eth_data()->control.watchdog_reset_cause =
     m_watchdog.watchdog_reset_cause();
   //m_watchdog.start();
-  m_izm_th_spi_enable = mp_cfg->eeprom_data()->izm_th_spi_enable;
-  mp_cfg->eth_data()->control.izm_th_spi_enable = m_izm_th_spi_enable; 
-  mp_cfg->izm_th_spi_enable_pin_set(m_izm_th_spi_enable);
-  mp_meas_comm->izm_th_start();
 }
 
 void u309m::app_t::tick()
 {
   mp_cfg->tick();
-  mp_meas_comm->tick();
-  mp_supply_comm->tick();
+  m_meas_comm.tick();
+  m_supply_comm.tick();
   m_supply_200V.tick();
   m_supply_20V.tick();
   m_supply_2V.tick();
   m_supply_1A.tick();
   m_supply_17A.tick();
-  
+  mp_cfg->adc()->tick();
+  m_meas_comm_th.tick();
+
   #ifndef NOP
-  bool change_ip_0 = 
+  bool change_ip_0 =
     (mp_cfg->eeprom_data()->ip_0 != mp_cfg->eth_data()->ip_0);
-  bool change_ip_1 = 
+  bool change_ip_1 =
     (mp_cfg->eeprom_data()->ip_1 != mp_cfg->eth_data()->ip_1);
-  bool change_ip_2 = 
+  bool change_ip_2 =
     (mp_cfg->eeprom_data()->ip_2 != mp_cfg->eth_data()->ip_2);
-  bool change_ip_3 = 
+  bool change_ip_3 =
     (mp_cfg->eeprom_data()->ip_3 != mp_cfg->eth_data()->ip_3);
-  
-  if (change_ip_0 || change_ip_1 || change_ip_2 || change_ip_3) 
+
+  if (change_ip_0 || change_ip_1 || change_ip_2 || change_ip_3)
   {
     mxip_t ip = mxip_t::zero_ip();
- 
+
     mp_cfg->eeprom_data()->ip_0 = mp_cfg->eth_data()->ip_0;
     mp_cfg->eeprom_data()->ip_1 = mp_cfg->eth_data()->ip_1;
     mp_cfg->eeprom_data()->ip_2 = mp_cfg->eth_data()->ip_2;
     mp_cfg->eeprom_data()->ip_3 = mp_cfg->eth_data()->ip_3;
-    
+
     ip.val[0] = mp_cfg->eth_data()->ip_0;
     ip.val[1] = mp_cfg->eth_data()->ip_1;
     ip.val[2] = mp_cfg->eth_data()->ip_2;
@@ -363,93 +376,97 @@ void u309m::app_t::tick()
       }
     }
 
-    bool internal_th_alarm = m_internal_th_value.alarm();
-    mp_cfg->eth_data()->control.alarm_internal_th = internal_th_alarm;
+    if (m_status != START) {
+      bool internal_th_alarm = m_internal_th_value.alarm();
+      mp_cfg->eth_data()->control.alarm_internal_th = internal_th_alarm;
 
-    bool ptc_a_alarm = m_ptc_a_value.alarm();
-    mp_cfg->eth_data()->control.alarm_ptc_a = ptc_a_alarm;
+      bool ptc_a_alarm = m_ptc_a_value.alarm();
+      mp_cfg->eth_data()->control.alarm_ptc_a = ptc_a_alarm;
 
-    bool ptc_lc_alarm = m_ptc_lc_value.alarm();
-    mp_cfg->eth_data()->control.alarm_ptc_lc = ptc_lc_alarm;
+      bool ptc_lc_alarm = m_ptc_lc_value.alarm();
+      mp_cfg->eth_data()->control.alarm_ptc_lc = ptc_lc_alarm;
 
-    bool ptc_pwr_alarm = m_ptc_pwr_value.alarm();
-    mp_cfg->eth_data()->control.alarm_ptc_pwr = ptc_pwr_alarm;
+      bool ptc_pwr_alarm = m_ptc_pwr_value.alarm();
+      mp_cfg->eth_data()->control.alarm_ptc_pwr = ptc_pwr_alarm;
 
-    bool ptc_17A_alarm = m_ptc_17A_value.alarm();
-    mp_cfg->eth_data()->control.alarm_ptc_17A = ptc_17A_alarm;
+      bool ptc_17A_alarm = m_ptc_17A_value.alarm();
+      mp_cfg->eth_data()->control.alarm_ptc_17A = ptc_17A_alarm;
 
-    bool tr_24V_alarm = m_tr_24V_value.alarm();
-    mp_cfg->eth_data()->control.alarm_tr_24V = tr_24V_alarm;
+      bool tr_24V_alarm = m_tr_24V_value.alarm();
+      mp_cfg->eth_data()->control.alarm_tr_24V = tr_24V_alarm;
 
-    bool v_24V_alarm = m_24V_value.alarm();
-    mp_cfg->eth_data()->control.alarm_24V = v_24V_alarm;
+      bool v_24V_alarm = m_24V_value.alarm();
+      mp_cfg->eth_data()->control.alarm_24V = v_24V_alarm;
 
-    bool v_5V_alarm = m_5V_value.alarm();
-    mp_cfg->eth_data()->control.alarm_5V = v_5V_alarm;
+      bool v_5V_alarm = m_5V_value.alarm();
+      mp_cfg->eth_data()->control.alarm_5V = v_5V_alarm;
 
-    bool izm_6V_alarm = m_izm_6V_value.alarm();
-    mp_cfg->eth_data()->control.alarm_izm_6V = izm_6V_alarm;
+      bool izm_6V_alarm = m_izm_6V_value.alarm();
+      mp_cfg->eth_data()->control.alarm_izm_6V = izm_6V_alarm;
 
-    bool izm_3_3V_alarm = m_izm_3_3V_value.alarm();
-    mp_cfg->eth_data()->control.alarm_izm_3_3V = izm_3_3V_alarm;
+      bool izm_3_3V_alarm = m_izm_3_3V_value.alarm();
+      mp_cfg->eth_data()->control.alarm_izm_3_3V = izm_3_3V_alarm;
 
-    bool izm_1_2V_alarm = m_izm_1_2V_value.alarm();
-    mp_cfg->eth_data()->control.alarm_izm_1_2V = izm_1_2V_alarm;
+      bool izm_1_2V_alarm = m_izm_1_2V_value.alarm();
+      mp_cfg->eth_data()->control.alarm_izm_1_2V = izm_1_2V_alarm;
 
-    bool izm_th1_alarm = m_izm_th1_value.alarm();
-    mp_cfg->eth_data()->control.alarm_izm_th1 = izm_th1_alarm;
+      if (m_meas_comm_th.operated()) {
+        bool izm_th1_alarm = m_izm_th1_value.alarm();
+        mp_cfg->eth_data()->control.alarm_izm_th1 = izm_th1_alarm;
 
-    bool izm_th2_alarm = m_izm_th2_value.alarm();
-    mp_cfg->eth_data()->control.alarm_izm_th2 = izm_th2_alarm;
+        bool izm_th2_alarm = m_izm_th2_value.alarm();
+        mp_cfg->eth_data()->control.alarm_izm_th2 = izm_th2_alarm;
 
-    bool izm_th3_alarm = m_izm_th3_value.alarm();
-    mp_cfg->eth_data()->control.alarm_izm_th3 = izm_th3_alarm;
+        bool izm_th3_alarm = m_izm_th3_value.alarm();
+        mp_cfg->eth_data()->control.alarm_izm_th3 = izm_th3_alarm;
 
-    bool izm_th4_alarm = m_izm_th4_value.alarm();
-    mp_cfg->eth_data()->control.alarm_izm_th4 = izm_th4_alarm;
+        bool izm_th4_alarm = m_izm_th4_value.alarm();
+        mp_cfg->eth_data()->control.alarm_izm_th4 = izm_th4_alarm;
 
-    bool izm_th5_alarm = m_izm_th5_value.alarm();
-    mp_cfg->eth_data()->control.alarm_izm_th5 = izm_th5_alarm;
+        bool izm_th5_alarm = m_izm_th5_value.alarm();
+        mp_cfg->eth_data()->control.alarm_izm_th5 = izm_th5_alarm;
+      }
 
-    bool t_200V_th_base_alarm = m_200V_th_base_value.alarm();
-    mp_cfg->eth_data()->control.alarm_200V_th_base
-      = t_200V_th_base_alarm;
+      bool t_200V_th_base_alarm = m_200V_th_base_value.alarm();
+      mp_cfg->eth_data()->control.alarm_200V_th_base
+        = t_200V_th_base_alarm;
 
-    bool t_200V_th_aux_alarm = m_200V_th_aux_value.alarm();
-    mp_cfg->eth_data()->control.alarm_200V_th_aux
-      = t_200V_th_aux_alarm;
+      bool t_200V_th_aux_alarm = m_200V_th_aux_value.alarm();
+      mp_cfg->eth_data()->control.alarm_200V_th_aux
+        = t_200V_th_aux_alarm;
 
-    bool t_20V_th_base_alarm = m_20V_th_base_value.alarm();
-    mp_cfg->eth_data()->control.alarm_20V_th_base
-      = t_20V_th_base_alarm;
+      bool t_20V_th_base_alarm = m_20V_th_base_value.alarm();
+      mp_cfg->eth_data()->control.alarm_20V_th_base
+        = t_20V_th_base_alarm;
 
-    bool t_20V_th_aux_alarm = m_20V_th_aux_value.alarm();
-    mp_cfg->eth_data()->control.alarm_20V_th_aux
-      = t_20V_th_aux_alarm;
+      bool t_20V_th_aux_alarm = m_20V_th_aux_value.alarm();
+      mp_cfg->eth_data()->control.alarm_20V_th_aux
+        = t_20V_th_aux_alarm;
 
-    bool t_2V_th_base_alarm = m_2V_th_base_value.alarm();
-    mp_cfg->eth_data()->control.alarm_2V_th_base
-      = t_2V_th_base_alarm;
+      bool t_2V_th_base_alarm = m_2V_th_base_value.alarm();
+      mp_cfg->eth_data()->control.alarm_2V_th_base
+        = t_2V_th_base_alarm;
 
-    bool t_2V_th_aux_alarm = m_2V_th_aux_value.alarm();
-    mp_cfg->eth_data()->control.alarm_2V_th_aux
-      = t_2V_th_aux_alarm;
+      bool t_2V_th_aux_alarm = m_2V_th_aux_value.alarm();
+      mp_cfg->eth_data()->control.alarm_2V_th_aux
+        = t_2V_th_aux_alarm;
 
-    bool t_1A_th_base_alarm = m_1A_th_base_value.alarm();
-    mp_cfg->eth_data()->control.alarm_1A_th_base
-      = t_1A_th_base_alarm;
+      bool t_1A_th_base_alarm = m_1A_th_base_value.alarm();
+      mp_cfg->eth_data()->control.alarm_1A_th_base
+        = t_1A_th_base_alarm;
 
-    bool t_1A_th_aux_alarm = m_1A_th_aux_value.alarm();
-    mp_cfg->eth_data()->control.alarm_1A_th_aux
-      = t_1A_th_aux_alarm;
+      bool t_1A_th_aux_alarm = m_1A_th_aux_value.alarm();
+      mp_cfg->eth_data()->control.alarm_1A_th_aux
+        = t_1A_th_aux_alarm;
 
-    bool t_17A_th_base_alarm = m_17A_th_base_value.alarm();
-    mp_cfg->eth_data()->control.alarm_17A_th_base
-      = t_17A_th_base_alarm;
+      bool t_17A_th_base_alarm = m_17A_th_base_value.alarm();
+      mp_cfg->eth_data()->control.alarm_17A_th_base
+        = t_17A_th_base_alarm;
 
-    bool t_17A_th_aux_alarm = m_17A_th_aux_value.alarm();
-    mp_cfg->eth_data()->control.alarm_17A_th_aux
-      = t_17A_th_aux_alarm;
+      bool t_17A_th_aux_alarm = m_17A_th_aux_value.alarm();
+      mp_cfg->eth_data()->control.alarm_17A_th_aux
+        = t_17A_th_aux_alarm;
+    }
 
     mp_cfg->eth_data()->control.alarm_upper_level = m_upper_level_unconnected;
 
@@ -463,8 +480,8 @@ void u309m::app_t::tick()
           clear_all_alarms();
           m_status = ON;
           mp_cfg->eth_data()->control.on = 1;
-          mp_meas_comm->on();
-          mp_supply_comm->on();
+          m_meas_comm.on();
+          m_supply_comm.on();
           m_supply_200V.on();
           m_supply_20V.on();
           m_supply_2V.on();
@@ -480,8 +497,8 @@ void u309m::app_t::tick()
         {
           m_status = ON;
           mp_cfg->eth_data()->control.on = 1;
-          mp_meas_comm->on();
-          mp_supply_comm->on();
+          m_meas_comm.on();
+          m_supply_comm.on();
           m_supply_200V.on();
           m_supply_20V.on();
           m_supply_2V.on();
@@ -501,8 +518,8 @@ void u309m::app_t::tick()
         {
           m_status = OFF;
           mp_cfg->eth_data()->control.on = 0;
-          mp_meas_comm->off();
-          mp_supply_comm->off();
+          m_meas_comm.off();
+          m_supply_comm.off();
           m_supply_200V.off();
           m_supply_20V.off();
           m_supply_2V.off();
@@ -560,16 +577,43 @@ void u309m::app_t::tick()
     {
       m_watchdog.restart();
     }
-    if (mp_cfg->eth_data()->control.izm_th_spi_enable != m_izm_th_spi_enable) {
-      m_izm_th_spi_enable = mp_cfg->eth_data()->control.izm_th_spi_enable;
-      mp_cfg->eeprom_data()->izm_th_spi_enable = m_izm_th_spi_enable;
-      mp_cfg->izm_th_spi_enable_pin_set(m_izm_th_spi_enable);
-      if (m_izm_th_spi_enable) {
-        mp_meas_comm->izm_th_start();
-      } else {
-        mp_meas_comm->izm_th_stop();
-      }
-    }
+  }
+
+  if (m_eth_data_refresh_timer.check()) {
+    enum {
+      PTC_A_num = 9,
+      PTC_LC_num = 8,
+      TR_24V_TEST_num = 7,
+      IZM_3_3V_TEST_num = 6,
+      IZM_6V_TEST_num = 5,
+      IZM_1_2V_TEST_num = 4,
+      TEST_24V_num = 3,
+      TEST_5V_num = 2,
+      PTC_PWR_num = 1,
+      PTC_17A_num = 0
+    };
+    mp_cfg->eth_data()->arm_adc.PTC_A
+      = mp_cfg->adc()->get_float_data(PTC_A_num);
+    mp_cfg->eth_data()->arm_adc.PTC_LC
+      = mp_cfg->adc()->get_float_data(PTC_LC_num);
+    mp_cfg->eth_data()->arm_adc.TR_24V_TEST
+      = mp_cfg->adc()->get_float_data(TR_24V_TEST_num) * 36.348f;
+    mp_cfg->eth_data()->arm_adc.IZM_3_3V_TEST
+      = mp_cfg->adc()->get_float_data(IZM_3_3V_TEST_num) * 9.446f;
+    mp_cfg->eth_data()->arm_adc.IZM_6V_TEST
+      = mp_cfg->adc()->get_float_data(IZM_6V_TEST_num) * 9.313f;
+    mp_cfg->eth_data()->arm_adc.IZM_1_2V_TEST
+      = mp_cfg->adc()->get_float_data(IZM_1_2V_TEST_num) * 10.028f;
+    mp_cfg->eth_data()->arm_adc.TEST_24V
+      = mp_cfg->adc()->get_float_data(TEST_24V_num) * 32.999f;
+    mp_cfg->eth_data()->arm_adc.TEST_5V
+      = mp_cfg->adc()->get_float_data(TEST_5V_num) * 35.163f;
+    mp_cfg->eth_data()->arm_adc.PTC_PWR
+      = mp_cfg->adc()->get_float_data(PTC_PWR_num);
+    mp_cfg->eth_data()->arm_adc.PTC_17A
+      = mp_cfg->adc()->get_float_data(PTC_17A_num);
+    mp_cfg->eth_data()->arm_adc.internal_temp
+      = mp_cfg->adc()->get_temperature();
   }
 }
 
@@ -603,3 +647,88 @@ void u309m::app_t::clear_all_alarms()
   m_17A_th_aux_value.clear_alarm();
   m_upper_level_unconnected = false;
 }
+
+u309m::meas_comm_th_t::meas_comm_th_t(
+  irs::spi_t* ap_spi,
+  meas_comm_th_pins_t* ap_pins,
+  meas_comm_th_data_t& a_data,
+  irs::bit_data_t& a_ee_izm_th_spi_enable,
+  irs::bit_data_t& a_eth_izm_th_spi_enable):
+
+  m_th_interval(irs::make_cnt_ms(300)),
+  m_data(a_data),
+  m_th1(ap_spi, ap_pins->termo_sense_1, m_th_interval),
+  m_th1_data(&m_th1),
+  m_th2(ap_spi, ap_pins->termo_sense_2, m_th_interval),
+  m_th2_data(&m_th2),
+  m_th3(ap_spi, ap_pins->termo_sense_3, m_th_interval),
+  m_th3_data(&m_th3),
+  m_th4(ap_spi, ap_pins->termo_sense_4, m_th_interval),
+  m_th4_data(&m_th4),
+  m_th5(ap_spi, ap_pins->termo_sense_5, m_th_interval),
+  m_th5_data(&m_th5),
+  m_timer(m_th_interval),
+  m_ee_izm_th_spi_enable(a_ee_izm_th_spi_enable),
+  m_eth_izm_th_spi_enable(a_eth_izm_th_spi_enable),
+  m_izm_th_spi_enable(m_ee_izm_th_spi_enable),
+  m_th_new_data(false),
+  m_izm_th_enable_pin(*ap_pins->izm_th_enable)
+{
+  m_eth_izm_th_spi_enable = m_izm_th_spi_enable;
+  if (m_izm_th_spi_enable) {
+    m_izm_th_enable_pin.set();
+    m_th1_data.stop_bit = 0;
+    m_th2_data.stop_bit = 0;
+    m_th3_data.stop_bit = 0;
+    m_th4_data.stop_bit = 0;
+    m_th5_data.stop_bit = 0;
+  } else {
+    m_izm_th_enable_pin.clear();
+    m_th1_data.stop_bit = 1;
+    m_th2_data.stop_bit = 1;
+    m_th3_data.stop_bit = 1;
+    m_th4_data.stop_bit = 1;
+    m_th5_data.stop_bit = 1;
+  }
+}
+
+void u309m::meas_comm_th_t::tick()
+{
+  m_th1.tick();
+  m_th2.tick();
+  m_th3.tick();
+  m_th4.tick();
+  m_th5.tick();
+  if (m_timer.check())
+  {
+    m_th_new_data = m_th1_data.new_data_bit & m_th2_data.new_data_bit &
+      m_th3_data.new_data_bit & m_th4_data.new_data_bit &
+      m_th5_data.new_data_bit;
+    m_data.th1_value = m_th1_data.temperature_code * m_th1.get_conv_koef();
+    m_data.th2_value = m_th2_data.temperature_code * m_th2.get_conv_koef();
+    m_data.th3_value = m_th3_data.temperature_code * m_th3.get_conv_koef();
+    m_data.th4_value = m_th4_data.temperature_code * m_th4.get_conv_koef();
+    m_data.th5_value = m_th5_data.temperature_code * m_th5.get_conv_koef();
+
+    if (m_izm_th_spi_enable != m_eth_izm_th_spi_enable) {
+      m_izm_th_spi_enable = m_eth_izm_th_spi_enable;
+      m_ee_izm_th_spi_enable = m_izm_th_spi_enable;
+      if (m_izm_th_spi_enable) {
+        m_izm_th_enable_pin.set();
+        m_th1_data.stop_bit = 0;
+        m_th2_data.stop_bit = 0;
+        m_th3_data.stop_bit = 0;
+        m_th4_data.stop_bit = 0;
+        m_th5_data.stop_bit = 0;
+      } else {
+        m_izm_th_enable_pin.clear();
+        m_th1_data.stop_bit = 1;
+        m_th2_data.stop_bit = 1;
+        m_th3_data.stop_bit = 1;
+        m_th4_data.stop_bit = 1;
+        m_th5_data.stop_bit = 1;
+      }
+    }
+  }
+}
+

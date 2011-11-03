@@ -3,12 +3,11 @@
 
 #include <irsdefs.h>
 
-#include <irsadc.h>
-
 #include <armspi.h>
-#include <armadc.h>
+#include <irsdev.h>
 
 #include "data.h"
+#include "cfg.h"
 
 #include <irsfinal.h>
 
@@ -18,6 +17,58 @@ enum
 {
   plis_tact_freq = 7000000,
   plis_relay_delay = 4000000//50000
+};
+
+typedef irs_u16 plis_data_t;
+enum plis_bit_t {
+  //  Входящие
+  plis_miso_mask_bit = 0,
+  plis_read_only_bit = 1,
+  plis_on_bit = 2,
+  //  Исходящие
+  plis_error_bit = 0,
+  plis_busy_bit = 1,
+  plis_ready_bit = 2
+};
+
+class plis_t {
+public:
+  plis_t(plis_pins_t& a_pins, irs::pwm_gen_t& a_gen, irs::spi_t& a_spi);
+  ~plis_t();
+  bool ready();
+  void write(plis_data_t a_data);
+  plis_data_t read();
+  void tick();
+private:
+  enum {
+    m_reset_pulse_interval = 1,
+    m_reset_interval = 500,
+    m_cfg_done_wait_interval = 3000,
+    m_size = sizeof(plis_data_t),
+    m_max_attempts_count = 5
+  };
+  enum status_t {
+    RESET,
+    WAIT,
+    CHECK_READY,
+    ERROR,
+    FREE
+  };
+  plis_pins_t& m_pins;
+  irs::pwm_gen_t& m_gen;
+  irs::spi_t& m_spi;
+  status_t m_status;
+  plis_data_t m_data;
+  irs_u8 mp_write_buf[m_size];
+  irs_u8 mp_read_buf[m_size];
+  irs_u8 m_attempts_counter;
+  bool m_ready;
+  bool m_need_transaction;
+  irs::timer_t m_timer;
+  //
+  void spi_prepare();
+  void command_prepare_check_ready(irs_u8* ap_buf);
+  bool command_check_ready(irs_u8* ap_buf);
 };
 
 class meas_plis_t
@@ -59,14 +110,13 @@ private:
   irs_u8 mp_buf[m_size];
   status_t m_status;
   bool m_need_write;
+  irs::arm::gptm_generator_t m_tact_gen;
 }; // meas_plis_t
 
 class meas_comm_t
 {
 public:
   meas_comm_t(
-    //irs::arm::adc_t* ap_adc,
-    irs::arm::arm_spi_t* ap_spi_term,
     irs::arm::arm_spi_t* ap_spi_meas_comm_plis,
     meas_comm_pins_t* ap_meas_comm_pins,
     meas_comm_data_t* ap_meas_comm_data
@@ -74,8 +124,6 @@ public:
   inline void on() { m_need_on = true; };
   inline void off() { m_need_off = true; };
   inline bool operated() { return m_operate; };
-  void izm_th_stop();
-  void izm_th_start();
   void tick();
 
 private:
@@ -97,20 +145,8 @@ private:
     meas_reset_complete
   };
 
-  //irs::arm::adc_t* mp_adc;
   meas_comm_pins_t* mp_meas_comm_pins;
   meas_comm_data_t* mp_meas_comm_data;
-  irs::th_lm95071_t m_th1;
-  irs::th_lm95071_data_t m_th1_data;
-  irs::th_lm95071_t m_th2;
-  irs::th_lm95071_data_t m_th2_data;
-  irs::th_lm95071_t m_th3;
-  irs::th_lm95071_data_t m_th3_data;
-  irs::th_lm95071_t m_th4;
-  irs::th_lm95071_data_t m_th4_data;
-  irs::th_lm95071_t m_th5;
-  irs::th_lm95071_data_t m_th5_data;
-  irs::loop_timer_t m_timer;
   meas_plis_t m_plis;
   bool m_command_apply;
   bool m_comm_on;
