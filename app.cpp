@@ -85,7 +85,8 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_upper_level_unconnected(false),
   m_refresh_timeout(false),
   m_refresh_timer(irs::make_cnt_s(1)),
-  m_watchdog(5)
+  m_watchdog(5),
+  m_izm_th_spi_enable(false)
 {
   m_rel_220V_timer.start();
   mp_cfg->rele_ext_pins()->SYM_OFF->set();
@@ -120,6 +121,10 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   mp_cfg->eth_data()->control.watchdog_reset_cause =
     m_watchdog.watchdog_reset_cause();
   //m_watchdog.start();
+  m_izm_th_spi_enable = mp_cfg->eeprom_data()->izm_th_spi_enable;
+  mp_cfg->eth_data()->control.izm_th_spi_enable = m_izm_th_spi_enable; 
+  mp_cfg->izm_th_spi_enable_pin_set(m_izm_th_spi_enable);
+  mp_meas_comm->izm_th_start();
 }
 
 void u309m::app_t::tick()
@@ -554,6 +559,16 @@ void u309m::app_t::tick()
     if (!mp_cfg->eth_data()->control.watchdog_test)
     {
       m_watchdog.restart();
+    }
+    if (mp_cfg->eth_data()->control.izm_th_spi_enable != m_izm_th_spi_enable) {
+      m_izm_th_spi_enable = mp_cfg->eth_data()->control.izm_th_spi_enable;
+      mp_cfg->eeprom_data()->izm_th_spi_enable = m_izm_th_spi_enable;
+      mp_cfg->izm_th_spi_enable_pin_set(m_izm_th_spi_enable);
+      if (m_izm_th_spi_enable) {
+        mp_meas_comm->izm_th_start();
+      } else {
+        mp_meas_comm->izm_th_stop();
+      }
     }
   }
 }

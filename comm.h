@@ -74,6 +74,8 @@ public:
   inline void on() { m_need_on = true; };
   inline void off() { m_need_off = true; };
   inline bool operated() { return m_operate; };
+  void izm_th_stop();
+  void izm_th_start();
   void tick();
 
 private:

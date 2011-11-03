@@ -132,7 +132,7 @@ u309m::cfg_t::cfg_t():
     m_eeprom_data.reset_to_default();
   }
   
-  m_izm_th_enable.set();
+  //m_izm_th_enable.set();
   m_REL_220V.set();
   /*m_eth_data.ip_0 = m_eeprom_data.ip_0;
   m_eth_data.ip_1 = m_eeprom_data.ip_1;
@@ -205,6 +205,14 @@ u309m::meas_comm_t* u309m::cfg_t::meas_comm()
 u309m::supply_comm_t* u309m::cfg_t::supply_comm()
 {
   return& m_supply_comm;
+}
+
+void u309m::cfg_t::izm_th_spi_enable_pin_set(bool a_value)
+{
+  if (a_value) {
+    m_izm_th_enable.set();
+  }
+  else m_izm_th_enable.clear();
 }
 
 void u309m::cfg_t::tick()

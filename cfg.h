@@ -114,6 +114,7 @@ struct control_data_t
   irs::bit_data_t refresh_all_sources;
   irs::bit_data_t watchdog_reset_cause;
   irs::bit_data_t watchdog_test;
+  irs::bit_data_t izm_th_spi_enable;
   
   irs::conn_data_t<irs_u32> connect_counter;
 
@@ -185,6 +186,7 @@ struct control_data_t
     refresh_all_sources.connect(ap_data, index, 3);
     watchdog_reset_cause.connect(ap_data, index, 4);
     watchdog_test.connect(ap_data, index, 5);
+    izm_th_spi_enable.connect(ap_data, index, 6);
 
     index++;
     index++;
@@ -335,6 +337,7 @@ public:
   rele_ext_pins_t* rele_ext_pins();
   meas_comm_t* meas_comm();
   supply_comm_t* supply_comm();
+  void izm_th_spi_enable_pin_set(bool a_value);
   void tick();
 
 private:

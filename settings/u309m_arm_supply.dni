@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-130472372
+Checksum=-513816514
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -31,12 +31,12 @@ Category=_ 0
 [Aliases]
 Count=0
 SuppressDialog=0
+[TermIOLog]
+LoggingEnabled=_ 1
+LogFile=_ "$PROJ_DIR$\TermIO.log"
 [CallStackLog]
 Enabled=0
 [DriverProfiling]
 Enabled=0
-Mode=138699800
+Mode=20195552
 Graph=0
-[TermIOLog]
-LoggingEnabled=_ 1
-LogFile=_ "$PROJ_DIR$\TermIO.log"

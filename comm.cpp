@@ -182,6 +182,24 @@ void u309m::meas_comm_t::init_default()
   mp_meas_comm_data->load_resistor = 0;
 }
 
+void u309m::meas_comm_t::izm_th_stop()
+{
+  m_th1_data.stop_bit = 1;
+  m_th2_data.stop_bit = 1;
+  m_th3_data.stop_bit = 1;
+  m_th4_data.stop_bit = 1;
+  m_th5_data.stop_bit = 1;
+}
+
+void u309m::meas_comm_t::izm_th_start()
+{
+  m_th1_data.stop_bit = 0;
+  m_th2_data.stop_bit = 0;
+  m_th3_data.stop_bit = 0;
+  m_th4_data.stop_bit = 0;
+  m_th5_data.stop_bit = 0;
+}
+
 void u309m::meas_comm_t::tick()
 {
   m_th1.tick();

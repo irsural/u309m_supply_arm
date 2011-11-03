@@ -450,6 +450,7 @@ struct eeprom_data_t
   eeprom_supply_data_t supply_17A;
   irs::conn_data_t<irs_u32> options;
   irs::bit_data_t upper_level_check;
+  irs::bit_data_t izm_th_spi_enable;
 
   eeprom_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
     irs_uarc* ap_size = IRS_NULL)
@@ -474,6 +475,7 @@ struct eeprom_data_t
     index = supply_17A.connect(ap_data, index);
     
     upper_level_check.connect(ap_data, index, 0);
+    izm_th_spi_enable.connect(ap_data, index, 1);
     index = options.connect(ap_data, index);
 
     return index;
@@ -488,6 +490,7 @@ struct eeprom_data_t
     
     options = 0;
     upper_level_check = 1;
+    izm_th_spi_enable = 1;
     
     supply_200V.resistance_code = 976;
     supply_200V.koef_adc_volt_prev = 0.259343;

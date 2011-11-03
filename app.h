@@ -118,6 +118,8 @@ private:
   irs::timer_t m_refresh_timer;
   
   irs::arm::watchdog_timer_t m_watchdog;
+  
+  bool m_izm_th_spi_enable;
 }; // app_t
 
 } // namespace u309m
