@@ -19,7 +19,18 @@ enum
   plis_relay_delay = 4000000//50000
 };
 
+//---------------------------------- ПЛИС --------------------------------------
+
 typedef irs_u16 plis_data_t;
+typedef struct {
+  irs_u8 lsb  : 8;
+  irs_u8 msb  : 8;
+} plis_bytes_t;
+typedef union {
+  plis_data_t data;
+  plis_bytes_t bytes;
+} plis_data_bytes_t;
+
 enum plis_bit_t {
   //  Входящие
   plis_miso_mask_bit = 0,
@@ -42,7 +53,7 @@ public:
 private:
   enum {
     m_reset_pulse_interval = 1,
-    m_reset_interval = 500,
+    m_transaction_interval = 500,
     m_cfg_done_wait_interval = 3000,
     m_size = sizeof(plis_data_t),
     m_max_attempts_count = 5
@@ -51,25 +62,66 @@ private:
     RESET,
     WAIT,
     CHECK_READY,
-    ERROR,
-    FREE
+    FREE,
+    ERROR
   };
   plis_pins_t& m_pins;
   irs::pwm_gen_t& m_gen;
   irs::spi_t& m_spi;
   status_t m_status;
-  plis_data_t m_data;
   irs_u8 mp_write_buf[m_size];
   irs_u8 mp_read_buf[m_size];
   irs_u8 m_attempts_counter;
   bool m_ready;
-  bool m_need_transaction;
+  bool m_need_write;
   irs::timer_t m_timer;
   //
   void spi_prepare();
-  void command_prepare_check_ready(irs_u8* ap_buf);
-  bool command_check_ready(irs_u8* ap_buf);
+  void command_prepare_check_ready();
+  bool command_check_ready();
+  void clear_buffers();
 };
+
+//------------------------------- Коммутатор -----------------------------------
+
+class comm_t {
+public:
+  comm_t(plis_t& a_plis, irs::bit_data_t* ap_apply_bit);
+  ~comm_t();
+  void add_byte(irs::conn_data_t<irs_u8>* ap_byte, irs_u8 a_position);
+  void add_bit(irs::bit_data_t* ap_bit, irs_u8 a_position,
+    bool a_on_bit = false);
+  void on();
+  void off();
+  bool operated();
+  void tick();
+private:
+  enum status_t {
+    START,
+    ON,
+    TRANSACTION,
+    OFF
+  };
+  typedef struct {
+    irs::conn_data_t<irs_u8>* user_byte;
+    irs_u8 position;
+  } byte_track_t;
+  typedef struct {
+    irs::bit_data_t* user_bit;
+    irs_u8 position;
+  } bit_track_t;
+  plis_t& m_plis;
+  status_t m_status;
+  vector<byte_track_t> m_byte_vector;
+  vector<bit_track_t> m_bit_vector;
+  irs::bit_data_t* mp_apply_bit;
+  irs_u8 m_on_bit_number;
+  bool m_need_on;
+  bool m_need_off;
+  void prepare_and_write_data();
+};
+
+//------------------------------------------------------------------------------
 
 class meas_plis_t
 {

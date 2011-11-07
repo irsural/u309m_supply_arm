@@ -67,7 +67,8 @@ private:
   {
     m_alarm_mask = 0x7FFFFFF,
     m_unlock_command = 116,
-    m_clear_alarm_command = 207
+    m_clear_alarm_command = 207,
+    m_fail_max = 5
   };
   class check_value_t
   {
@@ -77,22 +78,26 @@ private:
       m_value(a_value),
       m_min(a_min),
       m_max(a_max),
-      m_alarm(false)
+      m_fail_cnt(0)
     {}
     bool alarm()
     {
       float value = m_value;
       bool min = value < m_min;
       bool max = value > m_max;
-      m_alarm |= (min || max);
-      return m_alarm;
+      if (min || max) {
+        m_fail_cnt++;
+      } else {
+        m_fail_cnt = 0;
+      }
+      return (m_fail_cnt >= m_fail_max);
     }
-    void clear_alarm() { m_alarm = false; }
+    void clear_alarm() { m_fail_cnt = 0; }
   private:
     const irs::conn_data_t<float> &m_value;
     const float m_min;
     const float m_max;
-    bool m_alarm;
+    irs_u8 m_fail_cnt;
   };
   void clear_all_alarms();
 
