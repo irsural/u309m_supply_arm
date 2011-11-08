@@ -70,6 +70,9 @@ private:
   float m_temp_aux_time_const;
   bool m_operate;
   bool m_enable_saving_aux_th_ref;
+  bool m_th_base_start;
+  bool m_th_aux_start;
+  bool m_pid_reg_start;
 }; // supply_t
 
 } // namespace u309m

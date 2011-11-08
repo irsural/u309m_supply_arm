@@ -51,7 +51,10 @@ u309m::supply_t::supply_t(
   m_temp_aux_isodr(),
   m_temp_aux_time_const(0),
   m_operate(false),
-  m_enable_saving_aux_th_ref(true)
+  m_enable_saving_aux_th_ref(true),
+  m_th_base_start(false),
+  m_th_aux_start(false),
+  m_pid_reg_start(false)
 {
   mp_eth_data->resistance_code = mp_eeprom_data->resistance_code;
   m_ad5293_data.resistance_code = mp_eeprom_data->resistance_code;
@@ -354,16 +357,33 @@ void u309m::supply_t::tick()
   //  Вывод температуры и показаний АЦП
   if (m_timer.check())
   {
-    mp_eth_data->base_temp_data.value =
-      m_th_base_data.temperature_code * m_th_base.get_conv_koef();
-    mp_eth_data->base_temp_data.filtered_value =
-      fade(&m_temp_base_isodr.fd,
-      static_cast<float>(mp_eth_data->base_temp_data.value));
-    mp_eth_data->aux_temp_data.value = 
-      m_th_aux_data.temperature_code*m_th_aux.get_conv_koef();
-    mp_eth_data->aux_temp_data.filtered_value =
-      fade(&m_temp_aux_isodr.fd,
-      static_cast<float>(mp_eth_data->aux_temp_data.value));
+    if ((m_th_base_data.new_data_bit == 1) && (!m_th_base_start)) {
+      m_temp_base_isodr.fd.x1 = 
+        m_th_base_data.temperature_code * m_th_base.get_conv_koef();
+      m_temp_base_isodr.fd.y1 = 
+        m_th_base_data.temperature_code * m_th_base.get_conv_koef();
+      m_th_base_start = true;
+    } else if (m_th_base_start) {
+      mp_eth_data->base_temp_data.value =
+        m_th_base_data.temperature_code * m_th_base.get_conv_koef();
+      mp_eth_data->base_temp_data.filtered_value =
+        isodr(&m_temp_base_isodr,
+        static_cast<float>(mp_eth_data->base_temp_data.value));
+    }
+    
+    if ((m_th_aux_data.new_data_bit == 1) && (!m_th_aux_start)) {
+      m_temp_aux_isodr.fd.x1 = 
+        m_th_aux_data.temperature_code * m_th_aux.get_conv_koef();
+      m_temp_aux_isodr.fd.y1 = 
+        m_th_aux_data.temperature_code * m_th_aux.get_conv_koef();
+      m_th_aux_start = true;
+    } else if (m_th_aux_start) {
+      mp_eth_data->aux_temp_data.value = 
+        m_th_aux_data.temperature_code*m_th_aux.get_conv_koef();
+      mp_eth_data->aux_temp_data.filtered_value =
+        isodr(&m_temp_aux_isodr,
+        static_cast<float>(mp_eth_data->aux_temp_data.value));
+    }
 
     mp_eth_data->prev_adc_data.voltage_code =
       m_prev_adc_koef * m_adc102_data.voltage_code_A;
@@ -385,33 +405,49 @@ void u309m::supply_t::tick()
       mp_eth_data->aux_tr_data.temperature_ref;
   }
 
-  if (m_operate)
+  if ((m_operate) && (m_th_base_start) && (m_th_aux_start))
   {
     if (m_timer_reg.check())
     {
-      double base_pid_reg_data_in =
-        mp_eth_data->base_tr_data.temperature_ref -
-        mp_eth_data->base_temp_data.filtered_value;
-      m_temp_reg_data.voltage_code_A =
-        static_cast<irs_u16>(irs::pid_reg(&m_temp_base_pid_data,
-        base_pid_reg_data_in));
-      mp_eth_data->base_tr_data.dac_value =
-        m_temp_reg_data.voltage_code_A;
-      mp_eth_data->base_tr_data.int_val =
-        static_cast<irs_i32>(m_temp_base_pid_data.int_val*m_temp_base_pid_data.k*
-        m_temp_base_pid_data.ki);
-
-      double aux_pid_reg_data_in =
-        mp_eth_data->aux_tr_data.temperature_ref -
-        mp_eth_data->aux_temp_data.filtered_value;
-      m_temp_reg_data.voltage_code_B =
-        static_cast<irs_u16>(irs::pid_reg(&m_temp_aux_pid_data,
-        aux_pid_reg_data_in));
-      mp_eth_data->aux_tr_data.dac_value =
-        m_temp_reg_data.voltage_code_B;
-      mp_eth_data->aux_tr_data.int_val =
-        static_cast<irs_i32>(m_temp_aux_pid_data.int_val*m_temp_aux_pid_data.k*
-        m_temp_aux_pid_data.ki);
+      if (!m_pid_reg_start) {
+        double base_pid_reg_data_in =
+          mp_eth_data->base_tr_data.temperature_ref -
+          mp_eth_data->base_temp_data.filtered_value;
+        irs::pid_reg_sync(&m_temp_base_pid_data, base_pid_reg_data_in,
+           mp_eth_data->base_temp_data.filtered_value);
+          
+        double aux_pid_reg_data_in =
+          mp_eth_data->aux_tr_data.temperature_ref -
+          mp_eth_data->aux_temp_data.filtered_value;          
+        irs::pid_reg_sync(&m_temp_aux_pid_data, aux_pid_reg_data_in,
+           mp_eth_data->aux_temp_data.filtered_value);
+          
+        m_pid_reg_start = true;
+      } else {
+        double base_pid_reg_data_in =
+          mp_eth_data->base_tr_data.temperature_ref -
+          mp_eth_data->base_temp_data.filtered_value;
+        m_temp_reg_data.voltage_code_A =
+          static_cast<irs_u16>(irs::pid_reg(&m_temp_base_pid_data,
+          base_pid_reg_data_in));
+        mp_eth_data->base_tr_data.dac_value =
+          m_temp_reg_data.voltage_code_A;
+        mp_eth_data->base_tr_data.int_val =
+          static_cast<irs_i32>(m_temp_base_pid_data.int_val*m_temp_base_pid_data.k*
+          m_temp_base_pid_data.ki);
+  
+        double aux_pid_reg_data_in =
+          mp_eth_data->aux_tr_data.temperature_ref -
+          mp_eth_data->aux_temp_data.filtered_value;
+        m_temp_reg_data.voltage_code_B =
+          static_cast<irs_u16>(irs::pid_reg(&m_temp_aux_pid_data,
+          aux_pid_reg_data_in));
+        mp_eth_data->aux_tr_data.dac_value =
+          m_temp_reg_data.voltage_code_B;
+        mp_eth_data->aux_tr_data.int_val =
+          static_cast<irs_i32>(m_temp_aux_pid_data.int_val*m_temp_aux_pid_data.k*
+          m_temp_aux_pid_data.ki);
+      }
     }
   }
 }

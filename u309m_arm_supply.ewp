@@ -48,11 +48,11 @@
         <option>
           <name>Output variant</name>
           <version>0</version>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>Output description</name>
-          <state>Full formatting.</state>
+          <state>No specifier a, A.</state>
         </option>
         <option>
           <name>GOutputBinary</name>
@@ -641,7 +641,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$\u309m_arm_supply.icf</state>
+          <state>$PROJ_DIR$\user_generic_cortex.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
