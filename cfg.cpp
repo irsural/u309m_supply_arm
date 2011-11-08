@@ -123,19 +123,12 @@ u309m::cfg_t::cfg_t():
   m_eeprom_data(&m_eeprom)
 {
   if (m_eeprom.error()) {
-    m_eeprom_data.reset_to_default(sup_200V);
-    m_eeprom_data.reset_to_default(sup_20V);
-    m_eeprom_data.reset_to_default(sup_2V);
-    m_eeprom_data.reset_to_default(sup_1A);
-    m_eeprom_data.reset_to_default(sup_17A);
-    m_eth_data.reset_to_default(sup_200V);
-    m_eth_data.reset_to_default(sup_20V);
-    m_eth_data.reset_to_default(sup_2V);
-    m_eth_data.reset_to_default(sup_1A);
-    m_eth_data.reset_to_default(sup_17A);
+    m_eeprom_data.reset_to_default();
   }
-  m_eth_data.ip_0 = m_eeprom_data.ip_0;
+  
   m_REL_220V.set();
+  
+  m_eth_data.ip_0 = m_eeprom_data.ip_0;
   m_eth_data.ip_1 = m_eeprom_data.ip_1;
   m_eth_data.ip_2 = m_eeprom_data.ip_2;
   m_eth_data.ip_3 = m_eeprom_data.ip_3;

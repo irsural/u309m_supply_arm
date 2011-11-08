@@ -457,134 +457,118 @@ struct eeprom_data_t
     return index;
   }
 
-  void reset_to_default(supply_type_t a_supply_type)
+  void reset_to_default()
   {
     ip_0 = IP_0;
     ip_1 = IP_1;
     ip_2 = IP_2;
     ip_3 = IP_3;
-    switch(a_supply_type)
-    {
-      case sup_200V:
-      {
-        supply_200V.resistance_code = 976;
-        supply_200V.koef_adc_volt_prev = 0.259343;
-        supply_200V.koef_adc_volt_fin = 0.292788;
-        supply_200V.koef_reg_prev = 297.572;
-        supply_200V.koef_reg_fin = 263.678;
+    
+    supply_200V.resistance_code = 976;
+    supply_200V.koef_adc_volt_prev = 0.259343;
+    supply_200V.koef_adc_volt_fin = 0.292788;
+    supply_200V.koef_reg_prev = 297.572;
+    supply_200V.koef_reg_fin = 263.678;
 
-        supply_200V.temp_base_ref = 70.;
-        supply_200V.temp_base_k = 1500.;
-        supply_200V.temp_base_ki = 0.005;
-        supply_200V.temp_base_kd = 50.;
-        supply_200V.temp_base_prop_koef = 0.;
-        supply_200V.temp_base_time_const = 20.;
+    supply_200V.temp_base_ref = 70.;
+    supply_200V.temp_base_k = 1500.;
+    supply_200V.temp_base_ki = 0.005;
+    supply_200V.temp_base_kd = 50.;
+    supply_200V.temp_base_prop_koef = 0.;
+    supply_200V.temp_base_time_const = 20.;
 
-        supply_200V.temp_aux_ref = 70.;
-        supply_200V.temp_aux_k = 15000.;
-        supply_200V.temp_aux_ki = 0.005;
-        supply_200V.temp_aux_kd = 50.;
-        supply_200V.temp_aux_prop_koef = 0.;
-        supply_200V.temp_aux_time_const = 20.;
-        irs::mlog() << irsm(" eeprom supply_200V") << endl;
-      } break;
-      case sup_20V:
-      {
-        supply_20V.resistance_code = 463;
-        supply_20V.koef_adc_volt_prev = 0.029538188;
-        supply_20V.koef_adc_volt_fin = 0.025330844;
-        supply_20V.koef_reg_prev = 2610.304968;
-        supply_20V.koef_reg_fin = 3043.865432;
+    supply_200V.temp_aux_ref = 70.;
+    supply_200V.temp_aux_k = 15000.;
+    supply_200V.temp_aux_ki = 0.005;
+    supply_200V.temp_aux_kd = 50.;
+    supply_200V.temp_aux_prop_koef = 0.;
+    supply_200V.temp_aux_time_const = 20.;
+    irs::mlog() << irsm(" eeprom supply_200V") << endl;
 
-        supply_20V.temp_base_ref = 60.;
-        supply_20V.temp_base_k = 7500.;
-        supply_20V.temp_base_ki = 0.0015;
-        supply_20V.temp_base_kd = 5.;
-        supply_20V.temp_base_prop_koef = 0.3;
-        supply_20V.temp_base_time_const = 5.;
+    supply_20V.resistance_code = 463;
+    supply_20V.koef_adc_volt_prev = 0.029538188;
+    supply_20V.koef_adc_volt_fin = 0.025330844;
+    supply_20V.koef_reg_prev = 2610.304968;
+    supply_20V.koef_reg_fin = 3043.865432;
 
-        supply_20V.temp_aux_ref = 60.;
-        supply_20V.temp_aux_k = 15000.;
-        supply_20V.temp_aux_ki = 0.0015;
-        supply_20V.temp_aux_kd = 5.;
-        supply_20V.temp_aux_prop_koef = 0.3;
-        supply_20V.temp_aux_time_const = 5.;
-        irs::mlog() << irsm(" eeprom supply_20V") << endl;
-      } break;
-      case sup_2V:
-      {
-        supply_2V.resistance_code = 463;
-        supply_2V.koef_adc_volt_prev = 0.00962346;
-        supply_2V.koef_adc_volt_fin = 0.006859275;
-        supply_2V.koef_reg_prev = 15999.2186;
-        supply_2V.koef_reg_fin = 22446.6649;
+    supply_20V.temp_base_ref = 60.;
+    supply_20V.temp_base_k = 7500.;
+    supply_20V.temp_base_ki = 0.0015;
+    supply_20V.temp_base_kd = 5.;
+    supply_20V.temp_base_prop_koef = 0.3;
+    supply_20V.temp_base_time_const = 5.;
 
-        supply_2V.temp_base_ref = 60.;
-        supply_2V.temp_base_k = 7500.;
-        supply_2V.temp_base_ki = 0.0015;
-        supply_2V.temp_base_kd = 5.;
-        supply_2V.temp_base_prop_koef = 0.3;
-        supply_2V.temp_base_time_const = 5.;
+    supply_20V.temp_aux_ref = 60.;
+    supply_20V.temp_aux_k = 15000.;
+    supply_20V.temp_aux_ki = 0.0015;
+    supply_20V.temp_aux_kd = 5.;
+    supply_20V.temp_aux_prop_koef = 0.3;
+    supply_20V.temp_aux_time_const = 5.;
+    irs::mlog() << irsm(" eeprom supply_20V") << endl;
 
-        supply_2V.temp_aux_ref = 60.;
-        supply_2V.temp_aux_k = 15000.;
-        supply_2V.temp_aux_ki = 0.0015;
-        supply_2V.temp_aux_kd = 5.;
-        supply_2V.temp_aux_prop_koef = 0.3;
-        supply_2V.temp_aux_time_const = 5.;
-        irs::mlog() << irsm(" eeprom supply_2V") << endl;
-      } break;
-      case sup_1A:
-      {
-        supply_1A.resistance_code = 512;
-        supply_1A.koef_adc_volt_prev = 0.004820137;
-        supply_1A.koef_adc_volt_fin = 0.001420473;
-        supply_1A.koef_reg_prev = 15998.82792;
-        supply_1A.koef_reg_fin = 54289.35609;
+    supply_2V.resistance_code = 463;
+    supply_2V.koef_adc_volt_prev = 0.00962346;
+    supply_2V.koef_adc_volt_fin = 0.006859275;
+    supply_2V.koef_reg_prev = 15999.2186;
+    supply_2V.koef_reg_fin = 22446.6649;
 
-        supply_1A.temp_base_ref = 60.;
-        supply_1A.temp_base_k = 7500.;
-        supply_1A.temp_base_ki = 0.0015;
-        supply_1A.temp_base_kd = 5.;
-        supply_1A.temp_base_prop_koef = 0.3;
-        supply_1A.temp_base_time_const = 5.;
+    supply_2V.temp_base_ref = 60.;
+    supply_2V.temp_base_k = 7500.;
+    supply_2V.temp_base_ki = 0.0015;
+    supply_2V.temp_base_kd = 5.;
+    supply_2V.temp_base_prop_koef = 0.3;
+    supply_2V.temp_base_time_const = 5.;
 
-        supply_1A.temp_aux_ref = 60.;
-        supply_1A.temp_aux_k = 15000.;
-        supply_1A.temp_aux_ki = 0.0015;
-        supply_1A.temp_aux_kd = 5.;
-        supply_1A.temp_aux_prop_koef = 0.3;
-        supply_1A.temp_aux_time_const = 5.;
-        irs::mlog() << irsm(" eeprom supply_1A") << endl;
-      } break;
-      case sup_17A:
-      {
-        supply_17A.resistance_code = 512;
-        supply_17A.koef_adc_volt_prev = 0.004798729;
-        supply_17A.koef_adc_volt_fin = 0.020719409;
-        supply_17A.koef_reg_prev = 15996.48429;
-        supply_17A.koef_reg_fin = 3704.873815;
+    supply_2V.temp_aux_ref = 60.;
+    supply_2V.temp_aux_k = 15000.;
+    supply_2V.temp_aux_ki = 0.0015;
+    supply_2V.temp_aux_kd = 5.;
+    supply_2V.temp_aux_prop_koef = 0.3;
+    supply_2V.temp_aux_time_const = 5.;
+    irs::mlog() << irsm(" eeprom supply_2V") << endl;
 
-        supply_17A.temp_base_ref = 60.;
-        supply_17A.temp_base_k = 7500.;
-        supply_17A.temp_base_ki = 0.0015;
-        supply_17A.temp_base_kd = 5.;
-        supply_17A.temp_base_prop_koef = 0.3;
-        supply_17A.temp_base_time_const = 5.;
+    supply_1A.resistance_code = 512;
+    supply_1A.koef_adc_volt_prev = 0.004820137;
+    supply_1A.koef_adc_volt_fin = 0.001420473;
+    supply_1A.koef_reg_prev = 15998.82792;
+    supply_1A.koef_reg_fin = 54289.35609;
 
-        supply_17A.temp_aux_ref = 60.;
-        supply_17A.temp_aux_k = 15000.;
-        supply_17A.temp_aux_ki = 0.0015;
-        supply_17A.temp_aux_kd = 5.;
-        supply_17A.temp_aux_prop_koef = 0.3;
-        supply_17A.temp_aux_time_const = 5.;
-        irs::mlog() << irsm(" eeprom supply_17A") << endl;
-      } break;
-      default:
-      {
-        IRS_LIB_ASSERT_MSG("неверно указан тип источника");
-      }
-    }
+    supply_1A.temp_base_ref = 60.;
+    supply_1A.temp_base_k = 7500.;
+    supply_1A.temp_base_ki = 0.0015;
+    supply_1A.temp_base_kd = 5.;
+    supply_1A.temp_base_prop_koef = 0.3;
+    supply_1A.temp_base_time_const = 5.;
+
+    supply_1A.temp_aux_ref = 60.;
+    supply_1A.temp_aux_k = 15000.;
+    supply_1A.temp_aux_ki = 0.0015;
+    supply_1A.temp_aux_kd = 5.;
+    supply_1A.temp_aux_prop_koef = 0.3;
+    supply_1A.temp_aux_time_const = 5.;
+    irs::mlog() << irsm(" eeprom supply_1A") << endl;
+
+    supply_17A.resistance_code = 512;
+    supply_17A.koef_adc_volt_prev = 0.004798729;
+    supply_17A.koef_adc_volt_fin = 0.020719409;
+    supply_17A.koef_reg_prev = 15996.48429;
+    supply_17A.koef_reg_fin = 3704.873815;
+
+    supply_17A.temp_base_ref = 60.;
+    supply_17A.temp_base_k = 7500.;
+    supply_17A.temp_base_ki = 0.0015;
+    supply_17A.temp_base_kd = 5.;
+    supply_17A.temp_base_prop_koef = 0.3;
+    supply_17A.temp_base_time_const = 5.;
+
+    supply_17A.temp_aux_ref = 60.;
+    supply_17A.temp_aux_k = 15000.;
+    supply_17A.temp_aux_ki = 0.0015;
+    supply_17A.temp_aux_kd = 5.;
+    supply_17A.temp_aux_prop_koef = 0.3;
+    supply_17A.temp_aux_time_const = 5.;
+    irs::mlog() << irsm(" eeprom supply_17A") << endl;
+
     upper_level_check = 1;
     izm_th_spi_enable = 1;
   }
@@ -741,7 +725,7 @@ struct eth_data_t {
   control_data_t control;         //  12 bytes
   //---------------------------------------------
   //                          Итого:  660 байт
-
+ 
   eth_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
     irs_uarc* ap_size = IRS_NULL)
   {
@@ -768,133 +752,9 @@ struct eth_data_t {
     index = supply_2V.connect(ap_data, index);
     index = supply_1A.connect(ap_data, index);
     index = supply_17A.connect(ap_data, index);
-    index = control.connect(ap_data, index);
-
+    index = control.connect(ap_data, index);   
+   
     return index;
-  }
-  void reset_to_default(supply_type_t a_supply_type)
-  {
-    ip_0 = 192;
-    ip_1 = 168;
-    ip_2 = 0;
-    ip_3 = 211;
-    switch(a_supply_type)
-    {
-      case sup_200V:
-      {
-        supply_200V.prev_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_200V.fin_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_200V.prev_dac_data.koef = 2633;
-        supply_200V.fin_dac_data.koef = 2702;
-
-        supply_200V.base_tr_data.temperature_ref = 60;
-        supply_200V.base_tr_data.temp_k = 15000;
-        supply_200V.base_tr_data.temp_ki = 0.00075;
-        supply_200V.base_tr_data.temp_kd = 200;
-        supply_200V.base_tr_data.temp_prop_koef = 0;
-        supply_200V.base_tr_data.temp_time_const = 20;
-
-        supply_200V.aux_tr_data.temperature_ref = 60;
-        supply_200V.aux_tr_data.temp_k = 15000;
-        supply_200V.aux_tr_data.temp_ki = 0.00075;
-        supply_200V.aux_tr_data.temp_kd = 200;
-        supply_200V.aux_tr_data.temp_prop_koef = 0;
-        supply_200V.aux_tr_data.temp_time_const = 20;
-        irs::mlog() << irsm(" eeprom supply_200V") << endl;
-      } break;
-      case sup_20V:
-      {
-        supply_20V.prev_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_20V.fin_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_20V.prev_dac_data.koef = 2633;
-        supply_20V.fin_dac_data.koef = 2702;
-
-        supply_20V.base_tr_data.temperature_ref = 60;
-        supply_20V.base_tr_data.temp_k = 15000;
-        supply_20V.base_tr_data.temp_ki = 0.00075;
-        supply_20V.base_tr_data.temp_kd = 200;
-        supply_20V.base_tr_data.temp_prop_koef = 0;
-        supply_20V.base_tr_data.temp_time_const = 20;
-
-        supply_20V.aux_tr_data.temperature_ref = 60;
-        supply_20V.aux_tr_data.temp_k = 15000;
-        supply_20V.aux_tr_data.temp_ki = 0.00075;
-        supply_20V.aux_tr_data.temp_kd = 200;
-        supply_20V.aux_tr_data.temp_prop_koef = 0;
-        supply_20V.aux_tr_data.temp_time_const = 20;
-        irs::mlog() << irsm(" eeprom supply_20V") << endl;
-      } break;
-      case sup_2V:
-      {
-        supply_2V.prev_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_2V.fin_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_2V.prev_dac_data.koef = 2633;
-        supply_2V.fin_dac_data.koef = 2702;
-
-        supply_2V.base_tr_data.temperature_ref = 60;
-        supply_2V.base_tr_data.temp_k = 15000;
-        supply_2V.base_tr_data.temp_ki = 0.00075;
-        supply_2V.base_tr_data.temp_kd = 200;
-        supply_2V.base_tr_data.temp_prop_koef = 0;
-        supply_2V.base_tr_data.temp_time_const = 20;
-
-        supply_2V.aux_tr_data.temperature_ref = 60;
-        supply_2V.aux_tr_data.temp_k = 15000;
-        supply_2V.aux_tr_data.temp_ki = 0.00075;
-        supply_2V.aux_tr_data.temp_kd = 200;
-        supply_2V.aux_tr_data.temp_prop_koef = 0;
-        supply_2V.aux_tr_data.temp_time_const = 20;
-        irs::mlog() << irsm(" eeprom supply_2V") << endl;
-      } break;
-      case sup_1A:
-      {
-        supply_1A.prev_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_1A.fin_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_1A.prev_dac_data.koef = 2633;
-        supply_1A.fin_dac_data.koef = 2702;
-
-        supply_1A.base_tr_data.temperature_ref = 60;
-        supply_1A.base_tr_data.temp_k = 15000;
-        supply_1A.base_tr_data.temp_ki = 0.00075;
-        supply_1A.base_tr_data.temp_kd = 200;
-        supply_1A.base_tr_data.temp_prop_koef = 0;
-        supply_1A.base_tr_data.temp_time_const = 20;
-
-        supply_1A.aux_tr_data.temperature_ref = 60;
-        supply_1A.aux_tr_data.temp_k = 15000;
-        supply_1A.aux_tr_data.temp_ki = 0.00075;
-        supply_1A.aux_tr_data.temp_kd = 200;
-        supply_1A.aux_tr_data.temp_prop_koef = 0;
-        supply_1A.aux_tr_data.temp_time_const = 20;
-        irs::mlog() << irsm(" eeprom supply_1A") << endl;
-      } break;
-      case sup_17A:
-      {
-        supply_17A.prev_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_17A.fin_adc_data.koef = (4.096/1024)*(23.9/3.9)*1.2;
-        supply_17A.prev_dac_data.koef = 2633;
-        supply_17A.fin_dac_data.koef = 2702;
-
-        supply_17A.base_tr_data.temperature_ref = 60;
-        supply_17A.base_tr_data.temp_k = 15000;
-        supply_17A.base_tr_data.temp_ki = 0.00075;
-        supply_17A.base_tr_data.temp_kd = 200;
-        supply_17A.base_tr_data.temp_prop_koef = 0;
-        supply_17A.base_tr_data.temp_time_const = 20;
-
-        supply_17A.aux_tr_data.temperature_ref = 60;
-        supply_17A.aux_tr_data.temp_k = 15000;
-        supply_17A.aux_tr_data.temp_ki = 0.00075;
-        supply_17A.aux_tr_data.temp_kd = 200;
-        supply_17A.aux_tr_data.temp_prop_koef = 0;
-        supply_17A.aux_tr_data.temp_time_const = 20;
-        irs::mlog() << irsm(" eeprom supply_17A") << endl;
-      } break;
-      default:
-      {
-        IRS_LIB_ASSERT_MSG("неверно указан тип источника");
-      }
-    }
   }
 };
 
