@@ -190,7 +190,7 @@ void u309m::app_t::tick()
   {
     case rele_check_mode:
     {
-      if (m_SYM_2V != mp_cfg->eth_data()->rele_ext.SYM_2V)
+      if (m_SYM_2V != static_cast<bool>(mp_cfg->eth_data()->rele_ext.SYM_2V))
       {
         if (m_SYM_OFF)
         {
@@ -210,7 +210,7 @@ void u309m::app_t::tick()
           }
         }
       }
-      if (m_SYM_20V != mp_cfg->eth_data()->rele_ext.SYM_20V)
+      if (m_SYM_20V != static_cast<bool>(mp_cfg->eth_data()->rele_ext.SYM_20V))
       {
         if (m_SYM_OFF)
         {
@@ -230,7 +230,8 @@ void u309m::app_t::tick()
           }
         }
       }
-      if (m_SYM_200V != mp_cfg->eth_data()->rele_ext.SYM_200V)
+      if (m_SYM_200V != 
+        static_cast<bool>(mp_cfg->eth_data()->rele_ext.SYM_200V))
       {
         if (m_SYM_OFF)
         {
@@ -250,7 +251,7 @@ void u309m::app_t::tick()
           }
         }
       }
-      if (m_KZ_2V != mp_cfg->eth_data()->rele_ext.KZ_2V)
+      if (m_KZ_2V != static_cast<bool>(mp_cfg->eth_data()->rele_ext.KZ_2V))
       {
         if (m_SYM_OFF)
         {
@@ -286,7 +287,7 @@ void u309m::app_t::tick()
         mp_cfg->rele_ext_pins()->REL_220V->clear();
       }
 
-      if (mp_cfg->eth_data()->rele_ext.SYM_OFF != m_SYM_OFF)
+      if (static_cast<bool>(mp_cfg->eth_data()->rele_ext.SYM_OFF) != m_SYM_OFF)
       {
         m_SYM_OFF = mp_cfg->eth_data()->rele_ext.SYM_OFF;
         if (m_SYM_OFF)
@@ -710,7 +711,8 @@ void u309m::meas_comm_th_t::tick()
     m_data.th4_value = m_th4_data.temperature_code * m_th4.get_conv_koef();
     m_data.th5_value = m_th5_data.temperature_code * m_th5.get_conv_koef();
 
-    if (m_izm_th_spi_enable != m_eth_izm_th_spi_enable) {
+    if (m_izm_th_spi_enable != static_cast<bool>(m_eth_izm_th_spi_enable)) 
+    {
       m_izm_th_spi_enable = m_eth_izm_th_spi_enable;
       m_ee_izm_th_spi_enable = m_izm_th_spi_enable;
       if (m_izm_th_spi_enable) {

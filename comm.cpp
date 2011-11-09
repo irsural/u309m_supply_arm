@@ -467,7 +467,7 @@ void u309m::meas_comm_t::tick()
       }
       else
       {
-        if (m_comm_on != mp_meas_comm_data->on)
+        if (m_comm_on != static_cast<bool>(mp_meas_comm_data->on))
         {
           if (m_operate)
           {
@@ -482,7 +482,7 @@ void u309m::meas_comm_t::tick()
         }
         if (m_comm_on & m_operate)
         {
-          if (m_command_apply != mp_meas_comm_data->apply)
+          if (m_command_apply != static_cast<bool>(mp_meas_comm_data->apply))
           {
             m_command_apply = mp_meas_comm_data->apply;
             if (m_command_apply)
@@ -821,7 +821,7 @@ void u309m::supply_comm_t::tick()
   mp_supply_comm_data->error = m_error;
 
   bool plis_reset_change =
-    (m_plis_reset != mp_supply_comm_data->reset);
+    (m_plis_reset != static_cast<bool>(mp_supply_comm_data->reset));
   if (plis_reset_change) {
     m_plis_reset = mp_supply_comm_data->reset;
     if (m_plis_reset) {
@@ -884,7 +884,7 @@ void u309m::supply_comm_t::tick()
       }
       else
       {
-        if (m_command_apply != mp_supply_comm_data->apply)
+        if (m_command_apply != static_cast<bool>(mp_supply_comm_data->apply))
         {
           if (m_operate)
           {

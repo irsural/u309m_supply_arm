@@ -102,8 +102,8 @@ private:
   void clear_all_alarms();
 
   cfg_t* mp_cfg;
-  supply_t m_supply_20V;
   supply_t m_supply_200V;
+  supply_t m_supply_20V;
   supply_t m_supply_2V;
   supply_t m_supply_1A;
   supply_t m_supply_17A;
