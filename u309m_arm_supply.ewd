@@ -318,7 +318,7 @@
         <debug>1</debug>
         <option>
           <name>JLinkSpeed</name>
-          <state>100</state>
+          <state>32</state>
         </option>
         <option>
           <name>CCJLinkDoLogfile</name>
@@ -436,7 +436,7 @@
         </option>
         <option>
           <name>CCCatchMMERR</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCCatchNOCPERR</name>
@@ -452,7 +452,7 @@
         </option>
         <option>
           <name>CCCatchBUSERR</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCCatchINTERR</name>
@@ -460,7 +460,7 @@
         </option>
         <option>
           <name>CCCatchHARDERR</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCCatchDummy</name>
@@ -692,7 +692,7 @@
         <debug>1</debug>
         <option>
           <name>CRDIDriverDll</name>
-          <state>Browse to your RDI driver</state>
+          <state>###Uninitialized###</state>
         </option>
         <option>
           <name>CRDILogFileCheck</name>

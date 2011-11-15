@@ -3,8 +3,7 @@
 
 #include <irsdefs.h>
 
-#include <irsnetdefs.h>
-
+#include <mxdata.h>
 #include "privatecfg.h"
 
 #include <irsfinal.h>
@@ -70,6 +69,7 @@ struct supply_comm_data_t
   irs::bit_data_t on;
   irs::bit_data_t error;
   irs::bit_data_t reset;
+  irs::bit_data_t debug;
 
   supply_comm_data_t(irs::mxdata_t *ap_data = IRS_NULL,
     irs_uarc a_index = 0, irs_uarc* ap_size = IRS_NULL)
@@ -93,6 +93,7 @@ struct supply_comm_data_t
     on.connect(ap_data, index, 3);
     error.connect(ap_data, index, 4);
     reset.connect(ap_data, index, 5);
+    debug.connect(ap_data, index, 7);
     index++;
 
     return index;
@@ -109,6 +110,7 @@ struct meas_comm_data_t
   irs::bit_data_t on;
   irs::bit_data_t error;
   irs::bit_data_t reset;
+  irs::bit_data_t debug;
 
   meas_comm_data_t(irs::mxdata_t *ap_data = IRS_NULL,
     irs_uarc a_index = 0, irs_uarc* ap_size = IRS_NULL)
@@ -131,6 +133,7 @@ struct meas_comm_data_t
     on.connect(ap_data, index, 2);
     error.connect(ap_data, index, 3);
     reset.connect(ap_data, index, 4);
+    debug.connect(ap_data, index, 7);
     index++;
 
     return index;
@@ -427,6 +430,8 @@ struct eeprom_data_t
   irs::conn_data_t<irs_u32> options;
   irs::bit_data_t upper_level_check;
   irs::bit_data_t izm_th_spi_enable;
+  irs::bit_data_t supply_comm_debug;
+  irs::bit_data_t meas_comm_debug;
 
   eeprom_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
     irs_uarc* ap_size = IRS_NULL)
@@ -452,6 +457,8 @@ struct eeprom_data_t
 
     upper_level_check.connect(ap_data, index, 0);
     izm_th_spi_enable.connect(ap_data, index, 1);
+    supply_comm_debug.connect(ap_data, index, 2);
+    meas_comm_debug.connect(ap_data, index, 3);
     index = options.connect(ap_data, index);
 
     return index;
@@ -463,7 +470,7 @@ struct eeprom_data_t
     ip_1 = IP_1;
     ip_2 = IP_2;
     ip_3 = IP_3;
-    
+
     supply_200V.resistance_code = 976;
     supply_200V.koef_adc_volt_prev = 0.259343;
     supply_200V.koef_adc_volt_fin = 0.292788;
@@ -571,6 +578,8 @@ struct eeprom_data_t
 
     upper_level_check = 1;
     izm_th_spi_enable = 1;
+    supply_comm_debug = 0;
+    meas_comm_debug = 0;
   }
 }; // eeprom_data_t
 
@@ -725,7 +734,7 @@ struct eth_data_t {
   control_data_t control;         //  12 bytes
   //---------------------------------------------
   //                          Итого:  660 байт
- 
+
   eth_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
     irs_uarc* ap_size = IRS_NULL)
   {
@@ -752,8 +761,8 @@ struct eth_data_t {
     index = supply_2V.connect(ap_data, index);
     index = supply_1A.connect(ap_data, index);
     index = supply_17A.connect(ap_data, index);
-    index = control.connect(ap_data, index);   
-   
+    index = control.connect(ap_data, index);
+
     return index;
   }
 };

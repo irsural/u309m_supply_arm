@@ -12,12 +12,10 @@
 #include <irsnetdefs.h>
 #include <irstcpip.h>
 #include <hardflowg.h>
-#include <irsmbus.h>
-#include <irsmem.h>
 #include <armflash.h>
+#include <irsdev.h>
 
 #include "demux.h"
-#include "data.h"
 
 #include <irsfinal.h>
 
@@ -39,6 +37,29 @@ struct plis_pins_t {
   {
   }
 };  //  plis_pins_t
+
+struct comm_control_bits_t {
+  irs::bit_data_t& apply;
+  irs::bit_data_t& on;
+  irs::bit_data_t& error;
+  irs::bit_data_t& busy;
+  irs::bit_data_t& ready;
+
+  comm_control_bits_t(
+    irs::bit_data_t& a_apply,
+    irs::bit_data_t& a_on,
+    irs::bit_data_t& a_error,
+    irs::bit_data_t& a_busy,
+    irs::bit_data_t& a_ready
+  ):
+    apply(a_apply),
+    on(a_on),
+    error(a_error),
+    busy(a_busy),
+    ready(a_ready)
+  {
+  }
+};  //  comm_control_bits_t
 
 struct meas_comm_pins_t {
   irs::gpio_pin_t* cs;
@@ -101,8 +122,6 @@ struct supply_pins_t {
 }; // supply_pins_t
 
 struct command_pins_t {
-  meas_comm_pins_t* meas_comm;
-  supply_comm_pins_t* supply_comm;
   supply_pins_t* supply_200V;
   supply_pins_t* supply_20V;
   supply_pins_t* supply_2V;
@@ -110,16 +129,12 @@ struct command_pins_t {
   supply_pins_t* supply_17A;
 
   command_pins_t(
-    meas_comm_pins_t* ap_meas_comm_pins,
-    supply_comm_pins_t* ap_supply_comm_pins,
     supply_pins_t* ap_supply_200V_pins,
     supply_pins_t* ap_supply_20V_pins,
     supply_pins_t* ap_supply_2V_pins,
     supply_pins_t* ap_supply_1A_pins,
     supply_pins_t* ap_supply_17A_pins
   ):
-    meas_comm(ap_meas_comm_pins),
-    supply_comm(ap_supply_comm_pins),
     supply_200V(ap_supply_200V_pins),
     supply_20V(ap_supply_20V_pins),
     supply_2V(ap_supply_2V_pins),
@@ -212,34 +227,17 @@ public:
   irs::arm::arm_spi_t* spi_meas_comm_plis();
   irs::arm::arm_spi_t* spi_supply_comm_plis();
   irs::arm::arm_spi_t* spi_general_purpose();
-  eth_data_t* eth_data();
-  eeprom_data_t* eeprom_data();
+  irs::mxdata_t* eeprom();
+  bool eeprom_error();
   irs::hardflow::simple_udp_flow_t* hardflow();
   rele_ext_pins_t* rele_ext_pins();
   meas_comm_th_pins_t* meas_comm_th_pins();
   void izm_th_spi_enable_pin_set(bool a_value);
-  void tick();
-
+  plis_pins_t& supply_comm_pins();
+  plis_pins_t& meas_comm_pins();
+  irs::pwm_gen_t& supply_tact_gen();
+  irs::pwm_gen_t& meas_tact_gen();
 private:
-  class plis_ready_t
-  {
-  public:
-    plis_ready_t(irs::gpio_pin_t* ap_cfg_done_pin, counter_t a_counter):
-      m_timer(a_counter)
-    {
-      m_timer.start();
-      while(!ap_cfg_done_pin->pin())
-      {
-        if (m_timer.check()) {
-          irs::mlog() << "PLIS not configured" << endl;
-          break;
-        }
-      }
-    }
-  private:
-    irs::timer_t m_timer;
-  }; // plis_ready_t
-
   enum {
     CS_TR_3 = 0,
     CS_TR_4 = 1,
@@ -293,17 +291,6 @@ private:
     PTC_17A_channel = 0
   };
 
-  irs::arm::io_pin_t m_supply_comm_cfg_done;
-  plis_ready_t m_ipt_plis_ready;
-  irs::arm::io_pin_t m_meas_comm_cfg_done;
-  plis_ready_t m_meas_plis_ready;
-  irs_u32 m_f_osc;
-  irs::arm::adc_stellaris_t m_adc;
-  irs_u32 m_spi_bitrate;
-  irs_u8 m_spi_buf_size;
-  irs::arm::arm_spi_t m_spi_meas_comm_plis;
-  irs::arm::arm_spi_t m_spi_general_purpose;
-
   irs::arm::io_pin_t m_spi_cs_code_0;
   irs::arm::io_pin_t m_spi_cs_code_1;
   irs::arm::io_pin_t m_spi_cs_code_2;
@@ -313,33 +300,23 @@ private:
   spi_demux_t::spi_demux_cs_data_t m_spi_demux_cs_data;
   spi_demux_t m_spi_demux;
 
+  irs::arm::io_pin_t m_supply_comm_cfg_done;
+  irs::arm::io_pin_t m_supply_comm_reset;
+  plis_pins_t m_supply_comm_pins;
+
+  irs::arm::io_pin_t m_meas_comm_cfg_done;
+  irs::arm::io_pin_t m_meas_comm_cs;
+  irs::arm::io_pin_t m_meas_comm_reset;
+  plis_pins_t m_meas_comm_pins;
+
+  irs::arm::io_pin_t m_izm_th_enable;
+  meas_comm_th_pins_t m_meas_comm_th_pins;
+
   irs::arm::io_pin_t m_dac_cs_code_0;
   irs::arm::io_pin_t m_dac_cs_code_1;
   irs::arm::io_pin_t m_dac_cs_code_2;
   dac_demux_t::dac_demux_cs_data_t m_dac_demux_cs_data;
   dac_demux_t m_dac_demux;
-
-  mxmac_t m_local_mac;
-  irs::arm::arm_ethernet_t m_arm_eth;
-  mxip_t m_local_ip;
-  irs_u16 m_local_port;
-  mxip_t m_dest_ip;
-  irs_u16 m_dest_port;
-  irs::simple_tcpip_t m_tcpip;
-  irs::hardflow::simple_udp_flow_t m_simple_hardflow;
-  irs::modbus_server_t m_modbus_server;
-  eth_data_t m_eth_data;
-
-  irs::arm::io_pin_t m_izm_th_enable;
-  irs::arm::io_pin_t m_meas_comm_cs;
-  irs::arm::io_pin_t m_meas_comm_reset;
-  irs::arm::io_pin_t m_meas_comm_apply;
-  irs::arm::io_pin_t m_meas_comm_error;
-  meas_comm_pins_t m_meas_comm_pins;
-  meas_comm_th_pins_t m_meas_comm_th_pins;
-
-  irs::arm::io_pin_t m_supply_comm_reset;
-  supply_comm_pins_t m_supply_comm_pins;
 
   supply_pins_t m_supply_200V_pins;
   supply_pins_t m_supply_20V_pins;
@@ -362,9 +339,28 @@ private:
   irs::arm::io_pin_t m_SYM_OFF;
   irs::arm::io_pin_t m_SYM_OFF_TEST;
   rele_ext_pins_t m_rele_ext_pins;
-  irs::eeprom_command_t::size_type m_eeprom_size;
+
+  irs_u32 m_f_osc;
+  irs::arm::adc_stellaris_t m_adc;
+  irs_u32 m_spi_bitrate;
+  irs_u8 m_spi_buf_size;
+  irs::arm::arm_spi_t m_spi_meas_comm_plis;
+  irs::arm::arm_spi_t m_spi_general_purpose;
+
+  irs::arm::gptm_generator_t m_supply_tact_gen;
+  irs::arm::gptm_generator_t m_meas_tact_gen;
+
+  mxmac_t m_local_mac;
+  irs::arm::arm_ethernet_t m_arm_eth;
+  mxip_t m_local_ip;
+  irs_u16 m_local_port;
+  mxip_t m_dest_ip;
+  irs_u16 m_dest_port;
+  irs::simple_tcpip_t m_tcpip;
+  irs::hardflow::simple_udp_flow_t m_simple_hardflow;
+
+  irs::arm::flash_t::size_type m_eeprom_size;
   irs::arm::flash_t m_eeprom;
-  eeprom_data_t m_eeprom_data;
 };
 
 } // namespace u309m

@@ -83,7 +83,7 @@
         </option>
         <option>
           <name>OGProductVersion</name>
-          <state>5.10.0.159</state>
+          <state>5.50.0.51907</state>
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
@@ -314,7 +314,7 @@
         </option>
         <option>
           <name>CCOptLevel</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>CCOptStrategy</name>
@@ -323,7 +323,7 @@
         </option>
         <option>
           <name>CCOptLevelSlave</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>CompilerMisraRules98</name>
@@ -519,7 +519,7 @@
         </option>
         <option>
           <name>AOutputFile</name>
-          <state>$FILE_BNAME$.o</state>
+          <state></state>
         </option>
         <option>
           <name>AMultibyteSupport</name>
@@ -610,10 +610,6 @@
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
-          <name>IlinkOutputFile</name>
-          <state>u309m_arm_supply.out</state>
-        </option>
-        <option>
           <name>IlinkLibIOConfig</name>
           <state>1</state>
         </option>
@@ -624,6 +620,10 @@
         <option>
           <name>IlinkInputFileSlave</name>
           <state>0</state>
+        </option>
+        <option>
+          <name>IlinkOutputFile</name>
+          <state>$PROJ_FNAME$.out</state>
         </option>
         <option>
           <name>IlinkDebugInfoEnable</name>
@@ -659,7 +659,7 @@
         </option>
         <option>
           <name>IlinkMapFile</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IlinkLogFile</name>
@@ -687,7 +687,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$\user_generic_cortex.icf</state>
+          <state>C:\P-CAD WORK\&#x41F;&#x440;&#x43e;&#x435;&#x43A;&#x442;&#x44B;\&#x423;309&#x41C;\&#x418;&#x441;&#x442;&#x43e;&#x447;&#x43D;&#x438;&#x43A; &#x442;&#x43e;&#x43A;&#x430;\&#x41F;&#x440;&#x43e;&#x433;&#x440;&#x430;&#x43C;&#x43C;&#x430;\ARM\u309m_supply_arm\u309m_arm_supply.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -938,7 +938,7 @@
         </option>
         <option>
           <name>Input description</name>
-          <state>Full formatting.</state>
+          <state></state>
         </option>
         <option>
           <name>Output variant</name>
@@ -947,7 +947,7 @@
         </option>
         <option>
           <name>Output description</name>
-          <state>Full formatting.</state>
+          <state></state>
         </option>
         <option>
           <name>GOutputBinary</name>
@@ -974,11 +974,11 @@
         </option>
         <option>
           <name>RTDescription</name>
-          <state>Use the normal configuration of the C/C++ runtime library. No locale interface, C locale, no file descriptor support, no multibytes in printf and scanf, and no hex floats in strtod.</state>
+          <state></state>
         </option>
         <option>
           <name>OGProductVersion</name>
-          <state>5.10.0.159</state>
+          <state>5.50.0.51907</state>
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
@@ -994,7 +994,7 @@
         </option>
         <option>
           <name>OGChipSelectEditMenu</name>
-          <state>default	None</state>
+          <state></state>
         </option>
         <option>
           <name>GenLowLevelInterface</name>
@@ -1028,7 +1028,7 @@
         </option>
         <option>
           <name>RTConfigPath2</name>
-          <state>$TOOLKIT_DIR$\INC\c\DLib_Config_Normal.h</state>
+          <state></state>
         </option>
         <option>
           <name>GFPUCoreSlave</name>
@@ -1172,7 +1172,7 @@
         </option>
         <option>
           <name>OutputFile</name>
-          <state>$FILE_BNAME$.o</state>
+          <state></state>
         </option>
         <option>
           <name>CCLibConfigHeader</name>
@@ -1200,7 +1200,7 @@
         </option>
         <option>
           <name>IInterwork2</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IProcessorMode2</name>
@@ -1217,7 +1217,7 @@
         </option>
         <option>
           <name>CCOptLevelSlave</name>
-          <state>3</state>
+          <state>1</state>
         </option>
         <option>
           <name>CompilerMisraRules98</name>
@@ -1243,7 +1243,7 @@
         </option>
         <option>
           <name>IccLang</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IccCDialect</name>
@@ -1413,7 +1413,7 @@
         </option>
         <option>
           <name>AOutputFile</name>
-          <state>$FILE_BNAME$.o</state>
+          <state></state>
         </option>
         <option>
           <name>AMultibyteSupport</name>
@@ -1504,10 +1504,6 @@
         <wantNonLocal>1</wantNonLocal>
         <debug>0</debug>
         <option>
-          <name>IlinkOutputFile</name>
-          <state>###Unitialized###</state>
-        </option>
-        <option>
           <name>IlinkLibIOConfig</name>
           <state>1</state>
         </option>
@@ -1518,6 +1514,10 @@
         <option>
           <name>IlinkInputFileSlave</name>
           <state>0</state>
+        </option>
+        <option>
+          <name>IlinkOutputFile</name>
+          <state>###Unitialized###</state>
         </option>
         <option>
           <name>IlinkDebugInfoEnable</name>
@@ -1581,7 +1581,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\generic.icf</state>
+          <state>lnk0t.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>

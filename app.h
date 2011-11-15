@@ -3,9 +3,7 @@
 
 #include <irsdefs.h>
 
-#include <irsadc.h>
-#include <irsdev.h>
-
+#include <irsmbus.h>
 #include "supply.h"
 #include "cfg.h"
 #include "comm.h"
@@ -47,6 +45,20 @@ class meas_comm_th_t
     irs::gpio_pin_t& m_izm_th_enable_pin;
 };
 
+class plis_debug_check_t
+{
+  public:
+    plis_debug_check_t(plis_t& a_plis, irs::bit_data_t& a_eth_bit,
+      irs::bit_data_t& a_ee_bit);
+    ~plis_debug_check_t();
+    void tick();
+  private:
+    plis_t& m_plis;
+    irs::bit_data_t& m_eth_bit;
+    irs::bit_data_t& m_ee_bit;
+    bool m_recfg_flag;
+};
+
 class app_t
 {
 public:
@@ -61,7 +73,8 @@ private:
   {
     OFF = 0,
     ON = 1,
-    START = 2
+    START = 2,
+    WRITE_MISO_MASK = 3
   };
   enum
   {
@@ -102,6 +115,11 @@ private:
   void clear_all_alarms();
 
   cfg_t* mp_cfg;
+
+  irs::modbus_server_t m_modbus_server;
+  eth_data_t m_eth_data;
+  eeprom_data_t m_eeprom_data;
+
   supply_t m_supply_200V;
   supply_t m_supply_20V;
   supply_t m_supply_2V;
@@ -159,8 +177,13 @@ private:
 
   meas_comm_th_t m_meas_comm_th;
 
-  meas_comm_t m_meas_comm;
-  supply_comm_t m_supply_comm;
+  plis_t m_supply_plis;
+  comm_t m_supply_comm;
+  plis_debug_check_t m_supply_plis_debug_check;
+
+  plis_t m_meas_plis;
+  comm_t m_meas_comm;
+  plis_debug_check_t m_meas_plis_debug_check;
 }; // app_t
 
 } // namespace u309m
