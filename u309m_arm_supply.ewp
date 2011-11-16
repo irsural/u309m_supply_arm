@@ -519,7 +519,7 @@
         </option>
         <option>
           <name>AOutputFile</name>
-          <state></state>
+          <state>$FILE_BNAME$.o</state>
         </option>
         <option>
           <name>AMultibyteSupport</name>
@@ -687,7 +687,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>C:\P-CAD WORK\&#x41F;&#x440;&#x43e;&#x435;&#x43A;&#x442;&#x44B;\&#x423;309&#x41C;\&#x418;&#x441;&#x442;&#x43e;&#x447;&#x43D;&#x438;&#x43A; &#x442;&#x43e;&#x43A;&#x430;\&#x41F;&#x440;&#x43e;&#x433;&#x440;&#x430;&#x43C;&#x43C;&#x430;\ARM\u309m_supply_arm\u309m_arm_supply.icf</state>
+          <state>$PROJ_DIR$\u309m_arm_supply.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
