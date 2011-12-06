@@ -30,7 +30,7 @@ u309m::cfg_t::cfg_t():
 
   #ifdef OLD_MEAS_COMM
   m_meas_comm_cs(GPIO_PORTB, 3, irs::gpio_pin_t::dir_out),
-  m_meas_comm_reset(GPIO_PORTJ, 7, irs::gpio_pin_t::dir_out),
+  m_meas_comm_reset(GPIO_PORTH, 5, irs::gpio_pin_t::dir_out),
   m_meas_comm_apply(GPIO_PORTF, 1, irs::gpio_pin_t::dir_in),
   m_meas_comm_error(GPIO_PORTJ, 7, irs::gpio_pin_t::dir_in),
   m_meas_comm_pins(&m_meas_comm_cs, &m_meas_comm_reset, &m_meas_comm_apply,
@@ -38,7 +38,7 @@ u309m::cfg_t::cfg_t():
   #else //  !OLD_MEAS_COMM
   m_meas_comm_cfg_done(GPIO_PORTJ, 1, irs::gpio_pin_t::dir_in),
   m_meas_comm_cs(GPIO_PORTB, 3, irs::gpio_pin_t::dir_out),
-  m_meas_comm_reset(GPIO_PORTH, 5, irs::gpio_pin_t::dir_out),
+  m_meas_comm_reset(GPIO_PORTJ, 7, irs::gpio_pin_t::dir_out),
   m_meas_comm_pins(m_meas_comm_cfg_done, m_meas_comm_cs, m_meas_comm_reset),
   #endif  //  OLD_MEAS_COMM
 
