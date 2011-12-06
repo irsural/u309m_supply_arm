@@ -103,12 +103,20 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_supply_plis_debug_check(m_supply_plis, m_eth_data.supply_comm.debug,
     m_eeprom_data.supply_comm_debug),
 
+  #ifdef  OLD_MEAS_COMM
+  m_meas_comm(
+    mp_cfg->spi_meas_comm_plis(),
+    mp_cfg->meas_pins(),
+    &m_eth_data.meas_comm
+  )
+  #else //!OLD_MEAS_COMM
   m_meas_plis(mp_cfg->meas_comm_pins(), mp_cfg->meas_tact_gen(),
     *mp_cfg->spi_meas_comm_plis()),
   m_meas_comm(m_meas_plis, &m_eth_data.meas_comm.apply,
     &m_eth_data.meas_comm.reset),
   m_meas_plis_debug_check(m_meas_plis, m_eth_data.meas_comm.debug,
     m_eeprom_data.meas_comm_debug)
+  #endif  //  OLD_MEAS_COMM
 {
   m_rel_220V_timer.start();
   mp_cfg->rele_ext_pins()->SYM_OFF->set();
@@ -158,6 +166,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_supply_comm.add_bit(&m_eth_data.supply_comm.on, ON_POS, true);
   m_supply_comm.add_flag(&m_eth_data.supply_comm.error, ERROR_POS);
   m_supply_comm.on();
+  #ifndef OLD_MEAS_COMM
   enum {
     MEAS_MODE_POS = 14,
     MEAS_ETALON_POS = 10,
@@ -171,6 +180,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_meas_comm.add_bit(&m_eth_data.meas_comm.on, ON_POS, true);
   m_meas_comm.add_flag(&m_eth_data.meas_comm.error, ERROR_POS);
   m_meas_comm.on();
+  #endif  //  OLD_MEAS_COMM
 }
 
 void u309m::app_t::tick()
@@ -179,9 +189,13 @@ void u309m::app_t::tick()
   m_supply_comm.tick();
   m_supply_plis_debug_check.tick();
 
+  #ifdef  OLD_MEAS_COMM
+  m_meas_comm.tick();
+  #else //  !OLD_MEAS_COMM
   m_meas_plis.tick();
   m_meas_comm.tick();
   m_meas_plis_debug_check.tick();
+  #endif  //  OLD_MEAS_COMM
 
   m_supply_200V.tick();
   m_supply_20V.tick();

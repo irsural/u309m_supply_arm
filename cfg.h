@@ -14,6 +14,7 @@
 #include <hardflowg.h>
 #include <armflash.h>
 #include <irsdev.h>
+#include <irsconfig.h>
 
 #include "demux.h"
 
@@ -38,28 +39,7 @@ struct plis_pins_t {
   }
 };  //  plis_pins_t
 
-struct comm_control_bits_t {
-  irs::bit_data_t& apply;
-  irs::bit_data_t& on;
-  irs::bit_data_t& error;
-  irs::bit_data_t& busy;
-  irs::bit_data_t& ready;
-
-  comm_control_bits_t(
-    irs::bit_data_t& a_apply,
-    irs::bit_data_t& a_on,
-    irs::bit_data_t& a_error,
-    irs::bit_data_t& a_busy,
-    irs::bit_data_t& a_ready
-  ):
-    apply(a_apply),
-    on(a_on),
-    error(a_error),
-    busy(a_busy),
-    ready(a_ready)
-  {
-  }
-};  //  comm_control_bits_t
+#ifdef OLD_MEAS_COMM
 
 struct meas_comm_pins_t {
   irs::gpio_pin_t* cs;
@@ -81,19 +61,7 @@ struct meas_comm_pins_t {
   }
 }; // meas_comm_pins_t
 
-struct supply_comm_pins_t {
-  irs::gpio_pin_t* cs;
-  irs::gpio_pin_t* reset;
-
-  supply_comm_pins_t(
-    irs::gpio_pin_t* ap_cs,
-    irs::gpio_pin_t* ap_reset
-  ):
-    cs(ap_cs),
-    reset(ap_reset)
-  {
-  }
-}; // supply_comm_pins_t
+#endif  //  OLD_MEAS_COMM
 
 struct supply_pins_t {
   irs::gpio_pin_t* termo_sense_base_cs;
@@ -234,9 +202,13 @@ public:
   meas_comm_th_pins_t* meas_comm_th_pins();
   void izm_th_spi_enable_pin_set(bool a_value);
   plis_pins_t& supply_comm_pins();
-  plis_pins_t& meas_comm_pins();
   irs::pwm_gen_t& supply_tact_gen();
+  #ifdef OLD_MEAS_COMM
+  meas_comm_pins_t* meas_pins();
+  #else //  OLD_MEAS_COMM
+  plis_pins_t& meas_comm_pins();
   irs::pwm_gen_t& meas_tact_gen();
+  #endif  //  OLD_MEAS_COMM
 private:
   enum {
     CS_TR_3 = 0,
@@ -304,10 +276,18 @@ private:
   irs::arm::io_pin_t m_supply_comm_reset;
   plis_pins_t m_supply_comm_pins;
 
+  #ifdef OLD_MEAS_COMM
+  irs::arm::io_pin_t m_meas_comm_cs;
+  irs::arm::io_pin_t m_meas_comm_reset;
+  irs::arm::io_pin_t m_meas_comm_apply;
+  irs::arm::io_pin_t m_meas_comm_error;
+  meas_comm_pins_t m_meas_comm_pins;
+  #else //  OLD_MEAS_COMM
   irs::arm::io_pin_t m_meas_comm_cfg_done;
   irs::arm::io_pin_t m_meas_comm_cs;
   irs::arm::io_pin_t m_meas_comm_reset;
   plis_pins_t m_meas_comm_pins;
+  #endif  //  OLD_MEAS_COMM
 
   irs::arm::io_pin_t m_izm_th_enable;
   meas_comm_th_pins_t m_meas_comm_th_pins;
@@ -348,7 +328,9 @@ private:
   irs::arm::arm_spi_t m_spi_general_purpose;
 
   irs::arm::gptm_generator_t m_supply_tact_gen;
+  #ifndef OLD_MEAS_COMM
   irs::arm::gptm_generator_t m_meas_tact_gen;
+  #endif  //  OLD_MEAS_COMM
 
   mxmac_t m_local_mac;
   irs::arm::arm_ethernet_t m_arm_eth;

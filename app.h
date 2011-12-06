@@ -181,9 +181,13 @@ private:
   comm_t m_supply_comm;
   plis_debug_check_t m_supply_plis_debug_check;
 
+  #ifdef OLD_MEAS_COMM
+  meas_comm_t m_meas_comm;
+  #else //!OLD_MEAS_COMM
   plis_t m_meas_plis;
   comm_t m_meas_comm;
   plis_debug_check_t m_meas_plis_debug_check;
+  #endif  //  OLD_MEAS_COMM
 }; // app_t
 
 } // namespace u309m

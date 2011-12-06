@@ -28,10 +28,19 @@ u309m::cfg_t::cfg_t():
   m_supply_comm_pins(m_supply_comm_cfg_done, *m_spi_demux.cs_code(CS_PLIS),
     m_supply_comm_reset),
 
+  #ifdef OLD_MEAS_COMM
+  m_meas_comm_cs(GPIO_PORTB, 3, irs::gpio_pin_t::dir_out),
+  m_meas_comm_reset(GPIO_PORTJ, 7, irs::gpio_pin_t::dir_out),
+  m_meas_comm_apply(GPIO_PORTF, 1, irs::gpio_pin_t::dir_in),
+  m_meas_comm_error(GPIO_PORTJ, 7, irs::gpio_pin_t::dir_in),
+  m_meas_comm_pins(&m_meas_comm_cs, &m_meas_comm_reset, &m_meas_comm_apply,
+    &m_meas_comm_error),
+  #else //  !OLD_MEAS_COMM
   m_meas_comm_cfg_done(GPIO_PORTJ, 1, irs::gpio_pin_t::dir_in),
   m_meas_comm_cs(GPIO_PORTB, 3, irs::gpio_pin_t::dir_out),
   m_meas_comm_reset(GPIO_PORTH, 5, irs::gpio_pin_t::dir_out),
   m_meas_comm_pins(m_meas_comm_cfg_done, m_meas_comm_cs, m_meas_comm_reset),
+  #endif  //  OLD_MEAS_COMM
 
   m_izm_th_enable(GPIO_PORTG, 1, irs::gpio_pin_t::dir_out),
   m_meas_comm_th_pins(
@@ -104,7 +113,9 @@ u309m::cfg_t::cfg_t():
     irs::arm::arm_spi_t::SPI, irs::arm::arm_spi_t::SSI0),
 
   m_supply_tact_gen(PF4, m_spi_bitrate * 10),
+  #ifndef OLD_MEAS_COMM
   m_meas_tact_gen(PE1, m_spi_bitrate * 10),
+  #endif  //  OLD_MEAS_COMM
 
   m_local_mac(mxmac_t::zero_mac()),
   m_arm_eth(irs::simple_ethernet_t::double_buf, 300, m_local_mac),
@@ -185,17 +196,25 @@ u309m::plis_pins_t& u309m::cfg_t::supply_comm_pins()
   return m_supply_comm_pins;
 }
 
+#ifdef  OLD_MEAS_COMM
+u309m::meas_comm_pins_t* u309m::cfg_t::meas_pins()
+{
+  return &m_meas_comm_pins;
+}
+#else //  !OLD_MEAS_COMM
 u309m::plis_pins_t& u309m::cfg_t::meas_comm_pins()
 {
   return m_meas_comm_pins;
 }
 
-irs::pwm_gen_t& u309m::cfg_t::supply_tact_gen()
-{
-  return m_supply_tact_gen;
-}
-
 irs::pwm_gen_t& u309m::cfg_t::meas_tact_gen()
 {
   return m_meas_tact_gen;
+}
+
+#endif  //  OLD_MEAS_COMM
+
+irs::pwm_gen_t& u309m::cfg_t::supply_tact_gen()
+{
+  return m_supply_tact_gen;
 }

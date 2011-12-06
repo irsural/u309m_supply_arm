@@ -8,6 +8,10 @@
 #include <mxdata.h>
 #include "cfg.h"
 
+#ifdef OLD_MEAS_COMM
+#include "data.h"
+#endif  //  OLD_MEAS_COMM
+
 #include <irsfinal.h>
 
 namespace u309m {
@@ -128,6 +132,107 @@ private:
 };
 
 //------------------------------------------------------------------------------
+
+#ifdef OLD_MEAS_COMM
+
+enum
+{
+  plis_tact_freq = 7000000,
+  plis_relay_delay = 4000000//50000
+};
+
+
+class meas_plis_t
+{
+public:
+  enum plis_status_t {
+    BUSY = 1,
+    COMPLETE = 2,
+    ERROR = 3
+  };
+
+  meas_plis_t(
+    irs_u32 a_tact_freq,
+    irs::arm::arm_spi_t* ap_spi,
+    irs::gpio_pin_t* ap_cs_pin
+  );
+  ~meas_plis_t();
+  void write(const irs_u8 *ap_command);
+  void tact_on();
+  void tact_off();
+  void tick();
+private:
+  enum {
+    CCP2 = 0x4,
+    TIMER_16_BIT = 0x4,
+    PERIODIC_MODE = 0x2
+  };
+  enum status_t
+  {
+    PLIS_SPI_FREE,
+    PLIS_SPI_WRITE
+  };
+  enum {
+    m_size = 2
+  };
+  irs_u32 m_tact_freq;
+  irs::arm::arm_spi_t* mp_spi;
+  irs::gpio_pin_t* mp_cs_pin;
+  irs_u8 mp_buf[m_size];
+  status_t m_status;
+  bool m_need_write;
+  irs::arm::gptm_generator_t m_tact_gen;
+}; // meas_plis_t
+
+class meas_comm_t
+{
+public:
+  meas_comm_t(
+    irs::arm::arm_spi_t* ap_spi_meas_comm_plis,
+    meas_comm_pins_t* ap_meas_comm_pins,
+    meas_comm_data_t* ap_meas_comm_data
+  );
+  inline void on() { m_need_on = true; };
+  inline void off() { m_need_off = true; };
+  inline bool operated() { return m_operate; };
+  void tick();
+
+private:
+  enum meas_mode_t {
+    COILS,
+    NORMAL_ELEMENTS,
+    RES_BOX
+  };
+  enum tick_mode_t {
+    command_check,
+    meas_on_start,
+    meas_on_busy,
+    meas_on_complete,
+    meas_apply_start,
+    meas_apply_busy,
+    meas_apply_complete,
+    meas_reset_start,
+    meas_reset_process,
+    meas_reset_complete
+  };
+
+  meas_comm_pins_t* mp_meas_comm_pins;
+  meas_comm_data_t* mp_meas_comm_data;
+  meas_plis_t m_plis;
+  bool m_command_apply;
+  bool m_comm_on;
+  bool m_plis_reset;
+  irs_u16 m_command;
+  tick_mode_t m_mode;
+  bool m_operate;
+  bool m_need_on;
+  bool m_need_off;
+
+  void make_command();
+  void init_default();
+}; // meas_comm_t
+
+#endif  //  OLD_MEAS_COMM
 
 } // namespace u309m
 
