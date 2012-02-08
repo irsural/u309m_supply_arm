@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-1537291861
+Checksum=1859428716
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -42,6 +42,25 @@ StopOnThrow=_ 0
 ShowArgs=0
 [Disassembly]
 MixedMode=1
+[InterruptLog]
+LogEnabled=0
+SumEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+ShowTimeSum=1
+SumSortOrder=0
+[Interrupts]
+Enabled=1
+[MemoryMap]
+Enabled=0
+Base=0
+UseAuto=0
+TypeViolation=1
+UnspecRange=1
+ActionState=1
+[Trace1]
+Enabled=0
+ShowSource=1
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""

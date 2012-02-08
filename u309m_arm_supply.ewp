@@ -2029,6 +2029,9 @@
     <name>$PROJ_DIR$\comm.h</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\..\u309m_common\common_data.h</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\data.h</name>
   </file>
   <file>
