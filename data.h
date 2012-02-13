@@ -142,7 +142,7 @@ struct eeprom_data_t
     supply_20V.resistance_code = 521;
     supply_20V.koef_adc_volt_prev = 0.0295382;
     supply_20V.koef_adc_volt_fin = 0.0285352;
-    supply_20V.koef_reg_prev = 264.399;
+    supply_20V.koef_reg_prev = 2697.6;
     supply_20V.koef_reg_fin = 2697.6;
 
     supply_20V.temp_base_ref = 70.;
