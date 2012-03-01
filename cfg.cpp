@@ -105,11 +105,10 @@ u309m::cfg_t::cfg_t():
         (1 << PTC_PWR_channel) | (1 << PTC_17A_channel)),
         irs::arm::adc_stellaris_t::EXT_REF),
   m_spi_bitrate(500000),
-  m_spi_buf_size(4),
-  m_spi_meas_comm_plis(m_spi_bitrate, m_spi_buf_size,
+  m_spi_meas_comm_plis(m_spi_bitrate,
     irs::arm::arm_spi_t::SPI, irs::arm::arm_spi_t::SSI1, GPIO_PORTE,
     GPIO_PORTE, GPIO_PORTE),
-  m_spi_general_purpose(m_spi_bitrate, m_spi_buf_size,
+  m_spi_general_purpose(m_spi_bitrate,
     irs::arm::arm_spi_t::SPI, irs::arm::arm_spi_t::SSI0),
 
   m_supply_tact_gen(PF4, m_spi_bitrate * 10),
