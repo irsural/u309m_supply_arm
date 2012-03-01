@@ -12,6 +12,18 @@
 
 namespace u309m
 {
+  
+class init_eeprom_t {
+public:
+  init_eeprom_t(irs::eeprom_at25128_data_t* ap_eeprom, eeprom_data_t* ap_eeprom_data);
+  ~init_eeprom_t();
+};
+
+class init_supply_plis_t {
+public:
+  init_supply_plis_t(plis_t* ap_plis);
+  ~init_supply_plis_t();
+};
 
 class meas_comm_th_t
 {
@@ -115,11 +127,14 @@ private:
   void clear_all_alarms();
 
   cfg_t* mp_cfg;
-
+  plis_t m_supply_plis;
+  init_supply_plis_t m_init_supply_plis;
   irs::modbus_server_t m_modbus_server;
   eth_data_t m_eth_data;
+  irs::eeprom_at25128_data_t m_eeprom;
   eeprom_data_t m_eeprom_data;
-
+  init_eeprom_t m_init_eeprom;
+  
   supply_t m_supply_200V;
   supply_t m_supply_20V;
   supply_t m_supply_2V;
@@ -177,10 +192,9 @@ private:
 
   meas_comm_th_t m_meas_comm_th;
 
-  plis_t m_supply_plis;
+  
   comm_t m_supply_comm;
   plis_debug_check_t m_supply_plis_debug_check;
-
   #ifdef OLD_MEAS_COMM
   meas_comm_t m_meas_comm;
   #else //!OLD_MEAS_COMM

@@ -105,7 +105,7 @@ u309m::cfg_t::cfg_t():
         (1 << PTC_PWR_channel) | (1 << PTC_17A_channel)),
         irs::arm::adc_stellaris_t::EXT_REF),
   m_spi_bitrate(500000),
-  m_spi_buf_size(3),
+  m_spi_buf_size(4),
   m_spi_meas_comm_plis(m_spi_bitrate, m_spi_buf_size,
     irs::arm::arm_spi_t::SPI, irs::arm::arm_spi_t::SSI1, GPIO_PORTE,
     GPIO_PORTE, GPIO_PORTE),
@@ -125,10 +125,7 @@ u309m::cfg_t::cfg_t():
   m_dest_port(5006),
   m_tcpip(&m_arm_eth, m_local_ip, m_dest_ip, 10),
   m_simple_hardflow(&m_tcpip, m_local_ip, m_local_port,
-    m_dest_ip, m_dest_port, 10),
-
-  m_eeprom_size(338),
-  m_eeprom(m_eeprom_size)
+    m_dest_ip, m_dest_port, 10)
 {
   m_REL_220V.set();
 }
@@ -156,16 +153,6 @@ irs::arm::arm_spi_t* u309m::cfg_t::spi_general_purpose()
 irs::arm::arm_spi_t* u309m::cfg_t::spi_supply_comm_plis()
 {
   return& m_spi_general_purpose;
-}
-
-irs::mxdata_t* u309m::cfg_t::eeprom()
-{
-  return& m_eeprom;
-}
-
-bool u309m::cfg_t::eeprom_error()
-{
-  return m_eeprom.error();
 }
 
 irs::hardflow::simple_udp_flow_t* u309m::cfg_t::hardflow()
@@ -218,3 +205,9 @@ irs::pwm_gen_t& u309m::cfg_t::supply_tact_gen()
 {
   return m_supply_tact_gen;
 }
+
+irs::gpio_pin_t* u309m::cfg_t::pins_eeprom()
+{
+  return m_spi_demux.cs_code(CS_EE);
+}
+

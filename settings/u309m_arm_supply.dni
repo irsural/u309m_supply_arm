@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=1859428716
+Checksum=2109484229
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -61,6 +61,21 @@ ActionState=1
 [Trace1]
 Enabled=0
 ShowSource=1
+[struct_types]
+Fmt0=class irs::raw_data_t<irs_u8>-mp_data	4	0
+Fmt1=struct hard_fault_event_t::hard_fault_handler_c(unsigned long *)::stack_frame_t-LR	4	0
+Fmt2=struct hard_fault_event_t::hard_fault_handler_c(unsigned long *)::stack_frame_t-PC	4	0
+Fmt3=struct hard_fault_event_t::hard_fault_handler_c(unsigned long *)::stack_frame_t-R0	4	0
+Fmt4=struct hard_fault_event_t::hard_fault_handler_c(unsigned long *)::stack_frame_t-R1	4	0
+Fmt5=struct hard_fault_event_t::hard_fault_handler_c(unsigned long *)::stack_frame_t-R12	4	0
+Fmt6=struct hard_fault_event_t::hard_fault_handler_c(unsigned long *)::stack_frame_t-R2	4	0
+Fmt7=struct hard_fault_event_t::hard_fault_handler_c(unsigned long *)::stack_frame_t-R3	4	0
+[watch_formats]
+Fmt0={W}0:*((irs_u32*)0x20003CC0 + 15)	4	0
+Fmt1={W}0:crc	4	0
+Fmt2={W}0:crc_1	4	0
+Fmt3={W}0:crc_2	4	0
+Fmt4={W}0:ee_crc_1	4	0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""

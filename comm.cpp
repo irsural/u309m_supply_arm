@@ -21,6 +21,7 @@ u309m::plis_t::plis_t(plis_pins_t& a_pins, irs::pwm_gen_t& a_gen,
 {
   clear_buffers();
   m_gen.start();
+  //irs::measure_time_t measure_time;
   m_timer.start();
   while (!m_pins.cfg_done.pin()) {
     if (m_timer.check()) {
@@ -29,6 +30,7 @@ u309m::plis_t::plis_t(plis_pins_t& a_pins, irs::pwm_gen_t& a_gen,
       break;
     }
   }
+  //irs::mlog() << "Время инициализации: " << measure_time.get() << endl;
   m_pins.cs.set();
   m_pins.reset.set();
   m_timer.set(irs::make_cnt_ms(m_reset_pulse_interval));

@@ -8,10 +8,15 @@
 
 u309m::app_t::app_t(cfg_t* ap_cfg):
   mp_cfg(ap_cfg),
+  m_supply_plis(mp_cfg->supply_comm_pins(), mp_cfg->supply_tact_gen(),
+    *mp_cfg->spi_general_purpose()),
+  m_init_supply_plis(&m_supply_plis),
   m_modbus_server(mp_cfg->hardflow(), 0, 14, 323, 0, irs::make_cnt_ms(200)),
   m_eth_data(&m_modbus_server),
-  m_eeprom_data(mp_cfg->eeprom()),
-
+  m_eeprom(mp_cfg->spi_general_purpose(), mp_cfg->pins_eeprom(), 
+    1024, true),
+  m_eeprom_data(&m_eeprom),
+  m_init_eeprom(&m_eeprom, &m_eeprom_data),
   m_supply_200V(ap_cfg->spi_general_purpose(),
     ap_cfg->command_pins()->supply_200V,
     &m_eth_data.supply_200V,
@@ -40,9 +45,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_SYM_200V(m_eth_data.rele_ext.SYM_200V),
   m_KZ_2V(m_eth_data.rele_ext.KZ_2V),
   m_SYM_OFF(m_eth_data.rele_ext.SYM_OFF),
-  //
   m_rel_220V_timer(irs::make_cnt_s(1)),
-  //  check
   m_internal_th_value(m_eth_data.arm_adc.internal_temp, 18.f, 50.f),
   m_ptc_a_value(m_eth_data.arm_adc.PTC_A, 0.f, 0.33f),
   m_ptc_lc_value(m_eth_data.arm_adc.PTC_LC, 0.f, 0.33f),
@@ -95,14 +98,10 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
     m_eth_data.meas_comm_th,
     m_eeprom_data.izm_th_spi_enable,
     m_eth_data.control.izm_th_spi_enable),
-
-  m_supply_plis(mp_cfg->supply_comm_pins(), mp_cfg->supply_tact_gen(),
-    *mp_cfg->spi_general_purpose()),
   m_supply_comm(m_supply_plis, &m_eth_data.supply_comm.apply,
     &m_eth_data.supply_comm.reset),
   m_supply_plis_debug_check(m_supply_plis, m_eth_data.supply_comm.debug,
     m_eeprom_data.supply_comm_debug),
-
   #ifdef  OLD_MEAS_COMM
   m_meas_comm(
     mp_cfg->spi_meas_comm_plis(),
@@ -120,10 +119,6 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
 {
   m_rel_220V_timer.start();
   mp_cfg->rele_ext_pins()->SYM_OFF->set();
-
-  if (mp_cfg->eeprom_error()) {
-    m_eeprom_data.reset_to_default();
-  }
 
   m_eth_data.ip_0 = m_eeprom_data.ip_0;
   m_eth_data.ip_1 = m_eeprom_data.ip_1;
@@ -204,10 +199,11 @@ void u309m::app_t::tick()
   m_supply_17A.tick();
 
   mp_cfg->adc()->tick();
-  mp_cfg->eeprom()->tick();
 
   m_meas_comm_th.tick();
   m_modbus_server.tick();
+  
+  m_eeprom.tick();
 
   #ifndef NOP
   bool change_ip_0 =
@@ -221,13 +217,12 @@ void u309m::app_t::tick()
 
   if (change_ip_0 || change_ip_1 || change_ip_2 || change_ip_3)
   {
-    mxip_t ip = mxip_t::zero_ip();
-
     m_eeprom_data.ip_0 = m_eth_data.ip_0;
     m_eeprom_data.ip_1 = m_eth_data.ip_1;
     m_eeprom_data.ip_2 = m_eth_data.ip_2;
     m_eeprom_data.ip_3 = m_eth_data.ip_3;
 
+    mxip_t ip = mxip_t::zero_ip();
     ip.val[0] = m_eth_data.ip_0;
     ip.val[1] = m_eth_data.ip_1;
     ip.val[2] = m_eth_data.ip_2;
@@ -610,8 +605,8 @@ void u309m::app_t::tick()
     {
       m_eeprom_data.upper_level_check =
         m_eth_data.control.upper_level_check;
-      irs::mlog() << "eeprom = "
-        << m_eeprom_data.upper_level_check << endl;
+      /*irs::mlog() << "eeprom = "
+        << m_eeprom_data.upper_level_check << endl;*/
       if (m_eth_data.control.upper_level_check)
       {
         m_connect_counter = m_eth_data.control.connect_counter;
@@ -823,4 +818,28 @@ void u309m::plis_debug_check_t::tick()
       m_plis.write(m_debug_off_command);
     }
   }
+}
+
+u309m::init_eeprom_t::init_eeprom_t(irs::eeprom_at25128_data_t* ap_eeprom, 
+  eeprom_data_t* ap_eeprom_data)
+{
+  while (!ap_eeprom->connected()) ap_eeprom->tick();
+  if (ap_eeprom->error()) {
+    ap_eeprom_data->reset_to_default();
+  }
+}
+
+u309m::init_eeprom_t::~init_eeprom_t()
+{
+}
+
+u309m::init_supply_plis_t::init_supply_plis_t(plis_t* ap_plis)
+{
+  while(!ap_plis->ready()) {
+    ap_plis->tick();
+  }
+}
+
+u309m::init_supply_plis_t::~init_supply_plis_t()
+{
 }

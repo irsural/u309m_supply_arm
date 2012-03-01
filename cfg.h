@@ -15,6 +15,7 @@
 #include <armflash.h>
 #include <irsdev.h>
 #include <irsconfig.h>
+#include <irsmem.h>
 
 #include "demux.h"
 
@@ -195,14 +196,13 @@ public:
   irs::arm::arm_spi_t* spi_meas_comm_plis();
   irs::arm::arm_spi_t* spi_supply_comm_plis();
   irs::arm::arm_spi_t* spi_general_purpose();
-  irs::mxdata_t* eeprom();
-  bool eeprom_error();
   irs::hardflow::simple_udp_flow_t* hardflow();
   rele_ext_pins_t* rele_ext_pins();
   meas_comm_th_pins_t* meas_comm_th_pins();
   void izm_th_spi_enable_pin_set(bool a_value);
   plis_pins_t& supply_comm_pins();
   irs::pwm_gen_t& supply_tact_gen();
+  irs::gpio_pin_t* pins_eeprom();
   #ifdef OLD_MEAS_COMM
   meas_comm_pins_t* meas_pins();
   #else //  OLD_MEAS_COMM
@@ -340,9 +340,6 @@ private:
   irs_u16 m_dest_port;
   irs::simple_tcpip_t m_tcpip;
   irs::hardflow::simple_udp_flow_t m_simple_hardflow;
-
-  irs::arm::flash_t::size_type m_eeprom_size;
-  irs::arm::flash_t m_eeprom;
 };
 
 } // namespace u309m
