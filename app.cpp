@@ -13,7 +13,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_init_supply_plis(&m_supply_plis),
   m_modbus_server(mp_cfg->hardflow(), 0, 14, 323, 0, irs::make_cnt_ms(200)),
   m_eth_data(&m_modbus_server),
-  m_eeprom(mp_cfg->spi_general_purpose(), mp_cfg->pins_eeprom(), 
+  m_eeprom(mp_cfg->spi_general_purpose(), mp_cfg->pins_eeprom(),
     1024, true),
   m_eeprom_data(&m_eeprom),
   m_init_eeprom(&m_eeprom, &m_eeprom_data),
@@ -130,6 +130,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   ip.val[1] = m_eeprom_data.ip_1;
   ip.val[2] = m_eeprom_data.ip_2;
   ip.val[3] = m_eeprom_data.ip_3;
+
   char ip_str[IP_STR_LEN];
   mxip_to_cstr(ip_str, ip);
   mp_cfg->hardflow()->set_param("local_addr", ip_str);
@@ -202,7 +203,7 @@ void u309m::app_t::tick()
 
   m_meas_comm_th.tick();
   m_modbus_server.tick();
-  
+
   m_eeprom.tick();
 
   #ifndef NOP
@@ -820,7 +821,7 @@ void u309m::plis_debug_check_t::tick()
   }
 }
 
-u309m::init_eeprom_t::init_eeprom_t(irs::eeprom_at25128_data_t* ap_eeprom, 
+u309m::init_eeprom_t::init_eeprom_t(irs::eeprom_at25128_data_t* ap_eeprom,
   eeprom_data_t* ap_eeprom_data)
 {
   while (!ap_eeprom->connected()) ap_eeprom->tick();
@@ -835,7 +836,13 @@ u309m::init_eeprom_t::~init_eeprom_t()
 
 u309m::init_supply_plis_t::init_supply_plis_t(plis_t* ap_plis)
 {
-  while(!ap_plis->ready()) {
+  while (!ap_plis->ready()) {
+    ap_plis->tick();
+  }
+
+  irs::timer_t timer(irs::make_cnt_ms(500));
+  timer.start();
+  while (!timer.check()) {
     ap_plis->tick();
   }
 }
