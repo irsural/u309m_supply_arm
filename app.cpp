@@ -206,6 +206,10 @@ void u309m::app_t::tick()
 
   m_eeprom.tick();
 
+  if (m_eeprom.error()) {
+    irs::mlog() << "Îøèáêà CRC â tick app" << endl;
+  }
+
   #ifndef NOP
   bool change_ip_0 =
     (m_eeprom_data.ip_0 != m_eth_data.ip_0);
