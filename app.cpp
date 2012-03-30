@@ -207,7 +207,8 @@ void u309m::app_t::tick()
   m_eeprom.tick();
 
   if (m_eeprom.error()) {
-    irs::mlog() << "Îøèáêà CRC â tick app" << endl;
+    irs::mlog() << CNT_TO_DBLTIME(counter_get());
+    irs::mlog() << " Îøèáêà CRC â tick app" << endl;
   }
 
   #ifndef NOP
