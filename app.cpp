@@ -719,17 +719,200 @@ void u309m::app_t::clear_all_alarms()
 
 void u309m::app_t::ethernet_to_eeprom()
 {
-  /*m_eeprom_data.ip_0 = m_eth_data.ip_0;
+  m_eeprom_data.ip_0 = m_eth_data.ip_0;
   m_eeprom_data.ip_1 = m_eth_data.ip_1;
   m_eeprom_data.ip_2 = m_eth_data.ip_2;
   m_eeprom_data.ip_3 = m_eth_data.ip_3;
+  
   m_eeprom_data.supply_200V.resistance_code =
     m_eth_data.supply_200V.resistance_code;
-  m_eeprom_data.supply_200V.resistance_code =
-    m_eth_data.supply_200V.resistance_code;
-  m_eeprom_data.supply_200V.resistance_code =
-    m_eth_data.supply_200V.resistance_code;*/
-
+  m_eeprom_data.supply_200V.koef_reg_prev =
+    m_eth_data.supply_200V.prev_dac_data.koef;
+  m_eeprom_data.supply_200V.koef_adc_volt_prev =
+    m_eth_data.supply_200V.prev_adc_data.koef;
+  m_eeprom_data.supply_200V.koef_reg_fin =
+    m_eth_data.supply_200V.fin_dac_data.koef;
+  m_eeprom_data.supply_200V.koef_adc_volt_fin =
+    m_eth_data.supply_200V.fin_adc_data.koef;
+  
+  m_eeprom_data.supply_200V.temp_base_ref =
+    m_eth_data.supply_200V.base_tr_data.temperature_ref;
+  m_eeprom_data.supply_200V.temp_base_k =
+    m_eth_data.supply_200V.base_tr_data.temp_k;
+  m_eeprom_data.supply_200V.temp_base_ki =
+    m_eth_data.supply_200V.base_tr_data.temp_ki;
+  m_eeprom_data.supply_200V.temp_base_kd =
+    m_eth_data.supply_200V.base_tr_data.temp_kd; 
+  m_eeprom_data.supply_200V.temp_base_prop_koef =
+    m_eth_data.supply_200V.base_tr_data.temp_prop_koef;
+  m_eeprom_data.supply_200V.temp_base_time_const =
+    m_eth_data.supply_200V.base_tr_data.temp_time_const;
+  
+  m_eeprom_data.supply_200V.temp_aux_ref =
+    m_eth_data.supply_200V.aux_tr_data.temperature_ref;
+  m_eeprom_data.supply_200V.temp_aux_k =
+    m_eth_data.supply_200V.aux_tr_data.temp_k;
+  m_eeprom_data.supply_200V.temp_aux_ki =
+    m_eth_data.supply_200V.aux_tr_data.temp_ki;
+  m_eeprom_data.supply_200V.temp_aux_kd =
+    m_eth_data.supply_200V.aux_tr_data.temp_kd; 
+  m_eeprom_data.supply_200V.temp_aux_prop_koef =
+    m_eth_data.supply_200V.aux_tr_data.temp_prop_koef;
+  m_eeprom_data.supply_200V.temp_aux_time_const =
+    m_eth_data.supply_200V.aux_tr_data.temp_time_const;
+  
+  m_eeprom_data.supply_20V.resistance_code =
+    m_eth_data.supply_20V.resistance_code;
+  m_eeprom_data.supply_20V.koef_reg_prev =
+    m_eth_data.supply_20V.prev_dac_data.koef;
+  m_eeprom_data.supply_20V.koef_adc_volt_prev =
+    m_eth_data.supply_20V.prev_adc_data.koef;
+  m_eeprom_data.supply_20V.koef_reg_fin =
+    m_eth_data.supply_20V.fin_dac_data.koef;
+  m_eeprom_data.supply_20V.koef_adc_volt_fin =
+    m_eth_data.supply_20V.fin_adc_data.koef;
+  
+  m_eeprom_data.supply_20V.temp_base_ref =
+    m_eth_data.supply_20V.base_tr_data.temperature_ref;
+  m_eeprom_data.supply_20V.temp_base_k =
+    m_eth_data.supply_20V.base_tr_data.temp_k;
+  m_eeprom_data.supply_20V.temp_base_ki =
+    m_eth_data.supply_20V.base_tr_data.temp_ki;
+  m_eeprom_data.supply_20V.temp_base_kd =
+    m_eth_data.supply_20V.base_tr_data.temp_kd; 
+  m_eeprom_data.supply_20V.temp_base_prop_koef =
+    m_eth_data.supply_20V.base_tr_data.temp_prop_koef;
+  m_eeprom_data.supply_20V.temp_base_time_const =
+    m_eth_data.supply_20V.base_tr_data.temp_time_const;
+  
+  m_eeprom_data.supply_20V.temp_aux_ref =
+    m_eth_data.supply_20V.aux_tr_data.temperature_ref;
+  m_eeprom_data.supply_20V.temp_aux_k =
+    m_eth_data.supply_20V.aux_tr_data.temp_k;
+  m_eeprom_data.supply_20V.temp_aux_ki =
+    m_eth_data.supply_20V.aux_tr_data.temp_ki;
+  m_eeprom_data.supply_20V.temp_aux_kd =
+    m_eth_data.supply_20V.aux_tr_data.temp_kd; 
+  m_eeprom_data.supply_20V.temp_aux_prop_koef =
+    m_eth_data.supply_20V.aux_tr_data.temp_prop_koef;
+  m_eeprom_data.supply_20V.temp_aux_time_const =
+    m_eth_data.supply_20V.aux_tr_data.temp_time_const;
+  
+  m_eeprom_data.supply_2V.resistance_code =
+    m_eth_data.supply_2V.resistance_code;
+  m_eeprom_data.supply_2V.koef_reg_prev =
+    m_eth_data.supply_2V.prev_dac_data.koef;
+  m_eeprom_data.supply_2V.koef_adc_volt_prev =
+    m_eth_data.supply_2V.prev_adc_data.koef;
+  m_eeprom_data.supply_2V.koef_reg_fin =
+    m_eth_data.supply_2V.fin_dac_data.koef;
+  m_eeprom_data.supply_2V.koef_adc_volt_fin =
+    m_eth_data.supply_2V.fin_adc_data.koef;
+  
+  m_eeprom_data.supply_2V.temp_base_ref =
+    m_eth_data.supply_2V.base_tr_data.temperature_ref;
+  m_eeprom_data.supply_2V.temp_base_k =
+    m_eth_data.supply_2V.base_tr_data.temp_k;
+  m_eeprom_data.supply_2V.temp_base_ki =
+    m_eth_data.supply_2V.base_tr_data.temp_ki;
+  m_eeprom_data.supply_2V.temp_base_kd =
+    m_eth_data.supply_2V.base_tr_data.temp_kd; 
+  m_eeprom_data.supply_2V.temp_base_prop_koef =
+    m_eth_data.supply_2V.base_tr_data.temp_prop_koef;
+  m_eeprom_data.supply_2V.temp_base_time_const =
+    m_eth_data.supply_2V.base_tr_data.temp_time_const;
+  
+  m_eeprom_data.supply_2V.temp_aux_ref =
+    m_eth_data.supply_2V.aux_tr_data.temperature_ref;
+  m_eeprom_data.supply_2V.temp_aux_k =
+    m_eth_data.supply_2V.aux_tr_data.temp_k;
+  m_eeprom_data.supply_2V.temp_aux_ki =
+    m_eth_data.supply_2V.aux_tr_data.temp_ki;
+  m_eeprom_data.supply_2V.temp_aux_kd =
+    m_eth_data.supply_2V.aux_tr_data.temp_kd; 
+  m_eeprom_data.supply_2V.temp_aux_prop_koef =
+    m_eth_data.supply_2V.aux_tr_data.temp_prop_koef;
+  m_eeprom_data.supply_2V.temp_aux_time_const =
+    m_eth_data.supply_2V.aux_tr_data.temp_time_const;
+  
+    m_eeprom_data.supply_1A.resistance_code =
+    m_eth_data.supply_1A.resistance_code;
+  m_eeprom_data.supply_1A.koef_reg_prev =
+    m_eth_data.supply_1A.prev_dac_data.koef;
+  m_eeprom_data.supply_1A.koef_adc_volt_prev =
+    m_eth_data.supply_1A.prev_adc_data.koef;
+  m_eeprom_data.supply_1A.koef_reg_fin =
+    m_eth_data.supply_1A.fin_dac_data.koef;
+  m_eeprom_data.supply_1A.koef_adc_volt_fin =
+    m_eth_data.supply_1A.fin_adc_data.koef;
+  
+  m_eeprom_data.supply_1A.temp_base_ref =
+    m_eth_data.supply_1A.base_tr_data.temperature_ref;
+  m_eeprom_data.supply_1A.temp_base_k =
+    m_eth_data.supply_1A.base_tr_data.temp_k;
+  m_eeprom_data.supply_1A.temp_base_ki =
+    m_eth_data.supply_1A.base_tr_data.temp_ki;
+  m_eeprom_data.supply_1A.temp_base_kd =
+    m_eth_data.supply_1A.base_tr_data.temp_kd; 
+  m_eeprom_data.supply_1A.temp_base_prop_koef =
+    m_eth_data.supply_1A.base_tr_data.temp_prop_koef;
+  m_eeprom_data.supply_1A.temp_base_time_const =
+    m_eth_data.supply_1A.base_tr_data.temp_time_const;
+  
+  m_eeprom_data.supply_1A.temp_aux_ref =
+    m_eth_data.supply_1A.aux_tr_data.temperature_ref;
+  m_eeprom_data.supply_1A.temp_aux_k =
+    m_eth_data.supply_1A.aux_tr_data.temp_k;
+  m_eeprom_data.supply_1A.temp_aux_ki =
+    m_eth_data.supply_1A.aux_tr_data.temp_ki;
+  m_eeprom_data.supply_1A.temp_aux_kd =
+    m_eth_data.supply_1A.aux_tr_data.temp_kd; 
+  m_eeprom_data.supply_1A.temp_aux_prop_koef =
+    m_eth_data.supply_1A.aux_tr_data.temp_prop_koef;
+  m_eeprom_data.supply_1A.temp_aux_time_const =
+    m_eth_data.supply_1A.aux_tr_data.temp_time_const;
+  
+  m_eeprom_data.supply_17A.resistance_code =
+    m_eth_data.supply_17A.resistance_code;
+  m_eeprom_data.supply_17A.koef_reg_prev =
+    m_eth_data.supply_17A.prev_dac_data.koef;
+  m_eeprom_data.supply_17A.koef_adc_volt_prev =
+    m_eth_data.supply_17A.prev_adc_data.koef;
+  m_eeprom_data.supply_17A.koef_reg_fin =
+    m_eth_data.supply_17A.fin_dac_data.koef;
+  m_eeprom_data.supply_17A.koef_adc_volt_fin =
+    m_eth_data.supply_17A.fin_adc_data.koef;
+  
+  m_eeprom_data.supply_17A.temp_base_ref =
+    m_eth_data.supply_17A.base_tr_data.temperature_ref;
+  m_eeprom_data.supply_17A.temp_base_k =
+    m_eth_data.supply_17A.base_tr_data.temp_k;
+  m_eeprom_data.supply_17A.temp_base_ki =
+    m_eth_data.supply_17A.base_tr_data.temp_ki;
+  m_eeprom_data.supply_17A.temp_base_kd =
+    m_eth_data.supply_17A.base_tr_data.temp_kd; 
+  m_eeprom_data.supply_17A.temp_base_prop_koef =
+    m_eth_data.supply_17A.base_tr_data.temp_prop_koef;
+  m_eeprom_data.supply_17A.temp_base_time_const =
+    m_eth_data.supply_17A.base_tr_data.temp_time_const;
+  
+  m_eeprom_data.supply_17A.temp_aux_ref =
+    m_eth_data.supply_17A.aux_tr_data.temperature_ref;
+  m_eeprom_data.supply_17A.temp_aux_k =
+    m_eth_data.supply_17A.aux_tr_data.temp_k;
+  m_eeprom_data.supply_17A.temp_aux_ki =
+    m_eth_data.supply_17A.aux_tr_data.temp_ki;
+  m_eeprom_data.supply_17A.temp_aux_kd =
+    m_eth_data.supply_17A.aux_tr_data.temp_kd; 
+  m_eeprom_data.supply_17A.temp_aux_prop_koef =
+    m_eth_data.supply_17A.aux_tr_data.temp_prop_koef;
+  m_eeprom_data.supply_17A.temp_aux_time_const =
+    m_eth_data.supply_17A.aux_tr_data.temp_time_const;
+  
+  m_eeprom_data.upper_level_check = m_eth_data.control.upper_level_check;
+  m_eeprom_data.izm_th_spi_enable = m_eth_data.control.izm_th_spi_enable;
+  m_eeprom_data.supply_comm_debug = m_eth_data.supply_comm.debug;
+  m_eeprom_data.meas_comm_debug = m_eth_data.meas_comm.debug;
 }
 
 u309m::meas_comm_th_t::meas_comm_th_t(
