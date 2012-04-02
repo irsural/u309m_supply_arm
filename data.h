@@ -118,11 +118,11 @@ struct eeprom_data_t
     ip_2 = IP_2;
     ip_3 = IP_3;
 
-    supply_200V.resistance_code = 980;
+    supply_200V.resistance_code = 488;
     supply_200V.koef_adc_volt_prev = 0.259343;
-    supply_200V.koef_adc_volt_fin = 0.291522;
+    supply_200V.koef_adc_volt_fin = 0.299369;
     supply_200V.koef_reg_prev = 297.572;
-    supply_200V.koef_reg_fin = 264.399;
+    supply_200V.koef_reg_fin = 257.774;
 
     supply_200V.temp_base_ref = 70.;
     supply_200V.temp_base_k = 15000.;
@@ -139,11 +139,11 @@ struct eeprom_data_t
     supply_200V.temp_aux_time_const = 20.;
     irs::mlog() << irsm(" eeprom supply_200V") << endl;
 
-    supply_20V.resistance_code = 521;
+    supply_20V.resistance_code = 415;
     supply_20V.koef_adc_volt_prev = 0.0295382;
-    supply_20V.koef_adc_volt_fin = 0.0285352;
+    supply_20V.koef_adc_volt_fin = 0.0259706;
     supply_20V.koef_reg_prev = 2697.6;
-    supply_20V.koef_reg_fin = 2697.6;
+    supply_20V.koef_reg_fin = 2961.12;
 
     supply_20V.temp_base_ref = 70.;
     supply_20V.temp_base_k = 15000.;
@@ -160,11 +160,11 @@ struct eeprom_data_t
     supply_20V.temp_aux_time_const = 20.;
     irs::mlog() << irsm(" eeprom supply_20V") << endl;
 
-    supply_2V.resistance_code = 501;
+    supply_2V.resistance_code = 499;
     supply_2V.koef_adc_volt_prev = 0.00962346;
-    supply_2V.koef_adc_volt_fin = 0.00716917;
+    supply_2V.koef_adc_volt_fin = 0.00704233;
     supply_2V.koef_reg_prev = 15999.2;
-    supply_2V.koef_reg_fin = 21520;
+    supply_2V.koef_reg_fin = 21791.8;
 
     supply_2V.temp_base_ref = 70.;
     supply_2V.temp_base_k = 15000.;
@@ -181,11 +181,11 @@ struct eeprom_data_t
     supply_2V.temp_aux_time_const = 20.;
     irs::mlog() << irsm(" eeprom supply_2V") << endl;
 
-    supply_1A.resistance_code = 426;
+    supply_1A.resistance_code = 333;
     supply_1A.koef_adc_volt_prev = 0.00482014;
-    supply_1A.koef_adc_volt_fin = 0.00135671;
+    supply_1A.koef_adc_volt_fin = 0.00134612;
     supply_1A.koef_reg_prev = 15998.8;
-    supply_1A.koef_reg_fin = 56847.5;
+    supply_1A.koef_reg_fin = 57060;
 
     supply_1A.temp_base_ref = 70.;
     supply_1A.temp_base_k = 15000.;
@@ -202,11 +202,11 @@ struct eeprom_data_t
     supply_1A.temp_aux_time_const = 20.;
     irs::mlog() << irsm(" eeprom supply_1A") << endl;
 
-    supply_17A.resistance_code = 875;
+    supply_17A.resistance_code = 900;
     supply_17A.koef_adc_volt_prev = 0.00479873;
-    supply_17A.koef_adc_volt_fin = 0.0185929;
+    supply_17A.koef_adc_volt_fin = 0.0206957;
     supply_17A.koef_reg_prev = 15996.5;
-    supply_17A.koef_reg_fin = 4144.1;
+    supply_17A.koef_reg_fin = 3719.02;
 
     supply_17A.temp_base_ref = 70.;
     supply_17A.temp_base_k = 15000.;

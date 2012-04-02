@@ -12,7 +12,7 @@
 
 namespace u309m
 {
-  
+
 class init_eeprom_t {
 public:
   init_eeprom_t(irs::eeprom_at25128_data_t* ap_eeprom, eeprom_data_t* ap_eeprom_data);
@@ -134,12 +134,13 @@ private:
   irs::eeprom_at25128_data_t m_eeprom;
   eeprom_data_t m_eeprom_data;
   init_eeprom_t m_init_eeprom;
-  
+
   supply_t m_supply_200V;
   supply_t m_supply_20V;
   supply_t m_supply_2V;
   supply_t m_supply_1A;
   supply_t m_supply_17A;
+
   bool m_bistable_rele_change;
   mode_t m_mode;
   irs::timer_t m_rele_timer;
@@ -192,7 +193,7 @@ private:
 
   meas_comm_th_t m_meas_comm_th;
 
-  
+
   comm_t m_supply_comm;
   plis_debug_check_t m_supply_plis_debug_check;
   #ifdef OLD_MEAS_COMM
@@ -202,6 +203,7 @@ private:
   comm_t m_meas_comm;
   plis_debug_check_t m_meas_plis_debug_check;
   #endif  //  OLD_MEAS_COMM
+  void ethernet_to_eeprom();
 }; // app_t
 
 } // namespace u309m

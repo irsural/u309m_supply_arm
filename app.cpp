@@ -131,6 +131,15 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   ip.val[2] = m_eeprom_data.ip_2;
   ip.val[3] = m_eeprom_data.ip_3;
 
+  /*m_eth_data.ip_0 = IP_0;
+  m_eth_data.ip_1 = IP_1;
+  m_eth_data.ip_2 = IP_2;
+  m_eth_data.ip_3 = IP_3;
+  ip.val[0] = IP_0;
+  ip.val[1] = IP_1;
+  ip.val[2] = IP_2;
+  ip.val[3] = IP_3;*/
+
   char ip_str[IP_STR_LEN];
   mxip_to_cstr(ip_str, ip);
   mp_cfg->hardflow()->set_param("local_addr", ip_str);
@@ -209,6 +218,7 @@ void u309m::app_t::tick()
   if (m_eeprom.error()) {
     irs::mlog() << CNT_TO_DBLTIME(counter_get());
     irs::mlog() << " Îøèáêà CRC â tick app" << endl;
+    ethernet_to_eeprom();
   }
 
   #ifndef NOP
@@ -705,6 +715,21 @@ void u309m::app_t::clear_all_alarms()
   m_17A_th_base_value.clear_alarm();
   m_17A_th_aux_value.clear_alarm();
   m_upper_level_unconnected = false;
+}
+
+void u309m::app_t::ethernet_to_eeprom()
+{
+  /*m_eeprom_data.ip_0 = m_eth_data.ip_0;
+  m_eeprom_data.ip_1 = m_eth_data.ip_1;
+  m_eeprom_data.ip_2 = m_eth_data.ip_2;
+  m_eeprom_data.ip_3 = m_eth_data.ip_3;
+  m_eeprom_data.supply_200V.resistance_code =
+    m_eth_data.supply_200V.resistance_code;
+  m_eeprom_data.supply_200V.resistance_code =
+    m_eth_data.supply_200V.resistance_code;
+  m_eeprom_data.supply_200V.resistance_code =
+    m_eth_data.supply_200V.resistance_code;*/
+
 }
 
 u309m::meas_comm_th_t::meas_comm_th_t(

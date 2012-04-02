@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=1067163773
+Checksum=885363540
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -67,6 +67,10 @@ Fmt1={W}0:crc	4	0
 Fmt2={W}0:crc_1	4	0
 Fmt3={W}0:crc_2	4	0
 Fmt4={W}0:ee_crc_1	4	0
+[Disassemble mode]
+mode=0
+[Breakpoints2]
+Count=0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -74,6 +78,9 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 1
 LogFile=_ "$PROJ_DIR$\TermIO.log"
+[Aliases]
+Count=0
+SuppressDialog=0
 [CallStackLog]
 Enabled=0
 [DriverProfiling]
@@ -81,10 +88,3 @@ Enabled=0
 Mode=0
 Graph=0
 Symbiont=0
-[Disassemble mode]
-mode=0
-[Breakpoints2]
-Count=0
-[Aliases]
-Count=0
-SuppressDialog=0
