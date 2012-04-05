@@ -47,6 +47,7 @@ private:
   irs::dac_ltc2622_t m_temp_reg;
   irs::dac_ltc2622_data_t m_temp_reg_data;
   irs::loop_timer_t m_timer;
+  irs::loop_timer_t m_timer_2;
   irs_u16 m_tc_write;
   float m_prev_dac_reg_write;
   float m_fin_dac_reg_write;
@@ -65,6 +66,7 @@ private:
   float m_dt;
   irs::loop_timer_t m_timer_reg;
   irs::isodr_data_t m_temp_base_isodr;
+  irs::isodr_data_t m_temp_base_isodr_2;
   float m_temp_base_time_const;
   irs::isodr_data_t m_temp_aux_isodr;
   float m_temp_aux_time_const;

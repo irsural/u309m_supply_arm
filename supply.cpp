@@ -4,6 +4,17 @@
 
 #include <irsfinal.h>
 
+
+double isodr_2(irs::isodr_data_t *id, double x)
+{
+  irs::mlog() << id->k << endl;
+  irs::mlog() << x << endl;
+  irs::mlog() << id->fd.t << endl;
+  irs::mlog() << id->fd.x1 << endl;
+  irs::mlog() << id->fd.y1 << endl;
+  return 0;
+}
+
 u309m::supply_t::supply_t(
   irs::arm::arm_spi_t* ap_spi,
   supply_pins_t* ap_supply_pins,
@@ -29,6 +40,7 @@ u309m::supply_t::supply_t(
   m_temp_reg(ap_spi, mp_supply_pins->temp_reg_cs, 0, 0),
   m_temp_reg_data(&m_temp_reg),
   m_timer(irs::make_cnt_ms(200)),
+  m_timer_2(irs::make_cnt_s(300)),
   m_tc_write(0),
   m_prev_dac_reg_write(0),
   m_fin_dac_reg_write(0),
@@ -47,6 +59,7 @@ u309m::supply_t::supply_t(
   m_dt(0.5),
   m_timer_reg(irs::make_cnt_s(m_dt)),
   m_temp_base_isodr(),
+  m_temp_base_isodr_2(),
   m_temp_base_time_const(0),
   m_temp_aux_isodr(),
   m_temp_aux_time_const(0),
@@ -101,6 +114,12 @@ u309m::supply_t::supply_t(
     m_th_base.get_conv_koef();
   m_temp_base_isodr.fd.y1 = m_temp_base_isodr.fd.x1;
   m_temp_base_isodr.fd.t = mp_eth_data->base_tr_data.temp_time_const;
+  
+  m_temp_base_isodr_2.k = mp_eth_data->base_tr_data.temp_prop_koef;
+  m_temp_base_isodr_2.fd.x1 = m_th_base_data.temperature_code*
+    m_th_base.get_conv_koef();
+  m_temp_base_isodr_2.fd.y1 = m_temp_base_isodr.fd.x1;
+  m_temp_base_isodr_2.fd.t = mp_eth_data->base_tr_data.temp_time_const;
 
   mp_eth_data->base_tr_data.temperature_ref = mp_eeprom_data->temp_base_ref;
 
@@ -132,7 +151,7 @@ u309m::supply_t::supply_t(
   m_temp_aux_isodr.k = mp_eth_data->aux_tr_data.temp_prop_koef;
   m_temp_aux_isodr.fd.x1 = m_th_base_data.temperature_code*
     m_th_aux.get_conv_koef();
-  m_temp_aux_isodr.fd.y1 = m_temp_base_isodr.fd.x1;
+  m_temp_aux_isodr.fd.y1 = m_temp_aux_isodr.fd.x1;
   m_temp_aux_isodr.fd.t = mp_eth_data->aux_tr_data.temp_time_const;
 
   mp_eth_data->aux_tr_data.temperature_ref = mp_eeprom_data->temp_aux_ref;
@@ -332,11 +351,13 @@ void u309m::supply_t::tick()
       static_cast<float>(mp_eth_data->base_tr_data.temp_time_const);
     mp_eeprom_data->temp_base_time_const = m_temp_base_time_const;
     m_temp_base_isodr.fd.t = m_temp_base_time_const;
+    m_temp_base_isodr_2.fd.t = m_temp_base_time_const;
   }
 
   if (m_temp_base_isodr.k != mp_eth_data->base_tr_data.temp_prop_koef)
   {
     m_temp_base_isodr.k = mp_eth_data->base_tr_data.temp_prop_koef;
+    m_temp_base_isodr_2.k = mp_eth_data->base_tr_data.temp_prop_koef;
     mp_eeprom_data->temp_base_prop_koef = m_temp_base_isodr.k;
   }
 
@@ -362,13 +383,19 @@ void u309m::supply_t::tick()
         m_th_base_data.temperature_code * m_th_base.get_conv_koef();
       m_temp_base_isodr.fd.y1 = 
         m_th_base_data.temperature_code * m_th_base.get_conv_koef();
+      m_temp_base_isodr_2.fd.x1 = 
+        m_th_base_data.temperature_code * m_th_base.get_conv_koef();
+      m_temp_base_isodr_2.fd.y1 = 
+        m_th_base_data.temperature_code * m_th_base.get_conv_koef();
       m_th_base_start = true;
     } else if (m_th_base_start) {
       mp_eth_data->base_temp_data.value =
         m_th_base_data.temperature_code * m_th_base.get_conv_koef();
       mp_eth_data->base_temp_data.filtered_value =
-        isodr(&m_temp_base_isodr,
-        static_cast<float>(mp_eth_data->base_temp_data.value));
+        isodr(&m_temp_base_isodr, mp_eth_data->base_temp_data.value);
+      if (m_timer_2.check()) {
+        isodr_2(&m_temp_base_isodr_2, mp_eth_data->base_temp_data.value);
+      }
     }
     
     if ((m_th_aux_data.new_data_bit == 1) && (!m_th_aux_start)) {
@@ -381,8 +408,7 @@ void u309m::supply_t::tick()
       mp_eth_data->aux_temp_data.value = 
         m_th_aux_data.temperature_code*m_th_aux.get_conv_koef();
       mp_eth_data->aux_temp_data.filtered_value =
-        isodr(&m_temp_aux_isodr,
-        static_cast<float>(mp_eth_data->aux_temp_data.value));
+        isodr(&m_temp_aux_isodr, mp_eth_data->aux_temp_data.value);
     }
 
     mp_eth_data->prev_adc_data.voltage_code =
