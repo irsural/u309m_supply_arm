@@ -65,8 +65,8 @@ private:
   irs::pid_data_t m_temp_aux_pid_data;
   float m_dt;
   irs::loop_timer_t m_timer_reg;
-  irs::isodr_data_t m_temp_base_isodr;
   irs::isodr_data_t m_temp_base_isodr_2;
+  irs::isodr_data_t m_temp_base_isodr;
   float m_temp_base_time_const;
   irs::isodr_data_t m_temp_aux_isodr;
   float m_temp_aux_time_const;

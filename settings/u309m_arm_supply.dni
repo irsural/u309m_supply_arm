@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-764532076
+Checksum=-902711413
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -76,9 +76,6 @@ Count=1
 LoggingEnabled=_ 0
 LogFile=_ ""
 Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 1
-LogFile=_ "$PROJ_DIR$\TermIO.log"
 [Aliases]
 Count=0
 SuppressDialog=0
@@ -89,3 +86,6 @@ Enabled=0
 Mode=0
 Graph=0
 Symbiont=0
+[TermIOLog]
+LoggingEnabled=_ 1
+LogFile=_ "$PROJ_DIR$\TermIO.log"

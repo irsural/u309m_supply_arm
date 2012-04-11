@@ -51,7 +51,7 @@ public:
   void tick();
 private:
   enum {
-    m_reset_pulse_interval = 1,
+    m_reset_pulse_interval = 10,
     m_transaction_interval = 500,
     m_ack_interval = 1,
     m_cfg_done_wait_interval = 3000,
