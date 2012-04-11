@@ -107,16 +107,25 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
     mp_cfg->spi_meas_comm_plis(),
     mp_cfg->meas_pins(),
     &m_eth_data.meas_comm
-  )
+  ),
   #else //!OLD_MEAS_COMM
   m_meas_plis(mp_cfg->meas_comm_pins(), mp_cfg->meas_tact_gen(),
     *mp_cfg->spi_meas_comm_plis()),
   m_meas_comm(m_meas_plis, &m_eth_data.meas_comm.apply,
     &m_eth_data.meas_comm.reset),
   m_meas_plis_debug_check(m_meas_plis, m_eth_data.meas_comm.debug,
-    m_eeprom_data.meas_comm_debug)
+    m_eeprom_data.meas_comm_debug),
   #endif  //  OLD_MEAS_COMM
+  m_int_event(this, &u309m::app_t::event),
+  m_counter_high(0),
+  m_counter_low(0)
 {
+  irs::arm::interrupt_array()->int_event_gen(irs::arm::gpio_portj_int)
+    ->add(&m_int_event);
+  GPIOJIS = 0;
+  GPIOJIBE = 1;
+  GPIOJIM = 1;
+  
   m_rel_220V_timer.start();
   mp_cfg->rele_ext_pins()->SYM_OFF->set();
 
@@ -188,8 +197,25 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   #endif  //  OLD_MEAS_COMM
 }
 
+void u309m::app_t::event()
+{
+  if (mp_cfg->pins_meas_comm_reset_test()->pin()) {
+    m_counter_high++;
+  } else {
+    m_counter_low++;
+  }
+}
+
 void u309m::app_t::tick()
 {
+  if ((m_counter_high != 0) || (m_counter_low != 0)) {
+    irs::mlog() << CNT_TO_DBLTIME(counter_get());
+    irs::mlog() << " Перывание ";
+    irs::mlog() << m_counter_high << " ";
+    m_counter_high = 0;
+    irs::mlog() << m_counter_low << endl;
+    m_counter_low = 0;
+  }
   m_supply_plis.tick();
   m_supply_comm.tick();
   m_supply_plis_debug_check.tick();

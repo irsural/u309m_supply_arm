@@ -204,6 +204,10 @@ private:
   plis_debug_check_t m_meas_plis_debug_check;
   #endif  //  OLD_MEAS_COMM
   void ethernet_to_eeprom();
+  irs::event_connect_t<app_t> m_int_event;
+  void event();
+  int m_counter_high;
+  int m_counter_low;
 }; // app_t
 
 } // namespace u309m

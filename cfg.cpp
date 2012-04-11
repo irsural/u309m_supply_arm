@@ -124,7 +124,8 @@ u309m::cfg_t::cfg_t():
   m_dest_port(5006),
   m_tcpip(&m_arm_eth, m_local_ip, m_dest_ip, 10),
   m_simple_hardflow(&m_tcpip, m_local_ip, m_local_port,
-    m_dest_ip, m_dest_port, 10)
+    m_dest_ip, m_dest_port, 10),
+  m_meas_comm_reset_test(GPIO_PORTJ, 6, irs::gpio_pin_t::dir_in)
 {
   m_REL_220V.set();
 }
@@ -208,5 +209,10 @@ irs::pwm_gen_t& u309m::cfg_t::supply_tact_gen()
 irs::gpio_pin_t* u309m::cfg_t::pins_eeprom()
 {
   return m_spi_demux.cs_code(CS_EE);
+}
+
+irs::gpio_pin_t* u309m::cfg_t::pins_meas_comm_reset_test()
+{
+  return &m_meas_comm_reset_test;
 }
 

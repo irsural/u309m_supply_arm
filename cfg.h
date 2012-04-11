@@ -209,6 +209,7 @@ public:
   plis_pins_t& meas_comm_pins();
   irs::pwm_gen_t& meas_tact_gen();
   #endif  //  OLD_MEAS_COMM
+  irs::gpio_pin_t* pins_meas_comm_reset_test();
 private:
   enum {
     CS_TR_3 = 0,
@@ -339,6 +340,7 @@ private:
   irs_u16 m_dest_port;
   irs::simple_tcpip_t m_tcpip;
   irs::hardflow::simple_udp_flow_t m_simple_hardflow;
+  irs::arm::io_pin_t m_meas_comm_reset_test;
 };
 
 } // namespace u309m
