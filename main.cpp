@@ -14,8 +14,11 @@ public:
   {
     irs::arm::interrupt_array()->int_event_gen(irs::arm::gpio_portj_int)->
       add(this);
+    GPIOJIS = 0;
+    GPIOJIBE = 1;
+    GPIOJIM = 1;
   }
-  
+
   virtual void exec()
   {
     mxfact_event_t::exec();
@@ -34,9 +37,9 @@ int main()
   irs::mlog() << endl;
   irs::mlog() << endl;
   irs::mlog() << irsm("--------- INITIALIZATION --------") << endl;
-  
+
   interrupt_event_t interrupt_event_gpio();
-  
+
   static u309m::cfg_t cfg;
   app_start(&cfg);
 }
@@ -46,10 +49,18 @@ void app_start(u309m::cfg_t* ap_cfg)
   static u309m::app_t app(ap_cfg);
 
   irs::mlog() << irsm("------------- START -------------") << endl;
-
+  GPIOJIM = 1;
+  GPIOJIS = 0;
+  GPIOJIBE = 1;
+  GPIOJICR = 1;
+  //GPIOJMIS = 1;
   while(true) {
     app.tick();
     static irs::blink_t F0_blink(GPIO_PORTF, 0, irs::make_cnt_ms(100));
     F0_blink(); // Мигание светодиодом на плате arm
+    if (GPIOJRIS == 1) {
+      irs::mlog() << irsm("test") << endl;
+      GPIOJICR = 1;
+    }
   }
 }

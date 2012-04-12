@@ -120,12 +120,12 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_counter_high(0),
   m_counter_low(0)
 {
-  irs::arm::interrupt_array()->int_event_gen(irs::arm::gpio_portj_int)
+  /*irs::arm::interrupt_array()->int_event_gen(irs::arm::gpio_portj_int)
     ->add(&m_int_event);
   GPIOJIS = 0;
   GPIOJIBE = 1;
-  GPIOJIM = 1;
-  
+  GPIOJIM = 1;*/
+
   m_rel_220V_timer.start();
   mp_cfg->rele_ext_pins()->SYM_OFF->set();
 
@@ -750,7 +750,7 @@ void u309m::app_t::ethernet_to_eeprom()
   m_eeprom_data.ip_1 = m_eth_data.ip_1;
   m_eeprom_data.ip_2 = m_eth_data.ip_2;
   m_eeprom_data.ip_3 = m_eth_data.ip_3;
-  
+
   m_eeprom_data.supply_200V.resistance_code =
     m_eth_data.supply_200V.resistance_code;
   m_eeprom_data.supply_200V.koef_reg_prev =
@@ -761,7 +761,7 @@ void u309m::app_t::ethernet_to_eeprom()
     m_eth_data.supply_200V.fin_dac_data.koef;
   m_eeprom_data.supply_200V.koef_adc_volt_fin =
     m_eth_data.supply_200V.fin_adc_data.koef;
-  
+
   m_eeprom_data.supply_200V.temp_base_ref =
     m_eth_data.supply_200V.base_tr_data.temperature_ref;
   m_eeprom_data.supply_200V.temp_base_k =
@@ -769,12 +769,12 @@ void u309m::app_t::ethernet_to_eeprom()
   m_eeprom_data.supply_200V.temp_base_ki =
     m_eth_data.supply_200V.base_tr_data.temp_ki;
   m_eeprom_data.supply_200V.temp_base_kd =
-    m_eth_data.supply_200V.base_tr_data.temp_kd; 
+    m_eth_data.supply_200V.base_tr_data.temp_kd;
   m_eeprom_data.supply_200V.temp_base_prop_koef =
     m_eth_data.supply_200V.base_tr_data.temp_prop_koef;
   m_eeprom_data.supply_200V.temp_base_time_const =
     m_eth_data.supply_200V.base_tr_data.temp_time_const;
-  
+
   m_eeprom_data.supply_200V.temp_aux_ref =
     m_eth_data.supply_200V.aux_tr_data.temperature_ref;
   m_eeprom_data.supply_200V.temp_aux_k =
@@ -782,12 +782,12 @@ void u309m::app_t::ethernet_to_eeprom()
   m_eeprom_data.supply_200V.temp_aux_ki =
     m_eth_data.supply_200V.aux_tr_data.temp_ki;
   m_eeprom_data.supply_200V.temp_aux_kd =
-    m_eth_data.supply_200V.aux_tr_data.temp_kd; 
+    m_eth_data.supply_200V.aux_tr_data.temp_kd;
   m_eeprom_data.supply_200V.temp_aux_prop_koef =
     m_eth_data.supply_200V.aux_tr_data.temp_prop_koef;
   m_eeprom_data.supply_200V.temp_aux_time_const =
     m_eth_data.supply_200V.aux_tr_data.temp_time_const;
-  
+
   m_eeprom_data.supply_20V.resistance_code =
     m_eth_data.supply_20V.resistance_code;
   m_eeprom_data.supply_20V.koef_reg_prev =
@@ -798,7 +798,7 @@ void u309m::app_t::ethernet_to_eeprom()
     m_eth_data.supply_20V.fin_dac_data.koef;
   m_eeprom_data.supply_20V.koef_adc_volt_fin =
     m_eth_data.supply_20V.fin_adc_data.koef;
-  
+
   m_eeprom_data.supply_20V.temp_base_ref =
     m_eth_data.supply_20V.base_tr_data.temperature_ref;
   m_eeprom_data.supply_20V.temp_base_k =
@@ -806,12 +806,12 @@ void u309m::app_t::ethernet_to_eeprom()
   m_eeprom_data.supply_20V.temp_base_ki =
     m_eth_data.supply_20V.base_tr_data.temp_ki;
   m_eeprom_data.supply_20V.temp_base_kd =
-    m_eth_data.supply_20V.base_tr_data.temp_kd; 
+    m_eth_data.supply_20V.base_tr_data.temp_kd;
   m_eeprom_data.supply_20V.temp_base_prop_koef =
     m_eth_data.supply_20V.base_tr_data.temp_prop_koef;
   m_eeprom_data.supply_20V.temp_base_time_const =
     m_eth_data.supply_20V.base_tr_data.temp_time_const;
-  
+
   m_eeprom_data.supply_20V.temp_aux_ref =
     m_eth_data.supply_20V.aux_tr_data.temperature_ref;
   m_eeprom_data.supply_20V.temp_aux_k =
@@ -819,12 +819,12 @@ void u309m::app_t::ethernet_to_eeprom()
   m_eeprom_data.supply_20V.temp_aux_ki =
     m_eth_data.supply_20V.aux_tr_data.temp_ki;
   m_eeprom_data.supply_20V.temp_aux_kd =
-    m_eth_data.supply_20V.aux_tr_data.temp_kd; 
+    m_eth_data.supply_20V.aux_tr_data.temp_kd;
   m_eeprom_data.supply_20V.temp_aux_prop_koef =
     m_eth_data.supply_20V.aux_tr_data.temp_prop_koef;
   m_eeprom_data.supply_20V.temp_aux_time_const =
     m_eth_data.supply_20V.aux_tr_data.temp_time_const;
-  
+
   m_eeprom_data.supply_2V.resistance_code =
     m_eth_data.supply_2V.resistance_code;
   m_eeprom_data.supply_2V.koef_reg_prev =
@@ -835,7 +835,7 @@ void u309m::app_t::ethernet_to_eeprom()
     m_eth_data.supply_2V.fin_dac_data.koef;
   m_eeprom_data.supply_2V.koef_adc_volt_fin =
     m_eth_data.supply_2V.fin_adc_data.koef;
-  
+
   m_eeprom_data.supply_2V.temp_base_ref =
     m_eth_data.supply_2V.base_tr_data.temperature_ref;
   m_eeprom_data.supply_2V.temp_base_k =
@@ -843,12 +843,12 @@ void u309m::app_t::ethernet_to_eeprom()
   m_eeprom_data.supply_2V.temp_base_ki =
     m_eth_data.supply_2V.base_tr_data.temp_ki;
   m_eeprom_data.supply_2V.temp_base_kd =
-    m_eth_data.supply_2V.base_tr_data.temp_kd; 
+    m_eth_data.supply_2V.base_tr_data.temp_kd;
   m_eeprom_data.supply_2V.temp_base_prop_koef =
     m_eth_data.supply_2V.base_tr_data.temp_prop_koef;
   m_eeprom_data.supply_2V.temp_base_time_const =
     m_eth_data.supply_2V.base_tr_data.temp_time_const;
-  
+
   m_eeprom_data.supply_2V.temp_aux_ref =
     m_eth_data.supply_2V.aux_tr_data.temperature_ref;
   m_eeprom_data.supply_2V.temp_aux_k =
@@ -856,12 +856,12 @@ void u309m::app_t::ethernet_to_eeprom()
   m_eeprom_data.supply_2V.temp_aux_ki =
     m_eth_data.supply_2V.aux_tr_data.temp_ki;
   m_eeprom_data.supply_2V.temp_aux_kd =
-    m_eth_data.supply_2V.aux_tr_data.temp_kd; 
+    m_eth_data.supply_2V.aux_tr_data.temp_kd;
   m_eeprom_data.supply_2V.temp_aux_prop_koef =
     m_eth_data.supply_2V.aux_tr_data.temp_prop_koef;
   m_eeprom_data.supply_2V.temp_aux_time_const =
     m_eth_data.supply_2V.aux_tr_data.temp_time_const;
-  
+
     m_eeprom_data.supply_1A.resistance_code =
     m_eth_data.supply_1A.resistance_code;
   m_eeprom_data.supply_1A.koef_reg_prev =
@@ -872,7 +872,7 @@ void u309m::app_t::ethernet_to_eeprom()
     m_eth_data.supply_1A.fin_dac_data.koef;
   m_eeprom_data.supply_1A.koef_adc_volt_fin =
     m_eth_data.supply_1A.fin_adc_data.koef;
-  
+
   m_eeprom_data.supply_1A.temp_base_ref =
     m_eth_data.supply_1A.base_tr_data.temperature_ref;
   m_eeprom_data.supply_1A.temp_base_k =
@@ -880,12 +880,12 @@ void u309m::app_t::ethernet_to_eeprom()
   m_eeprom_data.supply_1A.temp_base_ki =
     m_eth_data.supply_1A.base_tr_data.temp_ki;
   m_eeprom_data.supply_1A.temp_base_kd =
-    m_eth_data.supply_1A.base_tr_data.temp_kd; 
+    m_eth_data.supply_1A.base_tr_data.temp_kd;
   m_eeprom_data.supply_1A.temp_base_prop_koef =
     m_eth_data.supply_1A.base_tr_data.temp_prop_koef;
   m_eeprom_data.supply_1A.temp_base_time_const =
     m_eth_data.supply_1A.base_tr_data.temp_time_const;
-  
+
   m_eeprom_data.supply_1A.temp_aux_ref =
     m_eth_data.supply_1A.aux_tr_data.temperature_ref;
   m_eeprom_data.supply_1A.temp_aux_k =
@@ -893,12 +893,12 @@ void u309m::app_t::ethernet_to_eeprom()
   m_eeprom_data.supply_1A.temp_aux_ki =
     m_eth_data.supply_1A.aux_tr_data.temp_ki;
   m_eeprom_data.supply_1A.temp_aux_kd =
-    m_eth_data.supply_1A.aux_tr_data.temp_kd; 
+    m_eth_data.supply_1A.aux_tr_data.temp_kd;
   m_eeprom_data.supply_1A.temp_aux_prop_koef =
     m_eth_data.supply_1A.aux_tr_data.temp_prop_koef;
   m_eeprom_data.supply_1A.temp_aux_time_const =
     m_eth_data.supply_1A.aux_tr_data.temp_time_const;
-  
+
   m_eeprom_data.supply_17A.resistance_code =
     m_eth_data.supply_17A.resistance_code;
   m_eeprom_data.supply_17A.koef_reg_prev =
@@ -909,7 +909,7 @@ void u309m::app_t::ethernet_to_eeprom()
     m_eth_data.supply_17A.fin_dac_data.koef;
   m_eeprom_data.supply_17A.koef_adc_volt_fin =
     m_eth_data.supply_17A.fin_adc_data.koef;
-  
+
   m_eeprom_data.supply_17A.temp_base_ref =
     m_eth_data.supply_17A.base_tr_data.temperature_ref;
   m_eeprom_data.supply_17A.temp_base_k =
@@ -917,12 +917,12 @@ void u309m::app_t::ethernet_to_eeprom()
   m_eeprom_data.supply_17A.temp_base_ki =
     m_eth_data.supply_17A.base_tr_data.temp_ki;
   m_eeprom_data.supply_17A.temp_base_kd =
-    m_eth_data.supply_17A.base_tr_data.temp_kd; 
+    m_eth_data.supply_17A.base_tr_data.temp_kd;
   m_eeprom_data.supply_17A.temp_base_prop_koef =
     m_eth_data.supply_17A.base_tr_data.temp_prop_koef;
   m_eeprom_data.supply_17A.temp_base_time_const =
     m_eth_data.supply_17A.base_tr_data.temp_time_const;
-  
+
   m_eeprom_data.supply_17A.temp_aux_ref =
     m_eth_data.supply_17A.aux_tr_data.temperature_ref;
   m_eeprom_data.supply_17A.temp_aux_k =
@@ -930,12 +930,12 @@ void u309m::app_t::ethernet_to_eeprom()
   m_eeprom_data.supply_17A.temp_aux_ki =
     m_eth_data.supply_17A.aux_tr_data.temp_ki;
   m_eeprom_data.supply_17A.temp_aux_kd =
-    m_eth_data.supply_17A.aux_tr_data.temp_kd; 
+    m_eth_data.supply_17A.aux_tr_data.temp_kd;
   m_eeprom_data.supply_17A.temp_aux_prop_koef =
     m_eth_data.supply_17A.aux_tr_data.temp_prop_koef;
   m_eeprom_data.supply_17A.temp_aux_time_const =
     m_eth_data.supply_17A.aux_tr_data.temp_time_const;
-  
+
   m_eeprom_data.upper_level_check = m_eth_data.control.upper_level_check;
   m_eeprom_data.izm_th_spi_enable = m_eth_data.control.izm_th_spi_enable;
   m_eeprom_data.supply_comm_debug = m_eth_data.supply_comm.debug;
