@@ -204,6 +204,7 @@ void u309m::app_t::event()
   } else {
     m_counter_low++;
   }
+  GPIOJICR = 1;
 }
 
 void u309m::app_t::tick()
