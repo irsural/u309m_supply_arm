@@ -11,7 +11,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_supply_plis(mp_cfg->supply_comm_pins(), mp_cfg->supply_tact_gen(),
     *mp_cfg->spi_general_purpose()),
   m_init_supply_plis(&m_supply_plis),
-  m_modbus_server(mp_cfg->hardflow(), 0, 14, 323, 0, irs::make_cnt_ms(200)),
+  m_modbus_server(mp_cfg->hardflow(), 0, 14, 327, 0, irs::make_cnt_ms(200)),
   m_eth_data(&m_modbus_server),
   m_eeprom(mp_cfg->spi_general_purpose(), mp_cfg->pins_eeprom(),
     1024, true),
