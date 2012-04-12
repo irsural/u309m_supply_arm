@@ -120,11 +120,13 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_counter_high(0),
   m_counter_low(0)
 {
-  /*irs::arm::interrupt_array()->int_event_gen(irs::arm::gpio_portj_int)
+  irs::arm::interrupt_array()->int_event_gen(irs::arm::gpio_portj_int)
     ->add(&m_int_event);
+  SETENA1_bit.NVIC_PORTJ_INT = 1;
+  GPIOJIM = 1;
   GPIOJIS = 0;
   GPIOJIBE = 1;
-  GPIOJIM = 1;*/
+  
 
   m_rel_220V_timer.start();
   mp_cfg->rele_ext_pins()->SYM_OFF->set();
@@ -211,7 +213,7 @@ void u309m::app_t::tick()
 {
   if ((m_counter_high != 0) || (m_counter_low != 0)) {
     irs::mlog() << CNT_TO_DBLTIME(counter_get());
-    irs::mlog() << " Перывание ";
+    irs::mlog() << " Прерывание ";
     irs::mlog() << m_counter_high << " ";
     m_counter_high = 0;
     irs::mlog() << m_counter_low << endl;
