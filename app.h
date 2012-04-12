@@ -208,9 +208,8 @@ private:
   void event();
   int m_counter_high;
   int m_counter_low;
-  double m_time;
-  double m_current_time;
-  double m_startup_time;
+  long m_time;
+  long m_update_time;
 }; // app_t
 
 } // namespace u309m

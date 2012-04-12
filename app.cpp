@@ -11,7 +11,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_supply_plis(mp_cfg->supply_comm_pins(), mp_cfg->supply_tact_gen(),
     *mp_cfg->spi_general_purpose()),
   m_init_supply_plis(&m_supply_plis),
-  m_modbus_server(mp_cfg->hardflow(), 0, 14, 327, 0, irs::make_cnt_ms(200)),
+  m_modbus_server(mp_cfg->hardflow(), 0, 14, 325, 0, irs::make_cnt_ms(200)),
   m_eth_data(&m_modbus_server),
   m_eeprom(mp_cfg->spi_general_purpose(), mp_cfg->pins_eeprom(),
     1024, true),
@@ -120,8 +120,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_counter_high(0),
   m_counter_low(0),
   m_time(0),
-  m_current_time(0),
-  m_startup_time(0)
+  m_update_time(0)
 {
   irs::arm::interrupt_array()->int_event_gen(irs::arm::gpio_portj_int)
     ->add(&m_int_event);
@@ -215,10 +214,21 @@ void u309m::app_t::event()
 void u309m::app_t::tick()
 {
   if ((m_counter_high != 0) || (m_counter_low != 0)) {
-    irs::mlog() << CNT_TO_DBLTIME(counter_get());
-    irs::mlog() << " Прерывание ";
+    long startup_time = static_cast<long>(CNT_TO_DBLTIME(counter_get()));
+    time_t time =
+      static_cast<time_t>(21600 + m_time + startup_time - m_update_time);
+    const tm* date = gmtime(&time);
+    irs::mlog() << setfill('0');
+    irs::mlog() << setw(4) << (date->tm_year + 1900) << ".";
+    irs::mlog() << setw(2) << (date->tm_mon + 1) << ".";
+    irs::mlog() << setw(2) << date->tm_mday << ' ';
+    irs::mlog() << setw(2) << date->tm_hour << ":";
+    irs::mlog() << setw(2) << date->tm_min << ":";
+    irs::mlog() << setw(2) << date->tm_sec << endl;
+    irs::mlog() << " Прерывание! Верхний уровень = ";
     irs::mlog() << m_counter_high << " ";
     m_counter_high = 0;
+    irs::mlog() << " Нижний уровень = ";
     irs::mlog() << m_counter_low << endl;
     m_counter_low = 0;
   }
@@ -715,24 +725,11 @@ void u309m::app_t::tick()
       = mp_cfg->adc()->get_float_data(PTC_17A_num);
     m_eth_data.arm_adc.internal_temp
       = mp_cfg->adc()->get_temperature();
-
-    m_current_time = CNT_TO_DBLTIME(counter_get());
-    time_t test =
-      static_cast<time_t>(21600 + m_time + m_current_time - m_startup_time);
-    const tm* date = gmtime(&test);
-    irs::mlog() << setfill('0');
-    irs::mlog() << setw(4) << (date->tm_year + 1900);
-    irs::mlog() << setw(2) << (date->tm_mon + 1);
-    irs::mlog() << setw(2) << date->tm_mday << ' ';
-    irs::mlog() << setw(2) << date->tm_hour;
-    irs::mlog() << setw(2) << date->tm_min;
-    irs::mlog() << setw(2) << date->tm_sec << endl;
-    //irs::mlog() << m_time + m_current_time - m_startup_time  << endl;
   }
 
   if (m_eth_data.control.time != m_time)
   {
-    m_startup_time = CNT_TO_DBLTIME(counter_get());
+    m_update_time = static_cast<long>(CNT_TO_DBLTIME(counter_get()));
     m_time = m_eth_data.control.time;
   }
 }
