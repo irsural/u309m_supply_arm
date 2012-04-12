@@ -122,11 +122,11 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
 {
   irs::arm::interrupt_array()->int_event_gen(irs::arm::gpio_portj_int)
     ->add(&m_int_event);
+  GPIOJIS_bit.no6 = 0;
+  GPIOJIBE_bit.no6 = 1;
+  GPIOJIM_bit.no6 = 1;
   SETENA1_bit.NVIC_PORTJ_INT = 1;
-  GPIOJIM = 1;
-  GPIOJIS = 0;
-  GPIOJIBE = 1;
-  
+  GPIOJICR_bit.no6 = 1;
 
   m_rel_220V_timer.start();
   mp_cfg->rele_ext_pins()->SYM_OFF->set();
@@ -206,7 +206,7 @@ void u309m::app_t::event()
   } else {
     m_counter_low++;
   }
-  GPIOJICR = 1;
+  GPIOJICR_bit.no6 = 1;
 }
 
 void u309m::app_t::tick()
