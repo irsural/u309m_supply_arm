@@ -715,9 +715,10 @@ void u309m::app_t::tick()
       = mp_cfg->adc()->get_float_data(PTC_17A_num);
     m_eth_data.arm_adc.internal_temp
       = mp_cfg->adc()->get_temperature();
-    
+
     m_current_time = CNT_TO_DBLTIME(counter_get());
-    time_t test = static_cast<time_t>(m_time + m_current_time - m_startup_time);
+    time_t test =
+      static_cast<time_t>(21600 + m_time + m_current_time - m_startup_time);
     const tm* date = gmtime(&test);
     irs::mlog() << setfill('0');
     irs::mlog() << setw(4) << (date->tm_year + 1900);
@@ -728,7 +729,7 @@ void u309m::app_t::tick()
     irs::mlog() << setw(2) << date->tm_sec << endl;
     //irs::mlog() << m_time + m_current_time - m_startup_time  << endl;
   }
-  
+
   if (m_eth_data.control.time != m_time)
   {
     m_startup_time = CNT_TO_DBLTIME(counter_get());
