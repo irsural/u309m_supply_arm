@@ -118,7 +118,10 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   #endif  //  OLD_MEAS_COMM
   m_int_event(this, &u309m::app_t::event),
   m_counter_high(0),
-  m_counter_low(0)
+  m_counter_low(0),
+  m_time(0),
+  m_current_time(0),
+  m_startup_time(0)
 {
   irs::arm::interrupt_array()->int_event_gen(irs::arm::gpio_portj_int)
     ->add(&m_int_event);
@@ -712,6 +715,15 @@ void u309m::app_t::tick()
       = mp_cfg->adc()->get_float_data(PTC_17A_num);
     m_eth_data.arm_adc.internal_temp
       = mp_cfg->adc()->get_temperature();
+    
+    m_current_time = CNT_TO_DBLTIME(counter_get());
+    irs::mlog() << m_time + m_current_time - m_startup_time  << endl;
+  }
+  
+  if (m_eth_data.control.time != m_time)
+  {
+    m_startup_time = CNT_TO_DBLTIME(counter_get());
+    m_time = m_eth_data.control.time;
   }
 }
 
