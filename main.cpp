@@ -7,6 +7,22 @@
 
 void app_start(u309m::cfg_t* ap_cfg);
 
+class interrupt_event_t: public mxfact_event_t
+{
+public:
+  interrupt_event_t()
+  {
+    irs::arm::interrupt_array()->int_event_gen(irs::arm::gpio_portj_int)->
+      add(this);
+  }
+  
+  virtual void exec()
+  {
+    mxfact_event_t::exec();
+    irs::mlog() << irsm("test") << endl;
+  }
+
+};
 int main()
 {
   pll_on();
@@ -18,7 +34,9 @@ int main()
   irs::mlog() << endl;
   irs::mlog() << endl;
   irs::mlog() << irsm("--------- INITIALIZATION --------") << endl;
-
+  
+  interrupt_event_t interrupt_event_gpio();
+  
   static u309m::cfg_t cfg;
   app_start(&cfg);
 }
