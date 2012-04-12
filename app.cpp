@@ -717,7 +717,16 @@ void u309m::app_t::tick()
       = mp_cfg->adc()->get_temperature();
     
     m_current_time = CNT_TO_DBLTIME(counter_get());
-    irs::mlog() << m_time + m_current_time - m_startup_time  << endl;
+    time_t test = static_cast<time_t>(m_time + m_current_time - m_startup_time);
+    const tm* date = gmtime(&test);
+    irs::mlog() << setfill('0');
+    irs::mlog() << setw(4) << (date->tm_year + 1900);
+    irs::mlog() << setw(2) << (date->tm_mon + 1);
+    irs::mlog() << setw(2) << date->tm_mday << ' ';
+    irs::mlog() << setw(2) << date->tm_hour;
+    irs::mlog() << setw(2) << date->tm_min;
+    irs::mlog() << setw(2) << date->tm_sec << endl;
+    //irs::mlog() << m_time + m_current_time - m_startup_time  << endl;
   }
   
   if (m_eth_data.control.time != m_time)
