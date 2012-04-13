@@ -4,7 +4,6 @@
 
 #include <irsfinal.h>
 
-
 double isodr_2(irs::isodr_data_t *id, double x)
 {
   irs::mlog() << x << endl;
@@ -40,7 +39,7 @@ u309m::supply_t::supply_t(
   m_temp_reg(ap_spi, mp_supply_pins->temp_reg_cs, 0, 0),
   m_temp_reg_data(&m_temp_reg),
   m_timer(irs::make_cnt_ms(200)),
-  m_timer_2(irs::make_cnt_s(300)),
+  m_timer_2(irs::make_cnt_s(3600)),
   m_tc_write(0),
   m_prev_dac_reg_write(0),
   m_fin_dac_reg_write(0),

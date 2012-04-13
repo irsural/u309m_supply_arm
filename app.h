@@ -208,8 +208,9 @@ private:
   void event();
   int m_counter_high;
   int m_counter_low;
-  long m_time;
-  long m_update_time;
+  irs_u32 m_time;
+  counter_t m_update_time;
+  counter_t m_edge_time;
 }; // app_t
 
 } // namespace u309m

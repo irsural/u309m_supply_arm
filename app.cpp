@@ -2,6 +2,8 @@
 
 #include "app.h"
 
+#include <irslimits.h>
+
 #include <irsfinal.h>
 
 //---------------------------- main application --------------------------------
@@ -120,7 +122,8 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_counter_high(0),
   m_counter_low(0),
   m_time(0),
-  m_update_time(0)
+  m_update_time(0),
+  m_edge_time(0)
 {
   irs::arm::interrupt_array()->int_event_gen(irs::arm::gpio_portj_int)
     ->add(&m_int_event);
@@ -203,6 +206,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
 
 void u309m::app_t::event()
 {
+  m_edge_time = counter_get();
   if (mp_cfg->pins_meas_comm_reset_test()->pin()) {
     m_counter_high++;
   } else {
@@ -214,23 +218,29 @@ void u309m::app_t::event()
 void u309m::app_t::tick()
 {
   if ((m_counter_high != 0) || (m_counter_low != 0)) {
-    long startup_time = static_cast<long>(CNT_TO_DBLTIME(counter_get()));
-    time_t time =
-      static_cast<time_t>(21600 + m_time + startup_time - m_update_time);
+    int counter_high = m_counter_high;
+    m_counter_high = 0;
+    int counter_low = m_counter_low;
+    m_counter_low = 0;
+    double delta_time = CNT_TO_DBLTIME(m_edge_time - m_update_time);
+    double time_s = 6*3600. + m_time + delta_time;
+    time_t time = static_cast<time_t>(time_s);
+    double time_ms = (time_s - time)*1000.;
     const tm* date = gmtime(&time);
+    //irs::mlog() << "time_t это " << irs::type_to_string(time_t()) << endl;
     irs::mlog() << setfill('0');
     irs::mlog() << setw(4) << (date->tm_year + 1900) << ".";
     irs::mlog() << setw(2) << (date->tm_mon + 1) << ".";
     irs::mlog() << setw(2) << date->tm_mday << ' ';
     irs::mlog() << setw(2) << date->tm_hour << ":";
     irs::mlog() << setw(2) << date->tm_min << ":";
-    irs::mlog() << setw(2) << date->tm_sec << endl;
-    irs::mlog() << " Прерывание! Верхний уровень = ";
-    irs::mlog() << m_counter_high << " ";
-    m_counter_high = 0;
-    irs::mlog() << " Нижний уровень = ";
-    irs::mlog() << m_counter_low << endl;
-    m_counter_low = 0;
+    irs::mlog() << setw(2) << date->tm_sec << " ";
+    irs::mlog() << time_ms;
+    irs::mlog() << endl;
+    irs::mlog() << " Прерывание! Передних фронтов: ";
+    irs::mlog() << counter_high << " ";
+    irs::mlog() << "; Задних фронтов: ";
+    irs::mlog() << counter_low << endl;
   }
   m_supply_plis.tick();
   m_supply_comm.tick();
@@ -729,7 +739,7 @@ void u309m::app_t::tick()
 
   if (m_eth_data.control.time != m_time)
   {
-    m_update_time = static_cast<long>(CNT_TO_DBLTIME(counter_get()));
+    m_update_time = counter_get();
     m_time = m_eth_data.control.time;
   }
 }
