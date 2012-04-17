@@ -222,11 +222,12 @@ void u309m::app_t::tick()
     m_counter_high = 0;
     int counter_low = m_counter_low;
     m_counter_low = 0;
-    double delta_time = CNT_TO_DBLTIME(m_edge_time - m_update_time);
+    /*double delta_time = CNT_TO_DBLTIME(m_edge_time - m_update_time);
     double time_s = 6*3600. + m_time + delta_time;
     time_t time = static_cast<time_t>(time_s);
-    double time_ms = (time_s - time)*1000.;
-    const tm* date = gmtime(&time);
+    double time_ms = (time_s - time)*1000.;*/
+    irs::time_remain_t time = irs::cur_time()->get_remain();
+    const tm* date = gmtime(&time.time);
     //irs::mlog() << "time_t это " << irs::type_to_string(time_t()) << endl;
     irs::mlog() << setfill('0');
     irs::mlog() << setw(4) << (date->tm_year + 1900) << ".";
@@ -235,7 +236,7 @@ void u309m::app_t::tick()
     irs::mlog() << setw(2) << date->tm_hour << ":";
     irs::mlog() << setw(2) << date->tm_min << ":";
     irs::mlog() << setw(2) << date->tm_sec << " ";
-    irs::mlog() << time_ms;
+    irs::mlog() << time.remain*1000.;
     irs::mlog() << endl;
     irs::mlog() << " Прерывание! Передних фронтов: ";
     irs::mlog() << counter_high << " ";
@@ -739,8 +740,9 @@ void u309m::app_t::tick()
 
   if (m_eth_data.control.time != m_time)
   {
-    m_update_time = counter_get();
-    m_time = m_eth_data.control.time;
+    //m_update_time = counter_get();
+    //m_time = m_eth_data.control.time;
+    irs::cur_time()->set(static_cast<time_t>(m_eth_data.control.time));
   }
 }
 
