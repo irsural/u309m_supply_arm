@@ -1,6 +1,8 @@
 #include <irsdefs.h>
 
 #include <irsstrm.h>
+#include <irsmcutil.h>
+
 #include "app.h"
 
 #include <irsfinal.h>
