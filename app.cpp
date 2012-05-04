@@ -227,7 +227,7 @@ void u309m::app_t::tick()
     time_t time = static_cast<time_t>(time_s);
     double time_ms = (time_s - time)*1000.;*/
     irs::time_remain_t time = irs::cur_time()->get_remain();
-    const tm* date = gmtime(&time.time);
+    const tm* date = localtime(&time.time);
     //irs::mlog() << "time_t это " << irs::type_to_string(time_t()) << endl;
     irs::mlog() << setfill('0');
     irs::mlog() << setw(4) << (date->tm_year + 1900) << ".";
@@ -741,7 +741,7 @@ void u309m::app_t::tick()
   if (m_eth_data.control.time != m_time)
   {
     //m_update_time = counter_get();
-    //m_time = m_eth_data.control.time;
+    m_time = m_eth_data.control.time;
     irs::cur_time()->set(static_cast<time_t>(m_eth_data.control.time));
   }
 }

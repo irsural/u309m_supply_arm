@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-560306927
+Checksum=540832383
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -84,7 +84,14 @@ Symbiont=0
 [Disassemble mode]
 mode=0
 [Breakpoints2]
-Count=0
+Bp0=_ 0 "EMUL_DATA" "0x20001220@32" 2 0 0 0 4294967295
+Bp1=_ 0 "EMUL_CODE" "{$PROJ_DIR$\supply.cpp}.9.3" 0 0 1 "" 0 "" 0
+Bp2=_ 0 "EMUL_CODE" "{$PROJ_DIR$\app.cpp}.233.5" 0 0 1 "" 0 "" 0
+Count=3
 [Aliases]
-Count=0
+A0=_ "D:\U309m\supply_arm\mxsrclib\arch\arm\irsarmutil.h" ""
+A1=_ "D:\U309m\supply_arm\mxsrclib\irserror.h" ""
+A2=_ "D:\U309m\supply_arm\mxsrclib\timer.cpp" ""
+A3=_ "D:\U309m\supply_arm\supply_arm\demux.h" ""
+Count=4
 SuppressDialog=0
