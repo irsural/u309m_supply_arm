@@ -169,7 +169,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
 
   m_eth_data.control.watchdog_reset_cause =
     m_watchdog.watchdog_reset_cause();
-  //m_watchdog.start();
+  m_watchdog.start();
   enum {
     ERROR_POS = 0,
     ON_POS = 2,
