@@ -1982,6 +1982,12 @@
         <name>$PROJ_DIR$\..\mxsrclib\irsgpio.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsinit.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsinit.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\mxsrclib\irsint.cpp</name>
       </file>
       <file>
@@ -2072,6 +2078,9 @@
         <name>$PROJ_DIR$\..\mxsrclib\irsstrdefs.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsstring.cpp</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\mxsrclib\irsstring.h</name>
       </file>
       <file>
@@ -2133,6 +2142,18 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\mxsrclib\mxdatastd.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\mxextbase.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\mxextbase.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\mxextchart.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\mxextchart.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\mxsrclib\mxifa.h</name>
