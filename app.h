@@ -189,6 +189,7 @@ private:
 
   irs::arm::watchdog_timer_t m_watchdog;
 
+  
   irs::loop_timer_t m_eth_data_refresh_timer;
 
   meas_comm_th_t m_meas_comm_th;
