@@ -2,6 +2,7 @@
 
 #include <irsstrm.h>
 #include <irsmcutil.h>
+#include <irsinit.h>
 
 #include "app.h"
 
@@ -13,6 +14,7 @@ void app_start(u309m::cfg_t* ap_cfg);
 int main()
 {
   pll_on();
+  irs::init();
 
   static hard_fault_event_t hard_fault_event(GPIO_PORTJ, 5);
 
