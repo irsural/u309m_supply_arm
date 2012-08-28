@@ -8,6 +8,10 @@
 
 #include <irsfinal.h>
 
+// Команды для переменной unlock (смещение 652):
+// m_unlock_command = 116,
+// m_clear_alarm_command = 207,
+
 void app_start(u309m::cfg_t* ap_cfg);
 
 
