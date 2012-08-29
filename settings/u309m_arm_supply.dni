@@ -78,6 +78,9 @@ Count=3
 LoggingEnabled=_ 0
 LogFile=_ ""
 Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 1
+LogFile=_ "$PROJ_DIR$\TermIO.log"
 [Aliases]
 A0=_ "D:\U309m\supply_arm\mxsrclib\arch\arm\irsarmutil.h" ""
 A1=_ "D:\U309m\supply_arm\mxsrclib\irserror.h" ""
@@ -92,6 +95,3 @@ Enabled=0
 Mode=0
 Graph=0
 Symbiont=0
-[TermIOLog]
-LoggingEnabled=_ 1
-LogFile=_ "$PROJ_DIR$\TermIO.log"
