@@ -2084,6 +2084,9 @@
         <name>$PROJ_DIR$\..\mxsrclib\irsstring.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsstrm.cpp</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\mxsrclib\irsstrm.h</name>
       </file>
       <file>

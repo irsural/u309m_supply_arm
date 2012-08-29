@@ -181,7 +181,7 @@ void u309m::plis_t::tick()
 void u309m::plis_t::spi_prepare()
 {
   m_spi.set_order(irs::spi_t::MSB);
-  m_spi.set_polarity(irs::spi_t::RISING_EDGE);
+  m_spi.set_polarity(irs::spi_t::NEGATIVE_POLARITY);//RISING_EDGE);
   m_spi.set_phase(irs::spi_t::LEAD_EDGE);
   m_spi.lock();
   m_pins.cs.clear();
@@ -407,7 +407,7 @@ u309m::meas_plis_t::meas_plis_t (
   for (; mp_spi->get_status() != irs::spi_t::FREE; )
     mp_spi->tick();
   mp_spi->set_order(irs::spi_t::MSB);
-  mp_spi->set_polarity(irs::spi_t::RISING_EDGE);
+  mp_spi->set_polarity(irs::spi_t::NEGATIVE_POLARITY);//RISING_EDGE);
   mp_spi->set_phase(irs::spi_t::LEAD_EDGE);
 
   mp_cs_pin->set();
@@ -445,7 +445,7 @@ void u309m::meas_plis_t::tick()
       if (m_need_write && (mp_spi->get_status() == irs::spi_t::FREE)) {
         if (!mp_spi->get_lock()) {
           mp_spi->set_order(irs::spi_t::MSB);
-          mp_spi->set_polarity(irs::spi_t::RISING_EDGE);
+          mp_spi->set_polarity(irs::spi_t::NEGATIVE_POLARITY);//RISING_EDGE);
           mp_spi->set_phase(irs::spi_t::LEAD_EDGE);
           mp_spi->lock();
           mp_cs_pin->clear();
