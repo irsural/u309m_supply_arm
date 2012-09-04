@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-164790734
+Checksum=-1070263972
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -67,13 +67,6 @@ Fmt1={W}0:crc	4	0
 Fmt2={W}0:crc_1	4	0
 Fmt3={W}0:crc_2	4	0
 Fmt4={W}0:ee_crc_1	4	0
-[Disassemble mode]
-mode=0
-[Breakpoints2]
-Bp0=_ 0 "EMUL_DATA" "0x20001220@32" 2 0 0 0 4294967295
-Bp1=_ 0 "EMUL_CODE" "{$PROJ_DIR$\supply.cpp}.9.3" 0 0 1 "" 0 "" 0
-Bp2=_ 0 "EMUL_CODE" "{$PROJ_DIR$\app.cpp}.233.5" 0 0 1 "" 0 "" 0
-Count=3
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -81,13 +74,6 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 1
 LogFile=_ "$PROJ_DIR$\TermIO.log"
-[Aliases]
-A0=_ "D:\U309m\supply_arm\mxsrclib\arch\arm\irsarmutil.h" ""
-A1=_ "D:\U309m\supply_arm\mxsrclib\irserror.h" ""
-A2=_ "D:\U309m\supply_arm\mxsrclib\timer.cpp" ""
-A3=_ "D:\U309m\supply_arm\supply_arm\demux.h" ""
-Count=4
-SuppressDialog=0
 [CallStackLog]
 Enabled=0
 [DriverProfiling]
@@ -95,3 +81,16 @@ Enabled=0
 Mode=0
 Graph=0
 Symbiont=0
+[Disassemble mode]
+mode=0
+[Breakpoints2]
+Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\supply.cpp}.9.3" 0 0 1 "" 0 "" 0
+Bp1=_ 0 "EMUL_CODE" "{$PROJ_DIR$\app.cpp}.249.3" 0 0 1 "" 0 "" 0
+Count=2
+[Aliases]
+A0=_ "D:\U309m\supply_arm\mxsrclib\arch\arm\irsarmutil.h" ""
+A1=_ "D:\U309m\supply_arm\mxsrclib\irserror.h" ""
+A2=_ "D:\U309m\supply_arm\mxsrclib\timer.cpp" ""
+A3=_ "D:\U309m\supply_arm\supply_arm\demux.h" ""
+Count=4
+SuppressDialog=0

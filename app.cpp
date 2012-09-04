@@ -13,7 +13,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_supply_plis(mp_cfg->supply_comm_pins(), mp_cfg->supply_tact_gen(),
     *mp_cfg->spi_general_purpose()),
   m_init_supply_plis(&m_supply_plis),
-  m_modbus_server(mp_cfg->hardflow(), 0, 14, 325, 0, irs::make_cnt_ms(200)),
+  m_modbus_server(mp_cfg->hardflow(), 0, 14, 327, 0, irs::make_cnt_ms(200)),
   m_eth_data(&m_modbus_server),
   m_eeprom(mp_cfg->spi_general_purpose(), mp_cfg->pins_eeprom(),
     1024, true),
@@ -217,6 +217,7 @@ void u309m::app_t::event()
 
 void u309m::app_t::tick()
 {
+  #ifdef NOP
   if ((m_counter_high != 0) || (m_counter_low != 0)) {
     int counter_high = m_counter_high;
     m_counter_high = 0;
@@ -243,6 +244,8 @@ void u309m::app_t::tick()
     irs::mlog() << "; Задних фронтов: ";
     irs::mlog() << counter_low << endl;
   }
+  #endif //NOP
+
   m_supply_plis.tick();
   m_supply_comm.tick();
   m_supply_plis_debug_check.tick();
@@ -473,6 +476,7 @@ void u309m::app_t::tick()
 
   if (m_alarm_timer.check())
   {
+    m_eth_data.control.work_counter++;
     if (!m_refresh_timeout)
     {
       if (m_eth_data.control.refresh_all_sources == 1)

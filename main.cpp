@@ -24,6 +24,8 @@ int main()
 
   static irs::arm::com_buf log_buf(1, 10, 1000000);
   irs::mlog().rdbuf(&log_buf);
+  //irs::mlog().rdbuf(cout.rdbuf());
+
   irs::mlog() << endl;
   irs::mlog() << endl;
   irs::mlog() << irsm("--------- INITIALIZATION --------") << endl;
