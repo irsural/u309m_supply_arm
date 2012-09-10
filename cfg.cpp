@@ -96,8 +96,6 @@ u309m::cfg_t::cfg_t():
   m_rele_ext_pins(&m_SYM_2V_on, &m_SYM_2V_off, &m_SYM_20V_on, &m_SYM_20V_off,
     &m_SYM_200V_on, &m_SYM_200V_off, &m_KZ_2V_on, &m_KZ_2V_off,
     &m_KZ_1A, &m_KZ_17A, &m_REL_220V, &m_SYM_OFF, &m_SYM_OFF_TEST),
-
-  m_f_osc(80000000),
   m_adc(((1 << PTC_A_channel) | (1 << PTC_LC_channel) |
         (1 << TR_24V_TEST_channel) | (1 << IZM_3_3V_TEST_channel) |
         (1 << IZM_6V_TEST_channel) | (1 << IZM_1_2V_TEST_channel) |

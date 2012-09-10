@@ -125,6 +125,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_update_time(0),
   m_edge_time(0)
 {
+  #ifdef NOP
   irs::arm::interrupt_array()->int_event_gen(irs::arm::gpio_portj_int)
     ->add(&m_int_event);
   GPIOJIS_bit.no6 = 0;
@@ -132,6 +133,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   GPIOJIM_bit.no6 = 1;
   SETENA1_bit.NVIC_PORTJ_INT = 1;
   GPIOJICR_bit.no6 = 1;
+  #endif //NOP 
 
   m_rel_220V_timer.start();
   mp_cfg->rele_ext_pins()->SYM_OFF->set();

@@ -321,7 +321,6 @@ private:
   irs::arm::io_pin_t m_SYM_OFF_TEST;
   rele_ext_pins_t m_rele_ext_pins;
 
-  irs_u32 m_f_osc;
   irs::arm::adc_stellaris_t m_adc;
   irs_u32 m_spi_bitrate;
   irs::arm::arm_spi_t m_spi_meas_comm_plis;
