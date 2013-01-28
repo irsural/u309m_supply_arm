@@ -133,7 +133,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   GPIOJIM_bit.no6 = 1;
   SETENA1_bit.NVIC_PORTJ_INT = 1;
   GPIOJICR_bit.no6 = 1;
-  #endif //NOP 
+  #endif //NOP
 
   m_rel_220V_timer.start();
   mp_cfg->rele_ext_pins()->SYM_OFF->set();
@@ -731,7 +731,7 @@ void u309m::app_t::tick()
     m_eth_data.arm_adc.IZM_6V_TEST
       = mp_cfg->adc()->get_float_data(IZM_6V_TEST_num) * 9.313f;
     m_eth_data.arm_adc.IZM_1_2V_TEST
-      = mp_cfg->adc()->get_float_data(IZM_1_2V_TEST_num) * 10.028f;
+      = mp_cfg->adc()->get_float_data(IZM_1_2V_TEST_num) * 9.257;//10.028f;
     m_eth_data.arm_adc.TEST_24V
       = mp_cfg->adc()->get_float_data(TEST_24V_num) * 32.999f;
     m_eth_data.arm_adc.TEST_5V
