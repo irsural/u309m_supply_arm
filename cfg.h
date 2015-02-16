@@ -41,7 +41,6 @@ struct plis_pins_t {
 };  //  plis_pins_t
 
 #ifdef OLD_MEAS_COMM
-
 struct meas_comm_pins_t {
   irs::gpio_pin_t* cs;
   irs::gpio_pin_t* reset;

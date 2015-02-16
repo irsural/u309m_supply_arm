@@ -18,10 +18,12 @@ u309m::supply_t::supply_t(
   irs::arm::arm_spi_t* ap_spi,
   supply_pins_t* ap_supply_pins,
   supply_eth_data_t* ap_supply_eth_data,
+  supply_add_data_t* ap_add_eth_data,
   eeprom_supply_data_t* ap_supply_eeprom_data
 ):
   mp_supply_pins(ap_supply_pins),
   mp_eth_data(ap_supply_eth_data),
+  mp_add_eth_data(ap_add_eth_data),
   mp_eeprom_data(ap_supply_eeprom_data),
   m_th_base(ap_spi, mp_supply_pins->termo_sense_base_cs,
     irs::make_cnt_ms(300)),
@@ -66,7 +68,11 @@ u309m::supply_t::supply_t(
   m_enable_saving_aux_th_ref(true),
   m_th_base_start(false),
   m_th_aux_start(false),
-  m_pid_reg_start(false)
+  m_pid_reg_start(false),
+  mode_thermo_off(mto_command_wait),
+  m_temp_reg_off(false),
+  m_heater_spi_off(false),
+  thermo_off_prev(0)
 {
   mp_eth_data->resistance_code = mp_eeprom_data->resistance_code;
   m_ad5293_data.resistance_code = mp_eeprom_data->resistance_code;
@@ -158,9 +164,13 @@ u309m::supply_t::supply_t(
 
 void u309m::supply_t::tick()
 {
-  m_th_base.tick();
-  m_th_aux.tick();
-  m_adc102.tick();
+  if (!m_heater_spi_off) {
+    m_th_base.tick();
+    m_th_aux.tick();
+  }
+  if (!*(mp_add_eth_data->p_meas_off)) {
+    m_adc102.tick();
+  }
   m_ad5293.tick();
   m_volt_reg.tick();
   m_temp_reg.tick();
@@ -430,6 +440,34 @@ void u309m::supply_t::tick()
       mp_eth_data->aux_tr_data.temperature_ref;
   }
 
+  switch(mode_thermo_off) {
+    case mto_command_wait: {
+      if (*(mp_add_eth_data->p_thermo_off) != thermo_off_prev) {
+        thermo_off_prev = *(mp_add_eth_data->p_thermo_off);
+        if (*(mp_add_eth_data->p_thermo_off)) {
+          m_temp_reg_off = true;
+          m_temp_reg_data.voltage_code_A = 0;
+          m_temp_reg_data.voltage_code_B = 0;
+          mode_thermo_off = mto_heater_wait;
+        } else {
+          m_temp_reg_off = false;
+          m_heater_spi_off = false;
+        }
+      }
+    } break;
+    case mto_heater_wait: {
+      if ((m_temp_reg_data.ready_bit_A == 1) && 
+        (m_temp_reg_data.ready_bit_B == 1))
+      {
+        m_heater_spi_off = true;
+        mode_thermo_off = mto_command_wait;
+      }
+    } break;
+  }
+  if (m_temp_reg_off) {
+    m_pid_reg_start = false;
+  }
+    
   if ((m_operate) && (m_th_base_start) && (m_th_aux_start))
   {
     if (m_timer_reg.check())
@@ -458,8 +496,8 @@ void u309m::supply_t::tick()
         mp_eth_data->base_tr_data.dac_value =
           m_temp_reg_data.voltage_code_A;
         mp_eth_data->base_tr_data.int_val =
-          static_cast<irs_i32>(m_temp_base_pid_data.int_val*m_temp_base_pid_data.k*
-          m_temp_base_pid_data.ki);
+          static_cast<irs_i32>(m_temp_base_pid_data.int_val*
+          m_temp_base_pid_data.k*m_temp_base_pid_data.ki);
 
         double aux_pid_reg_data_in =
           mp_eth_data->aux_tr_data.temperature_ref -
@@ -470,8 +508,8 @@ void u309m::supply_t::tick()
         mp_eth_data->aux_tr_data.dac_value =
           m_temp_reg_data.voltage_code_B;
         mp_eth_data->aux_tr_data.int_val =
-          static_cast<irs_i32>(m_temp_aux_pid_data.int_val*m_temp_aux_pid_data.k*
-          m_temp_aux_pid_data.ki);
+          static_cast<irs_i32>(m_temp_aux_pid_data.int_val*
+          m_temp_aux_pid_data.k*m_temp_aux_pid_data.ki);
       }
     }
   }

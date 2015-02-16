@@ -15,29 +15,38 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_init_supply_plis(&m_supply_plis),
   m_modbus_server(mp_cfg->hardflow(), 0, 14, 327, 0, irs::make_cnt_ms(200)),
   m_eth_data(&m_modbus_server),
+  m_spi_enable_disable(mp_cfg->spi_general_purpose(),
+    mp_cfg->spi_meas_comm_plis(),
+    &m_eth_data.control),
   m_eeprom(mp_cfg->spi_general_purpose(), mp_cfg->pins_eeprom(),
     1024, true),
   m_eeprom_data(&m_eeprom),
   m_init_eeprom(&m_eeprom, &m_eeprom_data),
+  m_supply_add_data_list(&m_eth_data.control),
   m_supply_200V(ap_cfg->spi_general_purpose(),
     ap_cfg->command_pins()->supply_200V,
     &m_eth_data.supply_200V,
+    &m_supply_add_data_list.supply_200V,
     &m_eeprom_data.supply_200V),
   m_supply_20V(ap_cfg->spi_general_purpose(),
     ap_cfg->command_pins()->supply_20V,
     &m_eth_data.supply_20V,
+    &m_supply_add_data_list.supply_20V,
     &m_eeprom_data.supply_20V),
   m_supply_2V(ap_cfg->spi_general_purpose(),
     ap_cfg->command_pins()->supply_2V,
     &m_eth_data.supply_2V,
+    &m_supply_add_data_list.supply_2V,
     &m_eeprom_data.supply_2V),
   m_supply_1A(ap_cfg->spi_general_purpose(),
     ap_cfg->command_pins()->supply_1A,
     &m_eth_data.supply_1A,
+    &m_supply_add_data_list.supply_1A,
     &m_eeprom_data.supply_1A),
   m_supply_17A(ap_cfg->spi_general_purpose(),
     ap_cfg->command_pins()->supply_17A,
     &m_eth_data.supply_17A,
+    &m_supply_add_data_list.supply_17A,
     &m_eeprom_data.supply_17A),
   m_bistable_rele_change(false),
   m_mode(rele_check_mode),
@@ -279,7 +288,6 @@ void u309m::app_t::tick()
     ethernet_to_eeprom();
   }
 
-  #ifndef NOP
   bool change_ip_0 =
     (m_eeprom_data.ip_0 != m_eth_data.ip_0);
   bool change_ip_1 =
@@ -305,7 +313,6 @@ void u309m::app_t::tick()
     mxip_to_cstr(ip_str, ip);
     mp_cfg->hardflow()->set_param("local_addr", ip_str);
   }
-  #endif //NOP
 
   if (m_rel_220V_timer.check())
   {
@@ -479,6 +486,9 @@ void u309m::app_t::tick()
   if (m_alarm_timer.check())
   {
     m_eth_data.control.work_counter++;
+    // Крашенинников. 15.02.2015
+    // Блокировка SPI по перменной spi_enable
+    m_spi_enable_disable.tick();
     if (!m_refresh_timeout)
     {
       if (m_eth_data.control.refresh_all_sources == 1)
@@ -1108,7 +1118,6 @@ u309m::init_eeprom_t::init_eeprom_t(irs::eeprom_at25128_data_t* ap_eeprom,
     ap_eeprom_data->reset_to_default();
   }
 }
-
 u309m::init_eeprom_t::~init_eeprom_t()
 {
 }
@@ -1125,7 +1134,69 @@ u309m::init_supply_plis_t::init_supply_plis_t(plis_t* ap_plis)
     ap_plis->tick();
   }
 }
-
 u309m::init_supply_plis_t::~init_supply_plis_t()
 {
+}
+
+u309m::supply_add_data_list_t::supply_add_data_list_t(
+  control_data_t* ap_control_data
+):
+  mp_control_data(ap_control_data)
+{
+  supply_200V.p_thermo_off = &(mp_control_data->thermo_200V_off);
+  supply_200V.p_meas_off = &(mp_control_data->meas_200V_off);
+  supply_20V.p_thermo_off = &(mp_control_data->thermo_20V_off);
+  supply_20V.p_meas_off = &(mp_control_data->meas_20V_off);
+  supply_2V.p_thermo_off = &(mp_control_data->thermo_2V_off);
+  supply_2V.p_meas_off = &(mp_control_data->meas_2V_off);
+  supply_1A.p_thermo_off = &(mp_control_data->thermo_1A_off);
+  supply_1A.p_meas_off = &(mp_control_data->meas_1A_off);
+  supply_17A.p_thermo_off = &(mp_control_data->thermo_17A_off);
+  supply_17A.p_meas_off = &(mp_control_data->meas_17A_off);
+}
+
+// Крашенинников. 15.02.2015
+// Реализация включения/выключения SPI
+u309m::spi_enable_disable_t::spi_enable_disable_t(
+  irs::spi_t* ap_spi_general_purpose,
+  irs::spi_t* ap_spi_meas_comm,
+  control_data_t* ap_control_data
+):
+  mp_spi_general_purpose(ap_spi_general_purpose),
+  mp_spi_meas_comm(ap_spi_meas_comm),
+  mp_control_data(ap_control_data),
+  m_mode(mode_wait_command),
+  m_spi_enable_prev(0)
+{
+  mp_control_data->spi_enable = 1;
+  m_spi_enable_prev = mp_control_data->spi_enable;
+}
+void u309m::spi_enable_disable_t::tick()
+{
+  switch (m_mode) {
+    case mode_wait_command: {
+      if (m_spi_enable_prev != mp_control_data->spi_enable) {
+        m_spi_enable_prev = mp_control_data->spi_enable;
+        if (mp_control_data->spi_enable) {
+          mp_spi_general_purpose->unlock();
+          mp_spi_meas_comm->unlock();
+        } else {
+          m_mode = mode_wait_spi_unlock;
+        }
+      }
+    } break;
+    case mode_wait_spi_unlock: {
+      if (!mp_spi_general_purpose->get_lock()) {
+        mp_spi_general_purpose->lock();
+      }
+      if (!mp_spi_meas_comm->get_lock()) {
+        mp_spi_meas_comm->lock();
+      }
+      if (!mp_spi_general_purpose->get_lock() &&
+        !mp_spi_meas_comm->get_lock())
+      {
+        m_mode = mode_wait_command;
+      }
+    } break;
+  }
 }

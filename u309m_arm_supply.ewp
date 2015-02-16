@@ -361,7 +361,7 @@
         </option>
         <option>
           <name>IccCppDialect</name>
-          <state>1</state>
+          <state>2</state>
         </option>
         <option>
           <name>IccExceptions</name>
@@ -1853,7 +1853,16 @@
         <name>$PROJ_DIR$\..\mxsrclib\arch\arm\armioregs.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\mxsrclib\arch\arm\armregs_cortex_m3.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\mxsrclib\arch\arm\armregs_lm3s.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\arch\arm\armregs_stm32.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\arch\arm\armregs_stm32f2xx.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\mxsrclib\arch\arm\armspi.cpp</name>
@@ -1877,10 +1886,31 @@
         <name>$PROJ_DIR$\..\mxsrclib\arch\arm\irsarmutil.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\mxsrclib\arch\arm\irsdefsarch.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\arch\arm\irsstm32f2xx_usb_hid_hardflow.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\arch\arm\irsstm32f2xx_usb_hid_hardflow.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\mxsrclib\arch\arm\mxifal.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\mxsrclib\arch\arm\mxnetda.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\arch\arm\stm32f2x7_eth_conf.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\arch\arm\stm32f2xx_conf.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\arch\arm\stm32f4x7_eth_conf.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\arch\arm\stm32f4xx_conf.h</name>
       </file>
     </group>
     <group>
@@ -1908,6 +1938,18 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\mxsrclib\hardflowg.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irs_chart_data.cpp</name>
+        <excluded>
+          <configuration>Debug</configuration>
+        </excluded>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irs_chart_data.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irs_codecvt.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\mxsrclib\irsadc.cpp</name>
@@ -1955,19 +1997,37 @@
         <name>$PROJ_DIR$\..\mxsrclib\irscpu.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsdacabs.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\mxsrclib\irsdbgutil.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\mxsrclib\irsdbgutil.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsdcp.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsdcp.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\mxsrclib\irsdefs.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsdefsbase.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\mxsrclib\irsdev.cpp</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\mxsrclib\irsdev.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsdevices.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irsdevices.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\mxsrclib\irsdsp.cpp</name>
@@ -2009,6 +2069,12 @@
         <name>$PROJ_DIR$\..\mxsrclib\irsgpio.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irshfftp.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irshfftp.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\mxsrclib\irsinit.cpp</name>
       </file>
       <file>
@@ -2034,6 +2100,12 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\mxsrclib\irslocale.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irslwip.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\irslwip.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\mxsrclib\irsmath.cpp</name>
@@ -2151,6 +2223,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\mxsrclib\irsvariant.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\mxsrclib\lwipopts.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\mxsrclib\measdef.h</name>

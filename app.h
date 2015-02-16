@@ -15,7 +15,8 @@ namespace u309m
 
 class init_eeprom_t {
 public:
-  init_eeprom_t(irs::eeprom_at25128_data_t* ap_eeprom, eeprom_data_t* ap_eeprom_data);
+  init_eeprom_t(irs::eeprom_at25128_data_t* ap_eeprom,
+    eeprom_data_t* ap_eeprom_data);
   ~init_eeprom_t();
 };
 
@@ -23,6 +24,19 @@ class init_supply_plis_t {
 public:
   init_supply_plis_t(plis_t* ap_plis);
   ~init_supply_plis_t();
+};
+
+struct supply_add_data_list_t {
+  supply_add_data_list_t(control_data_t* ap_control_data);
+
+  supply_add_data_t supply_200V;
+  supply_add_data_t supply_20V;
+  supply_add_data_t supply_2V;
+  supply_add_data_t supply_1A;
+  supply_add_data_t supply_17A;
+
+private:
+  control_data_t* mp_control_data;
 };
 
 class meas_comm_th_t
@@ -69,6 +83,29 @@ class plis_debug_check_t
     irs::bit_data_t& m_eth_bit;
     irs::bit_data_t& m_ee_bit;
     bool m_recfg_flag;
+};
+
+// Крашенинников. 15.02.2015
+// Реализация включения/выключения SPI
+class spi_enable_disable_t
+{
+public:
+  spi_enable_disable_t(
+    irs::spi_t* ap_spi_general_purpose,
+    irs::spi_t* ap_spi_meas_comm,
+    control_data_t* ap_control_data);
+  void tick();
+private:
+  enum mode_t {
+    mode_wait_command,
+    mode_wait_spi_unlock
+  };
+
+  irs::spi_t* mp_spi_general_purpose;
+  irs::spi_t* mp_spi_meas_comm;
+  control_data_t* mp_control_data;
+  mode_t m_mode;
+  irs::bit_data_t::bit_t m_spi_enable_prev;
 };
 
 class app_t
@@ -131,10 +168,12 @@ private:
   init_supply_plis_t m_init_supply_plis;
   irs::modbus_server_t m_modbus_server;
   eth_data_t m_eth_data;
+  spi_enable_disable_t m_spi_enable_disable;
   irs::eeprom_at25128_data_t m_eeprom;
   eeprom_data_t m_eeprom_data;
   init_eeprom_t m_init_eeprom;
 
+  supply_add_data_list_t m_supply_add_data_list;
   supply_t m_supply_200V;
   supply_t m_supply_20V;
   supply_t m_supply_2V;
@@ -189,7 +228,7 @@ private:
 
   irs::arm::watchdog_timer_t m_watchdog;
 
-  
+
   irs::loop_timer_t m_eth_data_refresh_timer;
 
   meas_comm_th_t m_meas_comm_th;

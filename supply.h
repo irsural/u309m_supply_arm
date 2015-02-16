@@ -21,6 +21,7 @@ public:
     irs::arm::arm_spi_t* ap_spi,
     supply_pins_t* ap_supply_pins,
     supply_eth_data_t* ap_supply_eth_data,
+    supply_add_data_t* ap_add_eth_data,
     eeprom_supply_data_t* ap_supply_eeprom_data
   );
   void on();
@@ -31,8 +32,14 @@ public:
   void disable_saving_aux_th_ref();
   void tick();
 private:
+  enum mode_thermo_off_t {
+    mto_command_wait,
+    mto_heater_wait
+  };
+
   supply_pins_t* mp_supply_pins;
   supply_eth_data_t* mp_eth_data;
+  supply_add_data_t* mp_add_eth_data;
   eeprom_supply_data_t* mp_eeprom_data;
   irs::th_lm95071_t m_th_base;
   irs::th_lm95071_data_t m_th_base_data;
@@ -75,6 +82,10 @@ private:
   bool m_th_base_start;
   bool m_th_aux_start;
   bool m_pid_reg_start;
+  mode_thermo_off_t mode_thermo_off;
+  bool m_temp_reg_off;
+  bool m_heater_spi_off;
+  irs::bit_data_t::bit_t thermo_off_prev;
 }; // supply_t
 
 } // namespace u309m
