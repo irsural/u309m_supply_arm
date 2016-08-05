@@ -1,4 +1,7 @@
-// 16.02.2015 12:06 rev. 97 mxsrclib rev. 1261 u309m_common 10
+// 05.08.2016 14:10:20 rev. 99 mxsrclib rev. 1261 u309m_common rev. 10
+//    Процессор изменен на TexasInstruments LM3S9B95 (раньше был LM3S9B96.
+//    Это не правильно, но работало)
+// 16.02.2015 12:06 rev. 97 mxsrclib rev. 1261 u309m_common rev. 10
 
 #include <irsdefs.h>
 
