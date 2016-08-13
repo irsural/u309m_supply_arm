@@ -123,7 +123,8 @@ u309m::cfg_t::cfg_t():
   m_tcpip(&m_arm_eth, m_local_ip, m_dest_ip, 10),
   m_simple_hardflow(&m_tcpip, m_local_ip, m_local_port,
     m_dest_ip, m_dest_port, 10),
-  m_meas_comm_reset_test(GPIO_PORTJ, 6, irs::gpio_pin_t::dir_in)
+  m_meas_comm_reset_test(GPIO_PORTJ, 6, irs::gpio_pin_t::dir_in),
+  mp_main_info(IRS_NULL)
 {
   m_REL_220V.set();
 }

@@ -186,6 +186,13 @@ struct meas_comm_th_pins_t
   }
 }; // meas_comm_th_pins_t
 
+struct main_info_t
+{
+  irs_u16 program_rev;
+  irs_u32 mxsrclib_rev;
+  irs_u16 common_rev;
+};
+
 class cfg_t
 {
 public:
@@ -209,6 +216,8 @@ public:
   irs::pwm_gen_t& meas_tact_gen();
   #endif  //  OLD_MEAS_COMM
   irs::gpio_pin_t* pins_meas_comm_reset_test();
+  main_info_t* main_info() { return mp_main_info; }
+  void main_info(main_info_t* ap_main_info) { mp_main_info = ap_main_info; }
 private:
   enum {
     CS_TR_3 = 0,
@@ -339,6 +348,7 @@ private:
   irs::simple_tcpip_t m_tcpip;
   irs::hardflow::simple_udp_flow_t m_simple_hardflow;
   irs::arm::io_pin_t m_meas_comm_reset_test;
+  main_info_t* mp_main_info;
 };
 
 } // namespace u309m

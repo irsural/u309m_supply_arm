@@ -168,10 +168,10 @@ private:
   init_supply_plis_t m_init_supply_plis;
   irs::modbus_server_t m_modbus_server;
   eth_data_t m_eth_data;
-  spi_enable_disable_t m_spi_enable_disable;
   irs::eeprom_at25128_data_t m_eeprom;
   eeprom_data_t m_eeprom_data;
   init_eeprom_t m_init_eeprom;
+  spi_enable_disable_t m_spi_enable_disable;
 
   supply_add_data_list_t m_supply_add_data_list;
   supply_t m_supply_200V;

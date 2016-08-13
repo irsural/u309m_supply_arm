@@ -13,15 +13,15 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_supply_plis(mp_cfg->supply_comm_pins(), mp_cfg->supply_tact_gen(),
     *mp_cfg->spi_general_purpose()),
   m_init_supply_plis(&m_supply_plis),
-  m_modbus_server(mp_cfg->hardflow(), 0, 14, 327, 0, irs::make_cnt_ms(200)),
+  m_modbus_server(mp_cfg->hardflow(), 0, 14, 400, 0, irs::make_cnt_ms(200)),
   m_eth_data(&m_modbus_server),
-  m_spi_enable_disable(mp_cfg->spi_general_purpose(),
-    mp_cfg->spi_meas_comm_plis(),
-    &m_eth_data.control),
   m_eeprom(mp_cfg->spi_general_purpose(), mp_cfg->pins_eeprom(),
     1024, true),
   m_eeprom_data(&m_eeprom),
   m_init_eeprom(&m_eeprom, &m_eeprom_data),
+  m_spi_enable_disable(mp_cfg->spi_general_purpose(),
+    mp_cfg->spi_meas_comm_plis(),
+    &m_eth_data.control),
   m_supply_add_data_list(&m_eth_data.control),
   m_supply_200V(ap_cfg->spi_general_purpose(),
     ap_cfg->command_pins()->supply_200V,
@@ -134,6 +134,10 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_update_time(0),
   m_edge_time(0)
 {
+  m_eth_data.control.program_rev = mp_cfg->main_info()->program_rev;
+  m_eth_data.control.mxsrclib_rev = mp_cfg->main_info()->mxsrclib_rev;
+  m_eth_data.control.common_rev = mp_cfg->main_info()->common_rev;
+  
   #ifdef NOP
   irs::arm::interrupt_array()->int_event_gen(irs::arm::gpio_portj_int)
     ->add(&m_int_event);
