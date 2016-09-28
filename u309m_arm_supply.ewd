@@ -45,7 +45,7 @@
         </option>
         <option>
           <name>MemFile</name>
-          <state>$TOOLKIT_DIR$\CONFIG\debugger\TexasInstruments\LM3S9B96.ddf</state>
+          <state>$TOOLKIT_DIR$\CONFIG\debugger\TexasInstruments\LM3S9B95.ddf</state>
         </option>
         <option>
           <name>RunToEnable</name>
@@ -918,11 +918,11 @@
         </option>
         <option>
           <name>CCCpuClockEdit</name>
-          <state>72.0</state>
+          <state>80</state>
         </option>
         <option>
           <name>CCSwoClockAuto</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>CCSwoClockEdit</name>

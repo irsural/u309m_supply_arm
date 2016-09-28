@@ -232,35 +232,6 @@ void u309m::app_t::event()
 
 void u309m::app_t::tick()
 {
-  #ifdef NOP
-  if ((m_counter_high != 0) || (m_counter_low != 0)) {
-    int counter_high = m_counter_high;
-    m_counter_high = 0;
-    int counter_low = m_counter_low;
-    m_counter_low = 0;
-    /*double delta_time = CNT_TO_DBLTIME(m_edge_time - m_update_time);
-    double time_s = 6*3600. + m_time + delta_time;
-    time_t time = static_cast<time_t>(time_s);
-    double time_ms = (time_s - time)*1000.;*/
-    irs::time_remain_t time = irs::cur_time()->get_remain();
-    const tm* date = localtime(&time.time);
-    //irs::mlog() << "time_t это " << irs::type_to_string(time_t()) << endl;
-    irs::mlog() << setfill('0');
-    irs::mlog() << setw(4) << (date->tm_year + 1900) << ".";
-    irs::mlog() << setw(2) << (date->tm_mon + 1) << ".";
-    irs::mlog() << setw(2) << date->tm_mday << ' ';
-    irs::mlog() << setw(2) << date->tm_hour << ":";
-    irs::mlog() << setw(2) << date->tm_min << ":";
-    irs::mlog() << setw(2) << date->tm_sec << " ";
-    irs::mlog() << time.remain*1000.;
-    irs::mlog() << endl;
-    irs::mlog() << " Прерывание! Передних фронтов: ";
-    irs::mlog() << counter_high << " ";
-    irs::mlog() << "; Задних фронтов: ";
-    irs::mlog() << counter_low << endl;
-  }
-  #endif //NOP
-
   m_supply_plis.tick();
   m_supply_comm.tick();
   m_supply_plis_debug_check.tick();
