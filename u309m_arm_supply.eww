@@ -4,6 +4,9 @@
   <project>
     <path>$WS_DIR$\u309m_arm_supply.ewp</path>
   </project>
+  <project>
+    <path>$WS_DIR$\..\..\..\..\U5023\prjs\arm\u5023m\u5023m_arm.ewp</path>
+  </project>
   <batchBuild/>
 </workspace>
 

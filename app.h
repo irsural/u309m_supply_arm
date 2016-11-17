@@ -7,6 +7,7 @@
 #include "supply.h"
 #include "cfg.h"
 #include "comm.h"
+#include "config.h"
 
 #include <irsfinal.h>
 

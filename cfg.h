@@ -18,6 +18,7 @@
 #include <irsmem.h>
 
 #include "demux.h"
+#include "config.h"
 
 #include <irsfinal.h>
 
@@ -218,6 +219,13 @@ public:
   irs::gpio_pin_t* pins_meas_comm_reset_test();
   main_info_t* main_info() { return mp_main_info; }
   void main_info(main_info_t* ap_main_info) { mp_main_info = ap_main_info; }
+  #ifdef LWIP
+  void change_ip(mxip_t a_ip);
+  void change_dhcp(bool a_dhcp);
+  void change_mask(mxip_t a_mask);
+  void change_gateway(mxip_t a_gateway);
+  void network_conf(mxip_t a_ip, mxip_t a_mask, mxip_t a_gateway, bool a_dhcp);
+  #endif //LWIP
 private:
   enum {
     CS_TR_3 = 0,
@@ -341,12 +349,22 @@ private:
 
   mxmac_t m_local_mac;
   irs::arm::arm_ethernet_t m_arm_eth;
+  #ifdef LWIP
+  irs::handle_t<irs::lwip::ethernet_t> m_ethernet;
+  irs::handle_t<irs::hardflow::lwip::udp_t> m_udp_client;
+  irs::hardflow::connector_t m_connector_hardflow;
+  mxip_t m_ip;
+  bool m_dhcp;
+  mxip_t m_mask;
+  mxip_t m_gateway;
+  #else //LWIP
   mxip_t m_local_ip;
   irs_u16 m_local_port;
   mxip_t m_dest_ip;
   irs_u16 m_dest_port;
   irs::simple_tcpip_t m_tcpip;
   irs::hardflow::simple_udp_flow_t m_simple_hardflow;
+  #endif //LWIP
   irs::arm::io_pin_t m_meas_comm_reset_test;
   main_info_t* mp_main_info;
 };
