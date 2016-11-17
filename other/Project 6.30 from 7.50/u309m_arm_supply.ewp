@@ -39,20 +39,20 @@
         <option>
           <name>Input variant</name>
           <version>3</version>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>Input description</name>
-          <state>Full formatting.</state>
+          <state>Automatic choice of formatter.</state>
         </option>
         <option>
           <name>Output variant</name>
           <version>2</version>
-          <state>3</state>
+          <state>0</state>
         </option>
         <option>
           <name>Output description</name>
-          <state>No specifier a, A.</state>
+          <state>Automatic choice of formatter.</state>
         </option>
         <option>
           <name>GOutputBinary</name>
@@ -70,20 +70,20 @@
         <option>
           <name>GRuntimeLibSelect</name>
           <version>0</version>
-          <state>2</state>
+          <state>1</state>
         </option>
         <option>
           <name>GRuntimeLibSelectSlave</name>
           <version>0</version>
-          <state>2</state>
+          <state>1</state>
         </option>
         <option>
           <name>RTDescription</name>
-          <state>Use the full configuration of the C/C++ runtime library. Full locale interface, C locale, file descriptor support, multibytes in printf and scanf, and hex floats in strtod.</state>
+          <state>Use the normal configuration of the C/C++ runtime library. No locale interface, C locale, no file descriptor support, no multibytes in printf and scanf, and no hex floats in strtod.</state>
         </option>
         <option>
           <name>OGProductVersion</name>
-          <state>5.50.0.51907</state>
+          <state>6.30.1.53141</state>
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
@@ -133,7 +133,7 @@
         </option>
         <option>
           <name>RTConfigPath2</name>
-          <state>$TOOLKIT_DIR$\INC\c\DLib_Config_Full.h</state>
+          <state>$TOOLKIT_DIR$\INC\c\DLib_Config_Normal.h</state>
         </option>
         <option>
           <name>GFPUCoreSlave</name>
@@ -164,7 +164,7 @@
         <debug>1</debug>
         <option>
           <name>CCDefines</name>
-          <state>__LM3SxBxx__</state>
+          <state></state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -200,11 +200,11 @@
         </option>
         <option>
           <name>CCEnableRemarks</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCDiagSuppress</name>
-          <state>Pa039, Pe261, Pe340, Pa091, Pa089</state>
+          <state></state>
         </option>
         <option>
           <name>CCDiagRemark</name>
@@ -293,8 +293,7 @@
         </option>
         <option>
           <name>CCIncludePath2</name>
-          <state>$PROJ_DIR$\..\mxsrclib\arch\arm\</state>
-          <state>$PROJ_DIR$\..\mxsrclib\</state>
+          <state></state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -349,7 +348,7 @@
         </option>
         <option>
           <name>IccLang</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IccCDialect</name>
@@ -361,7 +360,7 @@
         </option>
         <option>
           <name>IccCppDialect</name>
-          <state>2</state>
+          <state>1</state>
         </option>
         <option>
           <name>IccExceptions</name>
@@ -377,7 +376,7 @@
         </option>
         <option>
           <name>IccCppInlineSemantics</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IccCmsis</name>
@@ -519,7 +518,7 @@
         </option>
         <option>
           <name>AOutputFile</name>
-          <state>$FILE_BNAME$.o</state>
+          <state></state>
         </option>
         <option>
           <name>AMultibyteSupport</name>
@@ -565,7 +564,7 @@
         </option>
         <option>
           <name>OCOutputOverride</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>OOCOutputFile</name>
@@ -623,7 +622,7 @@
         </option>
         <option>
           <name>IlinkOutputFile</name>
-          <state>$PROJ_FNAME$.out</state>
+          <state>u309m_arm_supply.out</state>
         </option>
         <option>
           <name>IlinkDebugInfoEnable</name>
@@ -667,27 +666,27 @@
         </option>
         <option>
           <name>IlinkLogInitialization</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IlinkLogModule</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IlinkLogSection</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IlinkLogVeneer</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IlinkIcfOverride</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$\u309m_arm_supply.icf</state>
+          <state>lnk0t.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -747,7 +746,7 @@
         </option>
         <option>
           <name>IlinkProgramEntryLabel</name>
-          <state>__iar_program_start</state>
+          <state></state>
         </option>
         <option>
           <name>DoFill</name>
@@ -822,15 +821,15 @@
         </option>
         <option>
           <name>IlinkLogAutoLibSelect</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IlinkLogRedirSymbols</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IlinkLogUnusedFragments</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IlinkCrcReverseByteOrder</name>
@@ -946,7 +945,7 @@
         <option>
           <name>Input variant</name>
           <version>3</version>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>Input description</name>
@@ -955,7 +954,7 @@
         <option>
           <name>Output variant</name>
           <version>2</version>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>Output description</name>
@@ -990,11 +989,11 @@
         </option>
         <option>
           <name>OGProductVersion</name>
-          <state>5.50.0.51907</state>
+          <state>6.30.1.53141</state>
         </option>
         <option>
           <name>OGLastSavedByProductVersion</name>
-          <state>6.21.1.52845</state>
+          <state></state>
         </option>
         <option>
           <name>GeneralEnableMisra</name>
@@ -1045,12 +1044,12 @@
         <option>
           <name>GFPUCoreSlave</name>
           <version>19</version>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GBECoreSlave</name>
           <version>19</version>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>OGUseCmsis</name>
@@ -1283,7 +1282,7 @@
         </option>
         <option>
           <name>IccCppInlineSemantics</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IccCmsis</name>
@@ -2340,9 +2339,6 @@
       <name>$PROJ_DIR$\..\u309m_common\common_data.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\config.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\data.h</name>
     </file>
     <file>
@@ -2353,9 +2349,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\privatecfg.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\privatecfg0.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\supply.cpp</name>

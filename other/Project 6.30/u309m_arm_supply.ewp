@@ -2340,9 +2340,6 @@
       <name>$PROJ_DIR$\..\u309m_common\common_data.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\config.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\data.h</name>
     </file>
     <file>
@@ -2353,9 +2350,6 @@
     </file>
     <file>
       <name>$PROJ_DIR$\privatecfg.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\privatecfg0.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\supply.cpp</name>
