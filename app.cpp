@@ -15,10 +15,12 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_init_supply_plis(&m_supply_plis),
   m_modbus_server(mp_cfg->hardflow(), 0, 14, 400, 0, irs::make_cnt_ms(200)),
   m_eth_data(&m_modbus_server),
+  m_eeprom_max_size(1024),
   m_eeprom(mp_cfg->spi_general_purpose(), mp_cfg->pins_eeprom(),
-    1024, true),
-  m_eeprom_data(&m_eeprom),
-  m_init_eeprom(&m_eeprom, &m_eeprom_data),
+    m_eeprom_max_size, true),
+  m_eeprom_size(0),
+  m_eeprom_data(&m_eeprom, 0, &m_eeprom_size),
+  m_init_eeprom(&m_eeprom, &m_eeprom_data, m_eeprom_max_size, m_eeprom_size),
   m_spi_enable_disable(mp_cfg->spi_general_purpose(),
     mp_cfg->spi_meas_comm_plis(),
     &m_eth_data.control),
@@ -103,6 +105,8 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_refresh_timer(irs::make_cnt_s(1)),
   m_watchdog(5),
   m_eth_data_refresh_timer(irs::make_cnt_ms(300)),
+  ip_params_apply_reset(false),
+  ip_params_apply_timer(irs::make_cnt_ms(3000)),
   m_meas_comm_th(
     mp_cfg->spi_general_purpose(),
     mp_cfg->meas_comm_th_pins(),
@@ -137,6 +141,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_eth_data.control.program_rev = mp_cfg->main_info()->program_rev;
   m_eth_data.control.mxsrclib_rev = mp_cfg->main_info()->mxsrclib_rev;
   m_eth_data.control.common_rev = mp_cfg->main_info()->common_rev;
+  m_eth_data.control.lwip_rev = mp_cfg->main_info()->lwip_rev;
   
   #ifdef NOP
   irs::arm::interrupt_array()->int_event_gen(irs::arm::gpio_portj_int)
@@ -155,25 +160,43 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_eth_data.ip_1 = m_eeprom_data.ip_1;
   m_eth_data.ip_2 = m_eeprom_data.ip_2;
   m_eth_data.ip_3 = m_eeprom_data.ip_3;
-
   mxip_t ip = mxip_t::zero_ip();
   ip.val[0] = m_eeprom_data.ip_0;
   ip.val[1] = m_eeprom_data.ip_1;
   ip.val[2] = m_eeprom_data.ip_2;
   ip.val[3] = m_eeprom_data.ip_3;
 
-  /*m_eth_data.ip_0 = IP_0;
-  m_eth_data.ip_1 = IP_1;
-  m_eth_data.ip_2 = IP_2;
-  m_eth_data.ip_3 = IP_3;
-  ip.val[0] = IP_0;
-  ip.val[1] = IP_1;
-  ip.val[2] = IP_2;
-  ip.val[3] = IP_3;*/
+  m_eth_data.control.mask_0 = m_eeprom_data.mask_0;
+  m_eth_data.control.mask_1 = m_eeprom_data.mask_1;
+  m_eth_data.control.mask_2 = m_eeprom_data.mask_2;
+  m_eth_data.control.mask_3 = m_eeprom_data.mask_3;
 
+  m_eth_data.control.gateway_0 = m_eeprom_data.gateway_0;
+  m_eth_data.control.gateway_1 = m_eeprom_data.gateway_1;
+  m_eth_data.control.gateway_2 = m_eeprom_data.gateway_2;
+  m_eth_data.control.gateway_3 = m_eeprom_data.gateway_3;
+
+  #ifdef U309M_LWIP
+  mxip_t mask = mxip_t::zero_ip();
+  mask.val[0] = m_eeprom_data.mask_0;
+  mask.val[1] = m_eeprom_data.mask_1;
+  mask.val[2] = m_eeprom_data.mask_2;
+  mask.val[3] = m_eeprom_data.mask_3;
+  mxip_t gateway = mxip_t::zero_ip();
+  gateway.val[0] = m_eeprom_data.gateway_0;
+  gateway.val[1] = m_eeprom_data.gateway_1;
+  gateway.val[2] = m_eeprom_data.gateway_2;
+  gateway.val[3] = m_eeprom_data.gateway_3;
+  //mxip_t mask = { 255, 255, 252, 0 };
+  //mxip_t gateway = { 192, 168, 0, 1  };
+  bool dhcp_on = false;
+  mp_cfg->network_conf(ip, mask, gateway, dhcp_on);
+  #else //U309M_LWIP
   char ip_str[IP_STR_LEN];
   mxip_to_cstr(ip_str, ip);
   mp_cfg->hardflow()->set_param("local_addr", ip_str);
+  #endif //U309M_LWIP
+  
   m_eth_data.control.on = 0;
   m_alarm_timer.start();
   m_start_alarm_timer.start();
@@ -252,6 +275,7 @@ void u309m::app_t::tick()
 
   mp_cfg->adc()->tick();
 
+  mp_cfg->tick();
   m_meas_comm_th.tick();
   m_modbus_server.tick();
 
@@ -263,30 +287,56 @@ void u309m::app_t::tick()
     ethernet_to_eeprom();
   }
 
-  bool change_ip_0 =
-    (m_eeprom_data.ip_0 != m_eth_data.ip_0);
-  bool change_ip_1 =
-    (m_eeprom_data.ip_1 != m_eth_data.ip_1);
-  bool change_ip_2 =
-    (m_eeprom_data.ip_2 != m_eth_data.ip_2);
-  bool change_ip_3 =
-    (m_eeprom_data.ip_3 != m_eth_data.ip_3);
-
-  if (change_ip_0 || change_ip_1 || change_ip_2 || change_ip_3)
+  if (ip_params_apply_timer.check()) {
+    ip_params_apply_reset = false;
+    // 22.11.2016 Крашенинников: Отложенный сброс сделал для того, чтобы
+    // MODBUS не уходил в постоянный цикл записи
+    m_eth_data.control.ip_params_apply = 0;
+  }
+  if (!ip_params_apply_reset)
+  if (m_eth_data.control.ip_params_apply == 1)
   {
+    ip_params_apply_reset = true;
+    ip_params_apply_timer.start();
+    
     m_eeprom_data.ip_0 = m_eth_data.ip_0;
     m_eeprom_data.ip_1 = m_eth_data.ip_1;
     m_eeprom_data.ip_2 = m_eth_data.ip_2;
     m_eeprom_data.ip_3 = m_eth_data.ip_3;
-
     mxip_t ip = mxip_t::zero_ip();
     ip.val[0] = m_eth_data.ip_0;
     ip.val[1] = m_eth_data.ip_1;
     ip.val[2] = m_eth_data.ip_2;
     ip.val[3] = m_eth_data.ip_3;
+    
+    m_eeprom_data.mask_0 = m_eth_data.control.mask_0;
+    m_eeprom_data.mask_1 = m_eth_data.control.mask_1;
+    m_eeprom_data.mask_2 = m_eth_data.control.mask_2;
+    m_eeprom_data.mask_3 = m_eth_data.control.mask_3;
+  
+    m_eeprom_data.gateway_0 = m_eth_data.control.gateway_0;
+    m_eeprom_data.gateway_1 = m_eth_data.control.gateway_1;
+    m_eeprom_data.gateway_2 = m_eth_data.control.gateway_2;
+    m_eeprom_data.gateway_3 = m_eth_data.control.gateway_3;
+  
+    #ifdef U309M_LWIP
+    mxip_t mask = mxip_t::zero_ip();
+    mask.val[0] = m_eth_data.control.mask_0;
+    mask.val[1] = m_eth_data.control.mask_1;
+    mask.val[2] = m_eth_data.control.mask_2;
+    mask.val[3] = m_eth_data.control.mask_3;
+    mxip_t gateway = mxip_t::zero_ip();
+    gateway.val[0] = m_eth_data.control.gateway_0;
+    gateway.val[1] = m_eth_data.control.gateway_1;
+    gateway.val[2] = m_eth_data.control.gateway_2;
+    gateway.val[3] = m_eth_data.control.gateway_3;
+    bool dhcp_on = false;
+    mp_cfg->network_conf(ip, mask, gateway, dhcp_on);
+    #else //U309M_LWIP
     char ip_str[IP_STR_LEN];
     mxip_to_cstr(ip_str, ip);
     mp_cfg->hardflow()->set_param("local_addr", ip_str);
+    #endif //U309M_LWIP
   }
 
   if (m_rel_220V_timer.check())
@@ -1086,12 +1136,16 @@ void u309m::plis_debug_check_t::tick()
 }
 
 u309m::init_eeprom_t::init_eeprom_t(irs::eeprom_at25128_data_t* ap_eeprom,
-  eeprom_data_t* ap_eeprom_data)
+  eeprom_data_t* ap_eeprom_data, size_t a_max_size, irs_uarc a_size)
 {
   while (!ap_eeprom->connected()) ap_eeprom->tick();
   if (ap_eeprom->error()) {
     ap_eeprom_data->reset_to_default();
   }
+  if (ap_eeprom_data->mask_gateway_mark != new_params_marker) {
+    ap_eeprom_data->mask_gateway_reset_to_default();
+  }
+  irs::mlog() << "EEPROM size = " << a_size << " from " << a_max_size << endl;
 }
 u309m::init_eeprom_t::~init_eeprom_t()
 {

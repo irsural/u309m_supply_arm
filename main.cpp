@@ -1,6 +1,10 @@
+// 17.11.2016 14:07:20 Крашенинников:
+//  Добавлен LWIP. Маска, шлюз и ip-адрес теперь применяются по
+//    биту ip_params_apply
+enum { program_rev = 108, mxsrclib_rev = 1320, common_rev = 13, lwip_rev = 21 };
 // 17.11.2016 10:59:37 Крашенинников:
 // Сделал IP по умолчанию 192.168.1.6 (был 192.168.0.211)
-enum { program_rev = 107, mxsrclib_rev = 1319, common_rev = 12 };
+//enum { program_rev = 107, mxsrclib_rev = 1319, common_rev = 12 };
 // 17.11.2016 Крашенинников:
 // Программа скомпилированна в IAR EW ARM 6.30.1.3142, т. к. на IAR 7.50
 //   не работает программатор J-Link 8 (пишет что не оригинальный)
@@ -43,6 +47,7 @@ enum { program_rev = 107, mxsrclib_rev = 1319, common_rev = 12 };
 #include <irsinit.h>
 
 #include "app.h"
+#include "config.h"
 
 #include <irsfinal.h>
 
@@ -72,6 +77,11 @@ int main()
   main_info.program_rev = program_rev;
   main_info.mxsrclib_rev = mxsrclib_rev;
   main_info.common_rev = common_rev;
+  #ifdef U309M_LWIP
+  main_info.lwip_rev = lwip_rev;
+  #else //U309M_LWIP
+  main_info.lwip_rev = 0;
+  #endif //U309M_LWIP
   static u309m::cfg_t cfg;
   cfg.main_info(&main_info);
   app_start(&cfg);
@@ -85,6 +95,9 @@ void app_start(u309m::cfg_t* ap_cfg)
   irs::mlog() << irsm("program_rev = ") << program_rev << endl;
   irs::mlog() << irsm("mxsrclib_rev = ") << mxsrclib_rev << endl;
   irs::mlog() << irsm("common_rev = ") << common_rev << endl;
+  #ifdef U309M_LWIP
+  irs::mlog() << irsm("lwip_rev = ") << lwip_rev << endl;
+  #endif //U309M_LWIP
   while(true) {
     app.tick();
     static irs::blink_t F0_blink(GPIO_PORTF, 0, irs::make_cnt_ms(100));

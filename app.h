@@ -17,7 +17,7 @@ namespace u309m
 class init_eeprom_t {
 public:
   init_eeprom_t(irs::eeprom_at25128_data_t* ap_eeprom,
-    eeprom_data_t* ap_eeprom_data);
+    eeprom_data_t* ap_eeprom_data, size_t a_max_size, irs_uarc a_size);
   ~init_eeprom_t();
 };
 
@@ -169,7 +169,9 @@ private:
   init_supply_plis_t m_init_supply_plis;
   irs::modbus_server_t m_modbus_server;
   eth_data_t m_eth_data;
+  size_t m_eeprom_max_size;
   irs::eeprom_at25128_data_t m_eeprom;
+  irs_uarc m_eeprom_size;
   eeprom_data_t m_eeprom_data;
   init_eeprom_t m_init_eeprom;
   spi_enable_disable_t m_spi_enable_disable;
@@ -226,14 +228,11 @@ private:
   bool m_upper_level_unconnected;
   bool m_refresh_timeout;
   irs::timer_t m_refresh_timer;
-
   irs::arm::watchdog_timer_t m_watchdog;
-
-
   irs::loop_timer_t m_eth_data_refresh_timer;
-
+  bool ip_params_apply_reset;
+  irs::timer_t ip_params_apply_timer;
   meas_comm_th_t m_meas_comm_th;
-
 
   comm_t m_supply_comm;
   plis_debug_check_t m_supply_plis_debug_check;

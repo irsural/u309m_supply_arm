@@ -63,6 +63,8 @@ struct eeprom_supply_data_t
   }
 }; // supply_eeprom_data
 
+
+enum { new_params_marker = 7 };
 struct eeprom_data_t
 {
   irs::conn_data_t<irs_u8> ip_0;
@@ -79,6 +81,15 @@ struct eeprom_data_t
   irs::bit_data_t izm_th_spi_enable;
   irs::bit_data_t supply_comm_debug;
   irs::bit_data_t meas_comm_debug;
+  irs::conn_data_t<irs_u8> mask_0;
+  irs::conn_data_t<irs_u8> mask_1;
+  irs::conn_data_t<irs_u8> mask_2;
+  irs::conn_data_t<irs_u8> mask_3;
+  irs::conn_data_t<irs_u8> gateway_0;
+  irs::conn_data_t<irs_u8> gateway_1;
+  irs::conn_data_t<irs_u8> gateway_2;
+  irs::conn_data_t<irs_u8> gateway_3;
+  irs::conn_data_t<irs_u8> mask_gateway_mark;
 
   eeprom_data_t(irs::mxdata_t *ap_data = IRS_NULL, irs_uarc a_index = 0,
     irs_uarc* ap_size = IRS_NULL)
@@ -102,22 +113,51 @@ struct eeprom_data_t
     index = supply_1A.connect(ap_data, index);
     index = supply_17A.connect(ap_data, index);
 
-    upper_level_check.connect(ap_data, index, 0);
-    izm_th_spi_enable.connect(ap_data, index, 1);
-    supply_comm_debug.connect(ap_data, index, 2);
-    meas_comm_debug.connect(ap_data, index, 3);
+    irs_uarc options_index = index;
     index = options.connect(ap_data, index);
-
+    
+    upper_level_check.connect(ap_data, options_index, 0);
+    izm_th_spi_enable.connect(ap_data, options_index, 1);
+    supply_comm_debug.connect(ap_data, options_index, 2);
+    meas_comm_debug.connect(ap_data, options_index, 3);
+    
+    index = mask_0.connect(ap_data, index);
+    index = mask_1.connect(ap_data, index);
+    index = mask_2.connect(ap_data, index);
+    index = mask_3.connect(ap_data, index);
+    index = gateway_0.connect(ap_data, index);
+    index = gateway_1.connect(ap_data, index);
+    index = gateway_2.connect(ap_data, index);
+    index = gateway_3.connect(ap_data, index);
+    index = mask_gateway_mark.connect(ap_data, index);
+  
     return index;
   }
 
+  inline void mask_gateway_reset_to_default()
+  {
+    mask_0 = 255;
+    mask_1 = 255;
+    mask_2 = 252;
+    mask_3 = 0;
+
+    gateway_0 = 192;
+    gateway_1 = 168;
+    gateway_2 = 0;
+    gateway_3 = 1;
+
+    mask_gateway_mark = new_params_marker;
+  }
+  
   inline void reset_to_default()
   {
     ip_0 = IP_0;
     ip_1 = IP_1;
     ip_2 = IP_2;
     ip_3 = IP_3;
-
+    
+    mask_gateway_reset_to_default();
+    
     supply_200V.resistance_code = 488;
     supply_200V.koef_adc_volt_prev = 0.259343;
     supply_200V.koef_adc_volt_fin = 0.299369;

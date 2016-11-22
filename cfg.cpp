@@ -114,17 +114,17 @@ u309m::cfg_t::cfg_t():
   m_meas_tact_gen(PE1, m_spi_bitrate * 10),
   #endif  //  OLD_MEAS_COMM
 
-  m_local_mac(mxmac_t::zero_mac()),
+  m_local_mac(irs::make_mxmac(0, 0, 192, 168, 1, 48)),
   m_arm_eth(irs::simple_ethernet_t::double_buf, 300, m_local_mac),
-  #ifdef LWIP
+  m_connector_hardflow(IRS_NULL),
+  #ifdef U309M_LWIP
   m_ethernet(),
   m_udp_client(),
-  m_connector_hardflow(IRS_NULL),
   m_ip(mxip_t::any_ip()),
   m_dhcp(false),
   m_mask(mxip_t::any_ip()),
   m_gateway(mxip_t::any_ip()),
-  #else //LWIP
+  #else //U309M_LWIP
   m_local_ip(mxip_t::zero_ip()),
   m_local_port(5006),
   m_dest_ip(irs::make_mxip(192, 168, 0, 28)),
@@ -132,11 +132,14 @@ u309m::cfg_t::cfg_t():
   m_tcpip(&m_arm_eth, m_local_ip, m_dest_ip, 10),
   m_simple_hardflow(&m_tcpip, m_local_ip, m_local_port,
     m_dest_ip, m_dest_port, 10),
-  #endif // LWIP
+  #endif // U309M_LWIP
   m_meas_comm_reset_test(GPIO_PORTJ, 6, irs::gpio_pin_t::dir_in),
   mp_main_info(IRS_NULL)
 {
   m_REL_220V.set();
+  #ifndef U309M_LWIP
+  m_connector_hardflow.hardflow(&m_simple_hardflow);
+  #endif //U309M_LWIP
 }
 
 u309m::command_pins_t* u309m::cfg_t::command_pins()
@@ -164,9 +167,9 @@ irs::arm::arm_spi_t* u309m::cfg_t::spi_supply_comm_plis()
   return& m_spi_general_purpose;
 }
 
-irs::hardflow::simple_udp_flow_t* u309m::cfg_t::hardflow()
+irs::hardflow_t* u309m::cfg_t::hardflow()
 {
-  return& m_simple_hardflow;
+  return &m_connector_hardflow;
 }
 
 u309m::rele_ext_pins_t* u309m::cfg_t::rele_ext_pins()
@@ -225,24 +228,37 @@ irs::gpio_pin_t* u309m::cfg_t::pins_meas_comm_reset_test()
   return &m_meas_comm_reset_test;
 }
 
-#ifdef LWIP
-void cfg_t::change_ip(mxip_t a_ip)
+void u309m::cfg_t::tick()
+{
+  m_arm_eth.tick();
+  m_connector_hardflow.tick();
+  #ifdef U309M_LWIP
+  m_ethernet->tick();
+  m_udp_client->tick();
+  #else //U309M_LWIP
+  m_tcpip.tick();
+  m_simple_hardflow.tick();
+  #endif //U309M_LWIP
+}
+
+#ifdef U309M_LWIP
+void u309m::cfg_t::change_ip(mxip_t a_ip)
 {
   network_conf(a_ip, m_mask, m_gateway, m_dhcp);
 }
-void cfg_t::change_dhcp(bool a_dhcp)
+void u309m::cfg_t::change_dhcp(bool a_dhcp)
 {
   network_conf(m_ip, m_mask, m_gateway, a_dhcp);
 }
-void cfg_t::change_mask(mxip_t a_mask)
+void u309m::cfg_t::change_mask(mxip_t a_mask)
 {
   network_conf(m_ip, a_mask, m_gateway, m_dhcp);
 }
-void cfg_t::change_gateway(mxip_t a_gateway)
+void u309m::cfg_t::change_gateway(mxip_t a_gateway)
 {
   network_conf(m_ip, m_mask, a_gateway, m_dhcp);
 }
-void cfg_t::network_conf(mxip_t a_ip, mxip_t a_mask,
+void u309m::cfg_t::network_conf(mxip_t a_ip, mxip_t a_mask,
   mxip_t a_gateway, bool a_dhcp)
 {
   m_ip = a_ip;
@@ -264,13 +280,15 @@ void cfg_t::network_conf(mxip_t a_ip, mxip_t a_mask,
   eth_config.netmask = mask;
   eth_config.gateway = gateway_ip;
   eth_config.dhcp_enabled = a_dhcp;
+  mxmac_t mac = mxmac_t::zero_mac();
+  copy(a_ip.val, a_ip.val + ip_length, mac.val + mac_length - ip_length);
+  m_arm_eth.set_mac(mac);
   m_ethernet.reset(new irs::lwip::ethernet_t(&m_arm_eth, eth_config));
   irs::hardflow::lwip::udp_t::configuration_t configuration;
   m_udp_client.reset(new irs::hardflow::lwip::udp_t(
-    local_ip, 5005, remote_ip, 0, channel_max_count, configuration));
+    local_ip, 5006, remote_ip, 0, channel_max_count, configuration));
   m_udp_client->
     set_channel_switching_mode(irs::hardflow_t::csm_ready_for_reading);
   m_connector_hardflow.hardflow(m_udp_client.get());
-
 }
-#endif //LWIP
+#endif //U309M_LWIP
