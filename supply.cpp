@@ -403,7 +403,7 @@ void u309m::supply_t::tick()
       mp_eth_data->base_temp_data.filtered_value =
         isodr(&m_temp_base_isodr, mp_eth_data->base_temp_data.value);
       if (m_timer_2.check()) {
-        isodr_2(&m_temp_base_isodr_2, mp_eth_data->base_temp_data.value);
+        //isodr_2(&m_temp_base_isodr_2, mp_eth_data->base_temp_data.value);
       }
     }
 

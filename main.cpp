@@ -1,7 +1,10 @@
+// 24.11.2016 18:05:01 Крашенинников:
+//  Убран вывод в лог параметров изодромного звена терморегулятора
+enum { program_rev = 109, mxsrclib_rev = 1321, common_rev = 13, lwip_rev = 21 };
 // 17.11.2016 14:07:20 Крашенинников:
 //  Добавлен LWIP. Маска, шлюз и ip-адрес теперь применяются по
 //    биту ip_params_apply
-enum { program_rev = 108, mxsrclib_rev = 1320, common_rev = 13, lwip_rev = 21 };
+//enum { program_rev = 108, mxsrclib_rev = 1320, common_rev = 13, lwip_rev = 21 };
 // 17.11.2016 10:59:37 Крашенинников:
 // Сделал IP по умолчанию 192.168.1.6 (был 192.168.0.211)
 //enum { program_rev = 107, mxsrclib_rev = 1319, common_rev = 12 };
