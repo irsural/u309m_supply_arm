@@ -170,6 +170,9 @@ private:
   irs::modbus_server_t m_modbus_server;
   eth_data_t m_eth_data;
   size_t m_eeprom_max_size;
+  struct test_ee_t {
+    test_ee_t(irs::spi_t* ap_spi, irs::gpio_pin_t* ap_cs_pin);
+  } m_test_ee;
   irs::eeprom_at25128_data_t m_eeprom;
   irs_uarc m_eeprom_size;
   eeprom_data_t m_eeprom_data;

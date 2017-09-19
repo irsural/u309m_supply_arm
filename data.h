@@ -263,8 +263,8 @@ struct eeprom_data_t
     supply_17A.temp_aux_time_const = 20.;
     irs::mlog() << irsm(" eeprom supply_17A") << endl;
 
-    upper_level_check = 1;
-    izm_th_spi_enable = 1;
+    upper_level_check = 0;
+    izm_th_spi_enable = 0;
     supply_comm_debug = 0;
     meas_comm_debug = 0;
   }
