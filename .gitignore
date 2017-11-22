@@ -1,7 +1,6 @@
 # u309m_supply_arm ignore
 /settings
 /TermIO.log
-/privatecfg.h
 /*.ewt
 
 # irs global ignore
