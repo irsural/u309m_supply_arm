@@ -8,7 +8,7 @@
 
 //--------------------------- main application --------------------------------
 
-u309m::app_t::test_ee_t::test_ee_t(irs::spi_t* ap_spi, 
+u309m::app_t::test_ee_t::test_ee_t(irs::spi_t* ap_spi,
   irs::gpio_pin_t* ap_cs_pin)
 {
   #ifdef U309M_EEPROM_RESET
@@ -80,22 +80,22 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_KZ_2V(m_eth_data.rele_ext.KZ_2V),
   m_SYM_OFF(m_eth_data.rele_ext.SYM_OFF),
   m_rel_220V_timer(irs::make_cnt_s(1)),
-  m_internal_th_value(m_eth_data.arm_adc.internal_temp, 18.f, 50.f),
+  m_internal_th_value(m_eth_data.arm_adc.internal_temp, 5.f, 60.f),
   m_ptc_a_value(m_eth_data.arm_adc.PTC_A, 0.f, 0.33f),
   m_ptc_lc_value(m_eth_data.arm_adc.PTC_LC, 0.f, 0.33f),
   m_ptc_pwr_value(m_eth_data.arm_adc.PTC_PWR, 0.f, 0.33f),
   m_ptc_17A_value(m_eth_data.arm_adc.PTC_17A, 0.f, 0.33f),
-  m_tr_24V_value(m_eth_data.arm_adc.TR_24V_TEST, 23.f, 25.f),
-  m_24V_value(m_eth_data.arm_adc.TEST_24V, 23.f, 25.f),
-  m_5V_value(m_eth_data.arm_adc.TEST_5V, 4.5f, 5.5f),
-  m_izm_6V_value(m_eth_data.arm_adc.IZM_6V_TEST, 4.5f, 6.5f),
-  m_izm_3_3V_value(m_eth_data.arm_adc.IZM_3_3V_TEST, 3.15f, 3.45f),
-  m_izm_1_2V_value(m_eth_data.arm_adc.IZM_1_2V_TEST, 1.1f, 1.3f),
-  m_izm_th1_value(m_eth_data.meas_comm_th.th1_value, 18.f, 45.f),
-  m_izm_th2_value(m_eth_data.meas_comm_th.th2_value, 18.f, 45.f),
-  m_izm_th3_value(m_eth_data.meas_comm_th.th3_value, 18.f, 45.f),
-  m_izm_th4_value(m_eth_data.meas_comm_th.th4_value, 18.f, 45.f),
-  m_izm_th5_value(m_eth_data.meas_comm_th.th5_value, 18.f, 45.f),
+  m_tr_24V_value(m_eth_data.arm_adc.TR_24V_TEST, 21.f, 27.f),
+  m_24V_value(m_eth_data.arm_adc.TEST_24V, 21.f, 27.f),
+  m_5V_value(m_eth_data.arm_adc.TEST_5V, 4.0f, 6.0f),
+  m_izm_6V_value(m_eth_data.arm_adc.IZM_6V_TEST, 4.0f, 7.0f),
+  m_izm_3_3V_value(m_eth_data.arm_adc.IZM_3_3V_TEST, 2.9f, 3.7f),
+  m_izm_1_2V_value(m_eth_data.arm_adc.IZM_1_2V_TEST, 1.0f, 1.4f),
+  m_izm_th1_value(m_eth_data.meas_comm_th.th1_value, 5.f, 60.f),
+  m_izm_th2_value(m_eth_data.meas_comm_th.th2_value, 5.f, 60.f),
+  m_izm_th3_value(m_eth_data.meas_comm_th.th3_value, 5.f, 60.f),
+  m_izm_th4_value(m_eth_data.meas_comm_th.th4_value, 5.f, 60.f),
+  m_izm_th5_value(m_eth_data.meas_comm_th.th5_value, 5.f, 60.f),
   m_200V_th_base_value(m_eth_data.supply_200V.base_temp_data.value,
     18.f, 85.f),
   m_200V_th_aux_value(m_eth_data.supply_200V.aux_temp_data.value,
@@ -163,7 +163,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_eth_data.control.mxsrclib_rev = mp_cfg->main_info()->mxsrclib_rev;
   m_eth_data.control.common_rev = mp_cfg->main_info()->common_rev;
   m_eth_data.control.lwip_rev = mp_cfg->main_info()->lwip_rev;
-  
+
   #ifdef NOP
   irs::arm::interrupt_array()->int_event_gen(irs::arm::gpio_portj_int)
     ->add(&m_int_event);
@@ -199,7 +199,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   m_eth_data.control.gateway_1 = m_eeprom_data.gateway_1;
   m_eth_data.control.gateway_2 = m_eeprom_data.gateway_2;
   m_eth_data.control.gateway_3 = m_eeprom_data.gateway_3;
-  
+
   #ifdef U309M_LWIP
   mxip_t mask = mxip_t::zero_ip();
   mask.val[0] = m_eeprom_data.mask_0;
@@ -213,12 +213,12 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   gateway.val[3] = m_eeprom_data.gateway_3;
   //mxip_t mask = { 255, 255, 252, 0 };
   //mxip_t gateway = { 192, 168, 0, 1  };
-  
+
   irs::string_t mask_str = mxip_to_str(mask);
   irs::mlog() << irsm("mask = ") << mask_str << endl;
   irs::string_t gateway_str = mxip_to_str(gateway);
   irs::mlog() << irsm("gateway = ") << gateway_str << endl;
-  
+
   bool dhcp_on = false;
   mp_cfg->network_conf(ip, mask, gateway, dhcp_on);
   #else //U309M_LWIP
@@ -226,7 +226,7 @@ u309m::app_t::app_t(cfg_t* ap_cfg):
   mxip_to_cstr(ip_str, ip);
   mp_cfg->hardflow()->set_param("local_addr", ip_str);
   #endif //U309M_LWIP
-  
+
   m_eth_data.control.on = 0;
   m_alarm_timer.start();
   m_start_alarm_timer.start();
@@ -330,7 +330,7 @@ void u309m::app_t::tick()
   {
     ip_params_apply_reset = true;
     ip_params_apply_timer.start();
-    
+
     m_eeprom_data.ip_0 = m_eth_data.ip_0;
     m_eeprom_data.ip_1 = m_eth_data.ip_1;
     m_eeprom_data.ip_2 = m_eth_data.ip_2;
@@ -340,17 +340,17 @@ void u309m::app_t::tick()
     ip.val[1] = m_eth_data.ip_1;
     ip.val[2] = m_eth_data.ip_2;
     ip.val[3] = m_eth_data.ip_3;
-    
+
     m_eeprom_data.mask_0 = m_eth_data.control.mask_0;
     m_eeprom_data.mask_1 = m_eth_data.control.mask_1;
     m_eeprom_data.mask_2 = m_eth_data.control.mask_2;
     m_eeprom_data.mask_3 = m_eth_data.control.mask_3;
-  
+
     m_eeprom_data.gateway_0 = m_eth_data.control.gateway_0;
     m_eeprom_data.gateway_1 = m_eth_data.control.gateway_1;
     m_eeprom_data.gateway_2 = m_eth_data.control.gateway_2;
     m_eeprom_data.gateway_3 = m_eth_data.control.gateway_3;
-  
+
     #ifdef U309M_LWIP
     mxip_t mask = mxip_t::zero_ip();
     mask.val[0] = m_eth_data.control.mask_0;

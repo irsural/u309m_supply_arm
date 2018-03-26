@@ -1,7 +1,11 @@
 # u309m_supply_arm ignore
-/settings
 /TermIO.log
 /*.ewt
+settings
+List
+Obj
+*.sim
+*.out
 
 # irs global ignore
 *.*~
@@ -21,7 +25,6 @@
 *.tds
 *.tmp
 *.~*
-irsconfig.h
 irsconfig.h
 lsprst7.*
 sysprs7.*
